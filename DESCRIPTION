@@ -1,0 +1,11 @@
+Package: GillespieSSA
+Title: Gillespie's Stochastic Simulation Algorithm (SSA)
+Version: 0.2-0
+Date: 2007-09-12
+Author: Mario Pineda-Krch <mpineda@ucdavis.edu>
+Maintainer: Mario Pineda-Krch <mpineda@ucdavis.edu>
+Depends: R (>= 2.5.1)
+Description: GillespieSSA provides a simple to use, intuitive, and extensible interface to several stochastic simulation algorithms for generating simulated trajectories of finite population size continuous-time model. Currently it implements the Gillespie's exact stochastic simulation algorithm (Direct method) and several approximate methods (Explicit tau-leap, Binomial tau-leap, and Optimized tau-leap). The package also contains a library of template models that can easily be customized and extended.
+License: GPL version 3 or later
+URL: http://pineda-krch.com/GillespieSSA
+Packaged: Wed Sep 19 13:19:40 2007; pineda
