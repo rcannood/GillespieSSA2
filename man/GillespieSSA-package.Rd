@@ -1,6 +1,7 @@
-% $Id: GillespieSSA.Rd 76 2007-08-19 04:30:03Z pineda $
+% $Id: GillespieSSA-package.Rd 155 2007-10-04 06:19:46Z pineda $
 \name{GillespieSSA-package}
 \alias{GillespieSSA-package}
+\alias{GillespieSSA}
 \docType{package}
 
 \concept{Direct method}
@@ -26,20 +27,59 @@ The stochastic simulation algorithm (\acronym{SSA}) is a procedure for construct
 }
   
 \section{SSA implementations}{
-There are numerous exact Monte Carlo procedures implementing the \acronym{SSA}. Perhaps the simplest is the Direct method of Gillespie (1977. The Direct method is an exact continuous-time numerical realization of the corresponding stochastic time-evolution equation. Because the Direct method simulates one reaction at a time it is often, however, computationally too slow for practical applications. 
-  
+There are numerous exact Monte Carlo procedures implementing the \acronym{SSA}. Perhaps the simplest is the Direct method of Gillespie (1977. The Direct method is an exact continuous-time numerical realization of the corresponding stochastic time-evolution equation. Because the Direct method simulates one reaction at a time it is often, however, computationally too slow for practical applications.   
 Approximate implementations of the \acronym{SSA} sacrifices exactness for large improvements in computational efficiency. The most common technique used is tau-leaping where reaction-bundles are attempted in coarse-grained time increments \eqn{\tau}{tau}. Speed-ups of several orders of magnitude compared to the Direct method are common. Tau-leaping must be used with care, however, as it is not as foolproof as the Direct method.}
+
+\section{Example models}{
+The following example models are part of the package and can be run as demos:
+\itemize{
+\item Decaying-Dimerization model: \cr \code{file.show(system.file("demo/decayingDimer.R", package="GillespieSSA"))}
+\item Linear chain system: \cr \code{file.show(system.file("demo/linearChain.R", package="GillespieSSA"))}
+\item Logistic growth: \cr \code{file.show(system.file("demo/logisticGrowth.R", package="GillespieSSA"))}
+\item Lotka predator-prey model: \cr \code{file.show(system.file("demo/lotka.R", package="GillespieSSA"))}
+\item Rosenzweig-MacArthur predator-prey model: \cr \code{file.show(system.file("demo/rma.R", package="GillespieSSA"))}
+\item Kermack-McKendrick SIR model: \cr \code{file.show(system.file("demo/sir.R", package="GillespieSSA"))}
+}
+}
 
 \section{How to cite this package}{
 \preformatted{
   author = Mario Pineda-Krch,
   title  = GillespieSSA: a stochastic simulation package for R,
   year   = 2007, 
-  url    = http://pineda-krch.com/GillespieSSA
+  url    = http://pineda-krch.com/gillespiessa
 }
 }
 
-\section{Acknowledgements}{Thanks to the following people who contributed with valuable feedback, suggestions, and code: Heinrich zu Dohna (UC Davis)}
+\section{More information}{
+The following are additional sources of information on \pkg{GillespieSSA}:
+\tabular{ll}{
+Home page\tab \code{browseURL("http://pineda-krch.com/gillespiessa/")} \cr
+News\tab  \code{file.show(system.file("NEWS", package="GillespieSSA"))} \cr
+News\tab  \code{file.show(system.file("WISHLIST", package="GillespieSSA"))} \cr
+Acknowledgements\tab  \code{file.show(system.file("THANKS", package="GillespieSSA"))} \cr
+This File\tab  \code{package?GillespieSSA} \cr
+Help files as PDF\tab  \code{browseURL("http://cran.r-project.org/doc/packages/GillespieSSA.pdf")} \cr
+}
+}
+
+\references{
+\itemize{
+  \item Brown D. and Rothery P. 1993. Models in biology: mathematics, statistics, and computing. John Wiley & Sons.
+  \item Cao Y., Li H., and Petzold L. 2004. Efficient formulation of the stochastic simulation algorithm for chemically reacting systems. J. Chem. Phys. 121:4059-4067. \url{http://dx.doi.org/10.1063/1.1778376 }
+  \item Cao Y., Gillespie D.T., and Petzold L.R. 2006. Efficient step size selection for the tau-leaping method. J. Chem. Phys. 124:044109. \url{http://dx.doi.org/10.1063/1.2159468}
+  \item Cao Y., Gillespie D.T., and Petzold L.R. 2007. Adaptive explicit tau-leap method with automatic tau selection. J. Chem. Phys. 126:224101. \url{http://dx.doi.org/10.1063/1.2745299 }
+  \item Chatterjee A., Vlachos D.G., and Katsoulakis M.A. 2005. Binomial distribution based tau-leap accelerated stochastic simulation. J. Chem. Phys. 122:024112. \url{http://dx.doi.org/10.1063/1.1833357} 
+  \item Gillespie D.T. 1977. Exact stochastic simulation of coupled chemical reactions. J. Phys. Chem. 81:2340.  \url{http://dx.doi.org/10.1021/j100540a008}
+  \item Gillespie D.T. 2001. Approximate accelerated stochastic simulation of chemically reacting systems. J. Chem. Phys. 115:1716-1733. \url{http://dx.doi.org/10.1063/1.1378322 }
+  \item Gillespie D.T. 2007. Stochastic simulation of chemical kinetics. Annu. Rev. Chem. 58:35 \url{http://dx.doi.org/10.1146/annurev.physchem.58.032806.104637}
+  \item Kot M. 2001. Elements of mathematical ecology. Cambridge University Press. \url{http://dx.doi.org/10.2277/052180213X}
+  \item Pineda-Krch M. 2007. Implementing the stochastic simulation algorithm in R. Submitted to the Journal of Statistical Software (preprint available on request).
+  \item Pineda-Krch M., Blok H.J., Dieckmann U., and Doebeli M. 2007. A tale of two cycles --- distinguishing quasi-cycles and limit cycles in finite predator-prey populations. Oikos 116:53-64. \url{http://dx.doi.org/10.1111/j.2006.0030-1299.14940.x} 
+}
+}
+
+\author{Mario Pineda-Krch (\url{http://pineda-krch.com})}
 
 \section{License}{This package is distributed under the terms of the \acronym{GNU} General Public License (\acronym{GPL}) version 3 (or newer). Copyright 2007 Mario Pineda-Krch.\cr
 \cr
@@ -50,9 +90,10 @@ This file is part of the \R package \pkg{GillespieSSA}.\cr
 \pkg{GillespieSSA} is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the \acronym{GNU} General Public License for more details.\cr
 \cr
 You should have received a copy of the \acronym{GNU} General Public License along with this program. If not, see <\url{http://www.gnu.org/licenses/}>.
-} 
 
-\author{Mario Pineda-Krch (\url{http://pineda-krch.com})}
+Note that \pkg{GillespieSSA} is under active development. Although the package may be considered stable functionality and the structure of the package interface may change in future versions.
+
+} 
 
 \seealso{
   \code{\link{ssa}},
@@ -60,8 +101,7 @@ You should have received a copy of the \acronym{GNU} General Public License alon
   \code{\link{ssa.etl}},
   \code{\link{ssa.btl}},
   \code{\link{ssa.otl}},
-  \code{\link{ssa.plot}},
-  \link{ssa.references}
+  \code{\link{ssa.plot}}
 }
 
 \keyword{package}

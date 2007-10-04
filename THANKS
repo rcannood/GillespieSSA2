@@ -1,0 +1,3 @@
+o Ben Bolker for comments on the initial release of the package and for providing a hint for how to more elegantly handle model parameters as arguments to th4e ssa() function.
+
+o Heinrich zu Dohna for many caffein induced discussions on the package and reference manual, and for providing comments on the vignette documentation.

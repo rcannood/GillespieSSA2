@@ -1,10 +1,10 @@
-# $Id: ssa.btl.diag.R 108 2007-08-27 01:50:11Z pineda $
+# $Id: ssa.btl.diag.R 155 2007-10-04 06:19:46Z pineda $
 
 `ssa.btl.diag` <-
-function(a,   # Vector of evaluated propensity functions 
+function(a,        # Vector of evaluated propensity functions 
          nu_tile,  # State-change matrix 
-         x,   # State vector
-         f) { # Coarse-graining factor (see p.4 in Chatterjee et al. (2005))
+         x,        # State vector
+         f) {      # Coarse-graining factor (see p.4 in Chatterjee et al. (2005))
 
   coercing <- FALSE
 
@@ -50,7 +50,7 @@ function(a,   # Vector of evaluated propensity functions
     
     # Record the current state change
     nu_j[x1:x2] <- nu_j[x1:x2] + tmp_nu_j    
-if (any(is.na(nu_j))) browser() # MPK: Just in case!
+    if (any(is.na(nu_j))) browser() # MPK: Just in case!
   } # for()
 
   # Throw a warning message if p was coerced to unity. Coercing implies too 

@@ -1,4 +1,4 @@
-# $Id: ssa.plot.R 146 2007-09-12 22:04:21Z pineda $
+# $Id: ssa.plot.R 155 2007-10-04 06:19:46Z pineda $
 
 ssa.plot <- function(out = stop("requires simulation output object"), 
              plot.device = "x11", 
@@ -28,11 +28,11 @@ ssa.plot <- function(out = stop("requires simulation output object"),
           col=colorVector,
           bty="n",
           xlab="Time",
-          ylab="Frequency",...)
+          ylab="Frequency")
   title(out$args$simName)
   legendTxt <- names(out$arg$x0)
 
-  # If there are more states than 20 the legend starts to look crazy
+  # If there are more states than 20 the legend starts to look crazy, so we don't show it...
   if (length(legendTxt) < 20) legend("topright",legend=legendTxt,bty="y",pch=19,col=colorVector) 
 
   if (by==1) stepShowStr <- paste(" (showing all steps)")
@@ -40,7 +40,7 @@ ssa.plot <- function(out = stop("requires simulation output object"),
 
   textStr <- paste("Method: ", out$args$method,", Elapsed wall time: ",round(out$stats$elapsedWallTime,2)," sec, ",out$stats$nSteps," steps",stepShowStr,sep="") 
   if (out$arg$method=="OTL") textStr <- paste(textStr,", ",out$stats$nSuspendedTauLeaps," (",round((out$stats$nSuspendedTauLeaps/out$stats$nSteps),2),"%) susp. tau-leaps",sep="")
-  mtext(textStr,line=0)
+  mtext(textStr,line=0,cex=0.75)
   
   # Wrap up
   if (plot.device == "x11") return()

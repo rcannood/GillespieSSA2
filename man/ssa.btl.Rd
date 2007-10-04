@@ -1,4 +1,4 @@
-% $Id: ssa.btl.Rd 76 2007-08-19 04:30:03Z pineda $
+% $Id: ssa.btl.Rd 155 2007-10-04 06:19:46Z pineda $
 \name{ssa.btl}
 \alias{ssa.btl}
 
@@ -23,8 +23,7 @@ ssa.btl(a,nu,x,f)
 
 \seealso{
   \link{GillespieSSA-package},
-  \code{\link{ssa}},
-  \link{ssa.references}
+  \code{\link{ssa}}
 }
 
 \examples{

@@ -1,7 +1,7 @@
-# $Id: ssa.nutiling.R 103 2007-08-25 01:24:52Z pineda $
+# $Id: ssa.nutiling.R 155 2007-10-04 06:19:46Z pineda $
 
 ssa.nutiling <- function(a,nu,j) {
-  M  <- dim(nu)[2]        # Number of reaction channels in nu tile
+  M  <- dim(nu)[2]        # Number of reaction channels in nu-tile
   N  <- dim(nu)[1]        # Number of states in nu tile
   U  <- length(a)/M       # Number of tessallations of nu tile
   f  <- ceiling((j/M)-1)  # Frameshift factor

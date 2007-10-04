@@ -1,4 +1,4 @@
-% $Id: ssa.d.Rd 76 2007-08-19 04:30:03Z pineda $
+% $Id: ssa.d.Rd 155 2007-10-04 06:19:46Z pineda $
 \name{ssa.d}
 \alias{ssa.d}
 
@@ -21,8 +21,7 @@ ssa.d(a,nu)
 
 \seealso{
   \link{GillespieSSA-package},
-  \code{\link{ssa}},
-  \link{ssa.references}
+  \code{\link{ssa}}
 }
 
 \examples{

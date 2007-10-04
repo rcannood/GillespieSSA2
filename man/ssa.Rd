@@ -1,4 +1,4 @@
-% $Id: ssa.Rd 146 2007-09-12 22:04:21Z pineda $
+% $Id: ssa.Rd 155 2007-10-04 06:19:46Z pineda $
 \name{ssa}
 \alias{ssa}
 
@@ -8,7 +8,8 @@
 \usage{
             ssa( x0,        # initial state vector 
                   a,        # propensity vector
-                 nu,        # state-change matrix 
+                 nu,        # state-change matrix
+              parms = NULL, # model parameters
                  tf,        # final time 
              method = "D",  # SSA method 
             simName = "",      
@@ -32,6 +33,8 @@ ignoreNegativeState = TRUE,
   \item{a}{character vector of propensity functions where state variables correspond to the names of the elements in \code{x0} and are surrounded by curly brackets.}
   
   \item{nu}{numerical matrix of change if the number of individuals in each state (rows) caused by a single reaction of any given type (columns).}
+  
+  \item{parms}{named vector of model parameters.}
   
   \item{tf}{final time.}
   
@@ -92,14 +95,18 @@ is defined as \code{nu <- matrix(c(-1,0,+1,-1),nrow=2,byrow=TRUE)} where \eqn{c_
 
 where the single reaction channel is
 
-\deqn{S \stackrel{c}{\longrightarrow} 0}{S --c--> 0.} By setting \eqn{X_0=1000} and \eqn{c=-0.5} it is now simple to define this model and run it for 10 time steps using the Direct method,
+\deqn{S \stackrel{c}{\longrightarrow} 0}{S --c--> 0.} By setting \eqn{X_0=1000} and \eqn{c=0.5} it is now simple to define this model and run it for 10 time steps using the Direct method,
 
 \preformatted{
-x0  <- c(X=1000)           
-a   <- c("0.5*{X}")        
-nu  <- matrix(-1)         
-out <- ssa(x0,a,nu,tf=10)
+out <- ssa(x0=c(X=1000),a=c("c*{X}"),nu=matrix(-1),parms=c(c=0.5),tf=10)
 }  
+
+The resulting time series can then be displayed by,
+
+\preformatted{
+ssa.plot(ssa)
+}
+
 }
 
 \note{Selecting the appropriate \acronym{SSA} method is a trade-off between computational speed, accuracy of the results, and  which \acronym{SSa} actually works for a given scenario. This depends on the characteristics of the defined system (e.g. number of reaction channels, number of species, and the absolute and relative magnitude of the propensity functions). \strong{All methods are not appropriate for all models.} When selecting a \acronym{SSA} method all of these factors have to be taken into consideration. The various tau-leap methods accept a number of additional arguments. While the default values of these arguments may work for some scenarios they may have to be adjusted for others. The default values for the tau-leap methods are conservative in terms of computational speed and substantial increase in efficiency may be gained by optimizing their values for a specific system.}
@@ -111,56 +118,59 @@ out <- ssa(x0,a,nu,tf=10)
   \code{\link{ssa.btl}},
   \code{\link{ssa.otl}},
   \code{\link{ssa.plot}}
-  \link{ssa.references}
 }
 
 \author{Mario Pineda-Krch (\url{http://pineda-krch/GillespieSSA})}
 
 \examples{
 ## Irreversible isomerization
+parms <- c(c=0.5)
 x0  <- c(X=10000)
-a   <- c("0.5*{X}")
+a   <- c("c*{X}")
 nu  <- matrix(-1)
-out <- ssa(x0,a,nu,tf=10) # Direct method
+out <- ssa(x0,a,nu,parms,tf=10,simName="Irreversible isomerization") # Direct method
 \dontrun{
 plot(out$data[,1],out$data[,2]/10000,col="red",cex=0.5,pch=19)
 }
 
 x0  <- c(X=100)
-out <- ssa(x0,a,nu,tf=10) # Direct method
+out <- ssa(x0,a,nu,parms,tf=10) # Direct method
 \dontrun{
 points(out$data[,1],out$data[,2]/100,col="green",cex=0.5,pch=19)
 }
 
 x0  <- c(X=10)
-out <- ssa(x0,a,nu,tf=10) # Direct method
+out <- ssa(x0,a,nu,parms,tf=10) # Direct method
 \dontrun{
 points(out$data[,1],out$data[,2]/10,col="blue",cex=0.5,pch=19)
 }
 
 ## Logistic growth
+parms <- c(b=2, d=1)
 x0  <- c(N=500)
-a   <- c("2*{N}", "((2-1)*{N}/1000)*{N}")
+a   <- c("b*{N}", "((b-d)*{N}/1000)*{N}")
 nu  <- matrix(c(+1,-1),ncol=2)
-out <- ssa(x0,a,nu,tf=10,method="D",maxWallTime=5)
+out <- ssa(x0,a,nu,parms,tf=10,method="D",maxWallTime=5,simName="Logistic growth")
 \dontrun{
 ssa.plot(out)
 }
 
 ## Kermack-McKendrick SIR model 
+parms <- c(beta=0.001, gamma=0.1)
 x0  <- c(S=499,I=1,R=0)
-a   <- c("0.001*{S}*{I}","0.1*{I}") 
+a   <- c("beta*{S}*{I}","gamma*{I}") 
 nu  <- matrix(c(-1,0,+1,-1,0,+1),nrow=3,byrow=TRUE)
-out <- ssa(x0,a,nu,tf=100)
+out <- ssa(x0,a,nu,parms,tf=100,simName="SIR model")
 \dontrun{
 ssa.plot(out)
 }
 
-## Lotka predator-prey model 
+## Lotka predator-prey model
+parms <- c(c1=10, c2=.01, c3=10)
 x0  <- c(Y1=1000,Y2=1000)
-a   <- c("10*{Y1}",".01*{Y1}*{Y2}","10*{Y2}")
+a   <- c("c1*{Y1}","c2*{Y1}*{Y2}","c3*{Y2}")
 nu  <- matrix(c(+1,-1,0,0,+1,-1),nrow=2,byrow=TRUE) 
-out <- ssa(x0,a,nu,tf=100,method="ETL",simName="Lotka predator-prey model")
+out <- ssa(x0,a,nu,parms,tf=100,method="ETL",simName="Lotka predator-prey model")
 \dontrun{
 ssa.plot(out)
 }

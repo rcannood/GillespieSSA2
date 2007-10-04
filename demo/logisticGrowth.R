@@ -1,5 +1,3 @@
-# $Id: logisticGrowth.R 73 2007-08-18 23:39:50Z pineda $
-
 #===============================================================================
 # Logistic growth (Pearl-Verhulst model) (Kot, 2001)
 #===============================================================================
@@ -17,11 +15,8 @@
 # where d'=d+(b-d)N/K. The propensity functions are a_1=bN 
 # and a_2=d'N.
 
-# Parameters
-assign("b", b <- 2, env=.GlobalEnv)
-assign("d", d <- 1, env=.GlobalEnv)
-assign("K", K <- 1000, env=.GlobalEnv)
 
+parms <- c(b=2, d=1, K=1000)            # Parameters
 x0 <- c(N=500)                          # Initial state vector
 nu <- matrix(c(+1,-1),ncol=2)           # State-change matrix
 a  <- c("b*{N}", "(d+(b-d)*{N}/K)*{N}") # Propensity vector
@@ -31,18 +26,18 @@ simName <- "Logistic growth"
 # Run the simulations
 
 # Direct method
-out <- ssa(x0,a,nu,tf,method="D",simName,maxWallTime=5)
+out <- ssa(x0,a,nu,parms,tf,method="D",simName,maxWallTime=5)
 ssa.plot(out) 
  
 # Explict tau-leap method
-out <- ssa(x0,a,nu,tf,method="ETL",simName,tau=0.03,maxWallTime=5)
+out <- ssa(x0,a,nu,parms,tf,method="ETL",simName,tau=0.03,maxWallTime=5)
 ssa.plot(out) 
 
 # (Don't run: wrong results)
 # Run the simulation using the Binomial tau-leap method 
-# out <- ssa(x0,a,nu,tf,method="BTL",simName,f=5,maxWallTime=5)
+# out <- ssa(x0,a,nu,parms,tf,method="BTL",simName,f=5,maxWallTime=5)
 # ssa.plot(out) 
 
 # Optimized tau-leap method
-out <- ssa(x0,a,nu,tf,method="OTL",simName,maxWallTime=5)
+out <- ssa(x0,a,nu,parms,tf,method="OTL",simName,maxWallTime=5)
 ssa.plot(out)

@@ -1,5 +1,3 @@
-# $Id: lotka.R 73 2007-08-18 23:39:50Z pineda $
-
 #===============================================================================
 # Lotka predator-prey model (Gillespie, 1977; Kot, 2001)
 #===============================================================================
@@ -13,9 +11,7 @@
 #      Y1 --c3--> 0
 
 # Define parameters
-assign("c1", c1 <- 10,  env=.GlobalEnv)
-assign("c2", c2 <- .01, env=.GlobalEnv)
-assign("c3", c3 <- 10,  env=.GlobalEnv)
+parms <- c(c1=10, c2=.01, c3=10)
 
 # Define system
 x0 <- c(Y1=1000, Y2=1000)                           # Initial state vector
@@ -27,20 +23,20 @@ simName <- "Lotka predator-prey model"
 # Run the simulations 
 
 # Direct method 
-out <- ssa(x0,a,nu,tf,method="D",simName="Lotka predator-prey model",maxWallTime=10)
+out <- ssa(x0,a,nu,parms,tf,method="D",simName="Lotka predator-prey model",maxWallTime=10)
 ssa.plot(out)
 
 # Explict tau-leap method
-out <- ssa(x0,a,nu,tf,method="ETL",simName,tau=0.002)
+out <- ssa(x0,a,nu,parms,tf,method="ETL",simName,tau=0.002)
 ssa.plot(out)
 
 # Don't run: gives wrong results
 # Binomial tau-leap method
-#out <- ssa(x0,a,nu,tf,method="BTL",simName,f=100)
+#out <- ssa(x0,a,nu,parms,tf,method="BTL",simName,f=100)
 #ssa.plot(out)
 
 # Optimized tau-leap method
-out <- ssa(x0,a,nu,tf,method="OTL",simName,epsilon=0.1)
+out <- ssa(x0,a,nu,parms,tf,method="OTL",simName,epsilon=0.1)
 ssa.plot(out)
 
 

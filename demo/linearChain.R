@@ -1,5 +1,3 @@
-# $Id: linearChain.R 73 2007-08-18 23:39:50Z pineda $
-
 #===============================================================================
 # Linear Chain System (Cao et al., 2004)
 #===============================================================================
@@ -9,7 +7,7 @@
 # S_1 --c1--> S_2 --c2-->...--cM--> S_(M+1)
 
 # Rate parameter
-assign("c", c <- 1, env=.GlobalEnv)
+parms <- c(c=1)
 
 # Number of chain reactions
 M <- 50
@@ -33,17 +31,17 @@ simName <- "Linear Chain System"
 # Run the simulations
 
 # Direct method
-out <- ssa(x0,a,nu,tf,method="D",simName,maxWallTime=5)
+out <- ssa(x0,a,nu,parms,tf,method="D",simName,maxWallTime=5)
 ssa.plot(out)
 
 # Explict tau-leap method
-out <- ssa(x0,a,nu,tf,method="ETL",simName,tau=0.1,maxWallTime=5)
+out <- ssa(x0,a,nu,parms,tf,method="ETL",simName,tau=0.1,maxWallTime=5)
 ssa.plot(out)
 
 # Binomial tau-leap method
-out <- ssa(x0,a,nu,tf,method="BTL",simName,f=50,maxWallTime=5)
+out <- ssa(x0,a,nu,parms,tf,method="BTL",simName,f=50,maxWallTime=5)
 ssa.plot(out)
 
 # Optimal tau-leap method
-out <- ssa(x0,a,nu,tf,method="OTL",simName,maxWallTime=5)
+out <- ssa(x0,a,nu,parms,tf,method="OTL",simName,maxWallTime=5)
 ssa.plot(out)

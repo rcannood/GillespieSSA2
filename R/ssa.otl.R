@@ -1,4 +1,4 @@
-# $Id: ssa.otl.R 75 2007-08-19 01:31:48Z pineda $
+# $Id: ssa.otl.R 155 2007-10-04 06:19:46Z pineda $
 
 `ssa.otl` <-
 function(x,       # State vector (i.e. vector of population sizes of all the species) 
@@ -19,9 +19,12 @@ function(x,       # State vector (i.e. vector of population sizes of all the spe
   # reactants becomes extinct (L). The 'L' notation is from Eq. 10 in Cao 
   # et al. (2006), J. Chem. Phys. 124:044109. 
   tmp_nu <- nu
-  tmp_nu[nu>=0] <- NA                 # We are only interested in negative state changes
+  tmp_nu[nu>=0] <- NA  # We are only interested in negative state changes
 
-  # Turn off warning temporarily because min() throws a warning if it tries to evaluate only 'NA's, which it will for reaction channels that have no negative entries. Despite the warning the end result is correct, i.e. the number of firings for such a channel becomes Inf.
+  # Turn off warning temporarily because min() throws a warning if it tries to 
+  # evaluate only 'NA's, which it will for reaction channels that have no 
+  # negative entries. Despite the warning the end result is correct, i.e. the 
+  # number of firings for such a channel becomes Inf.
   options(warn = -1) # warnings off 
   L <- apply(floor(x/abs(tmp_nu)),2,min,na.rm=TRUE)
   options(warn = 0) # warnings on 

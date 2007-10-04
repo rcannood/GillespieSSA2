@@ -1,9 +1,10 @@
-# $Id: ssa.R 128 2007-09-03 00:44:35Z pineda $
+# $Id: ssa.R 155 2007-10-04 06:19:46Z pineda $
 
 `ssa` <-
 function(         x0 = stop("undefined 'x0'"), 
                    a = stop("undefined 'a'"),
                   nu = stop("undefined 'nu'"),
+               parms = NULL, 
                   tf = stop("undefined 'tf'"), 
               method = "D",
              simName = "",
@@ -20,7 +21,8 @@ function(         x0 = stop("undefined 'x0'"),
              verbose = FALSE,
          maxWallTime = Inf
              ) 
-{ # End of function arguments  
+{ # End of function arguments
+
   # Do some basic check of the argument types
   if (!is.numeric(x0))              stop("'x0' is not numeric")
   if (!is.character(a))             stop("'a' is not of character type")
@@ -36,15 +38,18 @@ function(         x0 = stop("undefined 'x0'"),
   if (!is.numeric(nd))              stop("'nd' is not numeric")
   if (!is.numeric(consoleInterval)) stop("'consoleInterval' is not numeric")
   if (!is.numeric(censusInterval))  stop("'censusInterval' is not numeric")
-  if ((ignoreNegativeState != TRUE) & (ignoreNegativeState != FALSE)) stop("'ignoreNegativeState' is not boolean")
+  if ((ignoreNegativeState != TRUE) & (ignoreNegativeState != FALSE)) 
+    stop("'ignoreNegativeState' is not boolean")
   if ((verbose != TRUE) & (verbose != FALSE)) stop("'verbose' is not boolean")
 
-  # Start the timer and say something short when running silent
-  procTimeStart <- proc.time()
+  # Start the timer and make an announcement if running silent
+  procTimeStart   <- proc.time()
   elapsedWallTime <- 0
-  startWallTime <- format(Sys.time())
+  startWallTime   <- format(Sys.time())
   if (verbose) {
-    cat("Running ",method," method with console output every ",consoleInterval," time step\n",sep="")
+    cat("Running ",method,
+        " method with console output every ",consoleInterval,
+        " time step\n",sep="")
     cat("Start wall time: ",startWallTime,"...\n",sep="")  
     flush.console()
   }
@@ -55,16 +60,21 @@ function(         x0 = stop("undefined 'x0'"),
   if (method=="btl") method <- "BTL"
   if (method=="otl") method <- "OTL"
   
-  ##
+  #############################################################################
   # More elaborated sanity checks...
-  ##  
+  #############################################################################
+
+  # Check the consistency of the system dimensions, i.e. number of rows and 
+  # columns in the state-change matrix and the number of elements in the initial 
+  # state vector and the vector of propensity functions  
+  if ((length(a)/dim(nu)[2]) != (length(x0)/dim(nu)[1])) 
+    stop("inconsistent system dimensions (unequal 'nu' tessallation)")
+  if (((length(a)%%dim(nu)[2])>0) || ((length(x0)%%dim(nu)[1])>0)) 
+    stop("inconsistent system dimensions (fractional tessallation)")
   
-  if ((length(a)/dim(nu)[2]) != (length(x0)/dim(nu)[1])) stop("inconsistent system dimensions (unequal 'nu' tessallation)")
-  if (((length(a)%%dim(nu)[2])>0) || ((length(x0)%%dim(nu)[1])>0)) stop("inconsistent system dimensions (fractional tessallation)")
-  
-  # Is the system diagonally tessallated?
+  # Is the system nu-tiled along the diagonal?
   if ((length(a)/dim(nu)[2]>1) && (length(x0)/dim(nu)[1])>1){
-    if (method=="D") method <- "D.diag" 
+    if (method=="D")   method <- "D.diag" 
     if (method=="ETL") method <- "ETL.diag"
     if (method=="BTL") method <- "BTL.diag"
     if (method=="OTL") method <- "OTL.diag"
@@ -73,8 +83,8 @@ function(         x0 = stop("undefined 'x0'"),
   # For the ETL method tau>0
   if ((method=="ETL") & (!(tau>0))) stop("ETL method requires tau>0") 
 
-  # Parse the propensity vector by recursive substitution of variables names with
-  # the corresponding state vector indexing
+  # Parse the propensity vector by recursive substitution of variables names 
+  # with the corresponding state vector indexing
   x <- x0
   varNam <- names(x)
   if (is.null(varNam)) stop("element labels are missing in 'x'") 
@@ -84,16 +94,40 @@ function(         x0 = stop("undefined 'x0'"),
   }
   parse_a <- parse(text=a)
 
+  # Assign the parameters defined in the parms vector
+  if (!is.null(parms)) {
+    parmsNames <- names(parms)
+    for (i in seq(length(parms))) {
+      assign(parmsNames[i],parms[[i]])
+    }
+  }
+
+  # Check that f (used in the BTL method) is >1 
   if (method=="BTL" & f<=1) stop("f has to be >1") 
   
   # Take a snapshot of all the options so they can be saved later
-  args <- list(x0=x0,a=a,nu=nu,tf=tf,method=method,tau=tau,f=f,epsilon=epsilon,nc=nc,hor=hor,dtf=dtf,nd=nd,ignoreNegativeState=ignoreNegativeState,consoleInterval=consoleInterval,censusInterval=censusInterval,verbose=verbose,simName=simName)
+  args <- list(    x0 = x0, 
+                    a = a, 
+                   nu = nu, 
+                parms = parms, 
+                   tf = tf, 
+               method = method, 
+                  tau = tau, 
+                    f = f, 
+              epsilon = epsilon, 
+                   nc = nc, 
+                  hor = hor, 
+                  dtf = dtf, 
+                   nd = nd, 
+  ignoreNegativeState = ignoreNegativeState, 
+      consoleInterval = consoleInterval, 
+       censusInterval = censusInterval,
+              verbose = verbose,
+              simName = simName)
   
-  ##
   # Initialize miscellaneous counters 
-  ##
   t <- 0 # Initialize the simulation time
-  timeOfNextCensus <- t + censusInterval # Time of first data census
+  timeOfNextCensus <- t + censusInterval  # Time of first data census
   timeForConsole   <- t + consoleInterval # Time of first console output
   stepSize         <- NULL
   timeToTerminate  <- FALSE
@@ -222,7 +256,7 @@ function(         x0 = stop("undefined 'x0'"),
       # Evaluate the transition rates for the next step by evaluating the 
       # propensity functions
       for (num in seq_len(length(parse_a))) eval_a[num] <- eval(parse_a[num])
-      
+      eval_a[is.na(eval_a)] <- 0 # Replace NA with zero (0/0 gives NA)
       if(any(eval_a<0)) warning("negative propensity function - coersing to zero\n")
       eval_a[eval_a<0] <- 0
     } # if (!suspendedTauLeapMethod)
@@ -247,10 +281,10 @@ function(         x0 = stop("undefined 'x0'"),
  
   # Figure out all the reasons why the simulation terminated
   terminationStatus <- NULL 
-  if (t>=tf)                 terminationStatus <- c(terminationStatus, "finalTime")
-  if (all(x==0))             terminationStatus <- c(terminationStatus, "extinction")
-  if (any(x<0))              terminationStatus <- c(terminationStatus, "negativeState")
-  if (all(eval_a==0))        terminationStatus <- c(terminationStatus, "zeroProp")
+  if (t>=tf)          terminationStatus <- c(terminationStatus, "finalTime")
+  if (all(x==0))      terminationStatus <- c(terminationStatus, "extinction")
+  if (any(x<0))       terminationStatus <- c(terminationStatus, "negativeState")
+  if (all(eval_a==0)) terminationStatus <- c(terminationStatus, "zeroProp")
   if (elapsedWallTime>=maxWallTime) terminationStatus <- c(terminationStatus, "maxWallTime") 
 
   # Calculate some stats for the used method

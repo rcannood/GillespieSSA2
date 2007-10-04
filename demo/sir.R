@@ -1,5 +1,3 @@
-# $Id: sir.R 73 2007-08-18 23:39:50Z pineda $
-
 #===============================================================================
 # Kermack-McKendric SIR model (Brown & Rothery, 1993)
 #===============================================================================
@@ -14,8 +12,7 @@
 #      I --gamma-> R
 
 # Define parameters
-assign("beta",  beta  <- .001, env=.GlobalEnv)
-assign("gamma", gamma <- .100, env=.GlobalEnv)
+parms <- c(beta=.001, gamma=.100)
 
 # Define system
 x0  <- c(S=500, I=1, R=0)                      # Initial state vector
@@ -27,17 +24,17 @@ simName <- "Kermack-McKendrick SIR"
 # Run the simulations
 
 # Direct method
-out <- ssa(x0,a,nu,tf,method="D",simName)
+out <- ssa(x0,a,nu,parms,tf,method="D",simName)
 ssa.plot(out) 
 
 # Explicit tau-leap method
-out <- ssa(x0,a,nu,tf,method="ETL",simName)
+out <- ssa(x0,a,nu,parms,tf,method="ETL",simName)
 ssa.plot(out) 
 
 # Binomial tau-leap method
-out <- ssa(x0,a,nu,tf,method="BTL",simName)
+out <- ssa(x0,a,nu,parms,tf,method="BTL",simName)
 ssa.plot(out) 
 
 # Optimized tau-leap method
-out <- ssa(x0,a,nu,tf,method="OTL",simName)
+out <- ssa(x0,a,nu,parms,tf,method="OTL",simName)
 ssa.plot(out) 

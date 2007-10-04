@@ -1,4 +1,4 @@
-% $Id: ssa.plot.Rd 146 2007-09-12 22:04:21Z pineda $
+% $Id: ssa.plot.Rd 155 2007-10-04 06:19:46Z pineda $
 \name{ssa.plot}
 \alias{ssa.plot}
 
@@ -48,10 +48,11 @@ ssa.plot(out,plot.device="jpeg")
 
 \dontrun{
 ## Kermack-McKendrick SIR model 
+parms <- c(beta=0.001, gamma=0.1)
 x0  <- c(S=499,I=1,R=0)
-a   <- c("0.001*{S}*{I}","0.1*{I}") 
+a   <- c("beta*{S}*{I}","gamma*{I}") 
 nu  <- matrix(c(-1,0,+1,-1,0,+1),nrow=3,byrow=T)
-out <- ssa(x0,a,nu,tf=100,simName="Kermack-McKendrick SIR")
+out <- ssa(x0,a,nu,parms,tf=100,simName="Kermack-McKendrick SIR")
 ssa.plot(out)
 
 # Plot only the infectious class

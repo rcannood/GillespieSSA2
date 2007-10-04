@@ -1,4 +1,4 @@
-# $Id: ssa.btl.R 103 2007-08-25 01:24:52Z pineda $
+# $Id: ssa.btl.R 155 2007-10-04 06:19:46Z pineda $
 
 `ssa.btl` <-
 function(a,   # Vector of evaluated propensity functions 
@@ -41,7 +41,7 @@ function(a,   # Vector of evaluated propensity functions
   } # for()
 
   # Throw a warning message if p was coerced to unity. Coercing implies too 
-  # large steps-size due to a high coarse-graning factor (f)
+  # large steps-size due to a high coarse-graining factor (f)
   if(coercing) warning("coerced p to unity - consider lowering f")
 
   return(list(tau=tau, nu_j=nu_j))

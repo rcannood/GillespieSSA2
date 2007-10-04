@@ -1,5 +1,3 @@
-# $Id: rma.R 73 2007-08-18 23:39:50Z pineda $
-
 #===============================================================================
 # Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al., 2007)
 #===============================================================================
@@ -31,14 +29,8 @@
 
 # Define parameters 
 # (B in Figure 1 in Pineda-Krch et al. 2007)
-assign("b", b <- 2,  env=.GlobalEnv)
-assign("d", d <- 1,  env=.GlobalEnv)
-assign("K", K <- 1000, env=.GlobalEnv)
-assign("alpha", alpha <- 0.005, env=.GlobalEnv)
-assign("w", w <- 0.0025, env=.GlobalEnv)
-assign("c", c <- 2, env=.GlobalEnv)
-assign("g", g <- 2, env=.GlobalEnv)
-
+parms <- c(b=2, d=1, K=1000, alpha=0.005, 
+           w=0.0025, c=2, g=2)       # Parameters
 x0  <- c(N=500, P=500)               # Initial state vector
 nu  <- matrix(c(+1, -1, -1,  0,  0,  # State-change matrix
                  0,  0,  0, +1, -1),     
@@ -55,18 +47,18 @@ simName <- "Rosenzweig-MacArthur predator-prey model"
 # Run the simulations
 
 # Direct method
-out <- ssa(x0,a,nu,tf,method="D",simName,maxWallTime=10)
+out <- ssa(x0,a,nu,parms,tf,method="D",simName,maxWallTime=10)
 ssa.plot(out)
 
 # Explicit tau-leap method
-out <- ssa(x0,a,nu,tf,method="ETL",simName,tau=0.01)
+out <- ssa(x0,a,nu,parms,tf,method="ETL",simName,tau=0.01)
 ssa.plot(out)
 
 # Don't run: wrong results
 # Binomial tau-leap method
-# out <- ssa(x0,a,nu,tf,method="BTL",simName)
+# out <- ssa(x0,a,nu,parms,tf,method="BTL",simName)
 # ssa.plot(out)
 
 # Optimized tau-leap method
-out <- ssa(x0,a,nu,tf,method="OTL",simName)
+out <- ssa(x0,a,nu,parms,tf,method="OTL",simName)
 ssa.plot(out)
