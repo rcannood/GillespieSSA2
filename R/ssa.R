@@ -1,4 +1,4 @@
-# $Id: ssa.R 155 2007-10-04 06:19:46Z pineda $
+# $Id: ssa.R 171 2007-10-14 14:48:36Z pineda $
 
 `ssa` <-
 function(         x0 = stop("undefined 'x0'"), 
@@ -83,23 +83,16 @@ function(         x0 = stop("undefined 'x0'"),
   # For the ETL method tau>0
   if ((method=="ETL") & (!(tau>0))) stop("ETL method requires tau>0") 
 
-  # Parse the propensity vector by recursive substitution of variables names 
-  # with the corresponding state vector indexing
+  # Assign the state variables defined in the state vector
   x <- x0
-  varNam <- names(x)
-  if (is.null(varNam)) stop("element labels are missing in 'x'") 
-  for (i in seq_len(length(varNam))) {
-   pattern <- paste("{",varNam[i],"}",sep="")
-   a <- gsub(pattern,paste("x[",i,"]",sep=""),a,fixed=TRUE)
-  }
-  parse_a <- parse(text=a)
+  varNames <- names(x)
+  if (is.null(varNames)) stop("element labels are missing in 'x0'") 
+  for (i in seq_len(length(varNames))) assign(varNames[i],x[[i]])
 
   # Assign the parameters defined in the parms vector
   if (!is.null(parms)) {
     parmsNames <- names(parms)
-    for (i in seq(length(parms))) {
-      assign(parmsNames[i],parms[[i]])
-    }
+    for (i in seq(length(parms))) assign(parmsNames[i],parms[[i]])
   }
 
   # Check that f (used in the BTL method) is >1 
@@ -143,6 +136,7 @@ function(         x0 = stop("undefined 'x0'"),
   eval_a <- rep(0,M)
 
   # Evaluate the initial transition rates by evaluating the propensity functions
+  parse_a <- parse(text=a)
   for (num in seq_len(length(parse_a))) eval_a[num] <- eval(parse_a[num])
 
   # If required (depends on the solver method) check if hor vector is defined 
@@ -243,7 +237,7 @@ function(         x0 = stop("undefined 'x0'"),
       # of 'censusInterval')
       stepSize <- c(stepSize, out$tau)
 
-      # If it's time..., record the current state of the system (t,x)
+      # If it's time record the current state of the system (t,x)
       if (timeOfNextCensus <= t) { 
         timeSeries[currentRow,] <- c(t, x)
         currentRow              <- currentRow + 1
@@ -253,9 +247,10 @@ function(         x0 = stop("undefined 'x0'"),
         if (currentRow > dim(timeSeries)[1]) timeSeries <- rbind(timeSeries, matrix(nrow=1000, ncol=(numCols)))
       } # if()
 
-      # Evaluate the transition rates for the next step by evaluating the 
-      # propensity functions
+      # Evaluate the transition rates for the next time step
+      for (i in seq_len(length(varNames))) assign(varNames[i],x[[i]])
       for (num in seq_len(length(parse_a))) eval_a[num] <- eval(parse_a[num])
+
       eval_a[is.na(eval_a)] <- 0 # Replace NA with zero (0/0 gives NA)
       if(any(eval_a<0)) warning("negative propensity function - coersing to zero\n")
       eval_a[eval_a<0] <- 0

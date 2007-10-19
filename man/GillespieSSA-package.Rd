@@ -1,4 +1,4 @@
-% $Id: GillespieSSA-package.Rd 162 2007-10-05 21:59:50Z pineda $
+% $Id: GillespieSSA-package.Rd 173 2007-10-15 17:30:30Z pineda $
 \name{GillespieSSA-package}
 \alias{GillespieSSA-package}
 \alias{GillespieSSA}
@@ -20,7 +20,7 @@
 
 \description{Package description and overview of basic SSA theory}
 
-\details{\pkg{GillespieSSA} is a versatile and extensible framework for stochastic simulation in \R and provides a simple interface to a number of Monte Carlo implementations of the stochastic simulation algorithm (\acronym{SSA}). The methods currently implemented are: the Direct method (\acronym{D}), Explicit tau-leaping (\acronym{ETL}), Binomial tau-leaping (\acronym{BTL}), and Optimized tau-leaping (\acronym{OTL}). The package also provides a library of ecological, epidemiological, and evolutionary continuous-time (demo) models that can easily be customized and extended. Currently the following models are included, Decaying-Dimerization Reaction Set, Linear Chain System, single-species logistic growth model, Lotka predator-prey model, Rosenzweig-MacArthur predator-prey model, and Kermack-McKendrick \acronym{SIR} model.}
+\details{\pkg{GillespieSSA} is a versatile and extensible framework for stochastic simulation in \R and provides a simple interface to a number of Monte Carlo implementations of the stochastic simulation algorithm (\acronym{SSA}). The methods currently implemented are: the Direct method (\acronym{D}), Explicit tau-leaping (\acronym{ETL}), Binomial tau-leaping (\acronym{BTL}), and Optimized tau-leaping (\acronym{OTL}). The package also provides a library of ecological, epidemiological, and evolutionary continuous-time (demo) models that can easily be customized and extended. Currently the following models are included, Decaying-Dimerization Reaction Set, Linear Chain System, single-species logistic growth model, Lotka predator-prey model, Rosenzweig-MacArthur predator-prey model, Kermack-McKendrick \acronym{SIR} model, and a metapopulation \acronym{SIRS} model.}
   
 \section{The stochastic simulation algorithm}{
 The stochastic simulation algorithm (\acronym{SSA}) is a procedure for constructing simulated trajectories of finite populations in continuous time. If \eqn{X_i(t)} is the number of individuals in population \eqn{i} (\eqn{i=1,\ldots,N}{i=1,...,N}) at time \eqn{t} the \acronym{SSA} estimates the state vector \eqn{ \mathbf{X}(t) \equiv (X_1(t),\ldots,X_N(t)) }{ X(t) = (X_1(t),...,X_N(t))}, given that the system initially (at time \eqn{t_0}) was in state \eqn{\mathbf{X}(t_0)=\mathbf{x_0}}{X(t_0)=x_0}. Reactions, single instantaneous events changing at least one of the populations (e.g. birth, death, movement, collision, predation, infection, etc), cause the state of the system to change over time. The \acronym{SSA} procedure samples the time \eqn{\tau}{tau} to the next reaction \eqn{R_j} (\eqn{j=1,\ldots,M}{j=1,...,M}) and updates the system state \eqn{\mathbf{X}(t)}{X(t)} accordingly. Each reaction \eqn{R_j} is characterized mathematically by two quantities; its state-change vector \eqn{\bm{\nu}_j \equiv ( \nu_{1j},\ldots,\nu_{Nj} )}{nu_j = (nu_1j,...,nu_Nj)}, where \eqn{ \nu_{ij} }{nu_ij} is the change in the number of individuals in population \eqn{i} caused by one reaction of type \eqn{j} and its propensity function \eqn{a_j(\mathbf{x})}{a_j(x)}, where \eqn{a_j(\mathbf{x})dt}{a_j(x)dt} is the probability that a particular reaction \eqn{j} will occur in the next infinitesimal time interval \eqn{\left[t,t+dt\right]}{[t,t+dt]}. 
@@ -32,26 +32,33 @@ There are numerous exact Monte Carlo procedures implementing the \acronym{SSA}. 
 Approximate implementations of the \acronym{SSA} sacrifices exactness for large improvements in computational efficiency. The most common technique used is tau-leaping where reaction-bundles are attempted in coarse-grained time increments \eqn{\tau}{tau}. Speed-ups of several orders of magnitude compared to the Direct method are common. Tau-leaping must be used with care, however, as it is not as foolproof as the Direct method.}
 
 \section{Example models}{
-The following example models are part of the package and can be run as demos:
+Individual demo models can be run by issuing \code{demo(<moel name>)}, alternativelly all of the demo models can be run using \code{demo(GillespieSSA)}. The following example models are available:
+
 \tabular{l}{
 Decaying-Dimerization Reaction Set (Gillespie, 2001)\cr 
 \code{file.show(system.file("demo/decayingDimer.R", package = "GillespieSSA"))} \cr
 \cr
 Linear Chain System (Cao et al., 2004)\cr 
 \code{file.show(system.file("demo/linearChain.R", package = "GillespieSSA"))} \cr
-\cr
-Logistic growth (Pearl-Verhulst model) (Kot, 2001)\cr 
+\cr 
+Logistic growth model (Kot, 2001)\cr
 \code{file.show(system.file("demo/logisticGrowth.R", package = "GillespieSSA"))} \cr
 \cr
 Lotka predator-prey model (Gillespie, 1977; Kot, 2001)\cr
 \code{file.show(system.file("demo/lotka.R", package = "GillespieSSA"))} \cr
 \cr
-Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al., 2007) \cr
-\code{file.show(system.file("demo/rma.R", package = "GillespieSSA"))} \cr
-\cr
 Kermack-McKendrick SIR model (Brown & Rothery, 1993)\cr 
 \code{file.show(system.file("demo/sir.R", package = "GillespieSSA"))} \cr
+\cr
+Logistic growth (Pearl-Verhulst model) (Kot, 2001, Pineda-Krch, [submitted JSS manuscript])
+\cr
+Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al., 2007, Pineda-Krch, [submitted JSS manuscript]) \cr
+\code{file.show(system.file("demo/rma.R", package = "GillespieSSA"))} \cr
+\cr
+Metapopulation SIRS model (Pineda-Krch, [submitted JSS manuscript])\cr 
+\code{file.show(system.file("demo/epiChain.R", package = "GillespieSSA"))} \cr
 }
+Note, the last three models are part of a manuscript currently submitted to the Journal of Statistical Software.
 }
 
 \section{How to cite this package}{
@@ -60,29 +67,6 @@ Kermack-McKendrick SIR model (Brown & Rothery, 1993)\cr
   title  = GillespieSSA: a stochastic simulation package for R,
   year   = 2007, 
   url    = http://pineda-krch.com/gillespiessa
-}
-}
-
-\section{Additional information}{
-The following are additional sources of information on \pkg{GillespieSSA}:
-\tabular{l}{
-Home page\cr 
-\code{u <- "http://pineda-krch.com/gillespiessa/"; browseURL(u)} \cr
-\cr
-News\cr  
-\code{file.show(system.file("NEWS", package = "GillespieSSA"))} \cr
-\cr
-News\cr  
-\code{file.show(system.file("WISHLIST", package = "GillespieSSA"))} \cr
-\cr
-Acknowledgements\cr  
-\code{file.show(system.file("THANKS", package = "GillespieSSA"))} \cr
-\cr
-This File\cr 
-\code{package?GillespieSSA} \cr
-\cr
-Help files as PDF\cr  
-\code{u <- "http://cran.r-project.org/doc/packages/GillespieSSA.pdf"; browseURL(u)} \cr
 }
 }
 
@@ -117,6 +101,15 @@ You should have received a copy of the \acronym{GNU} General Public License alon
 Note that \pkg{GillespieSSA} is under active development. Although the package may be considered stable functionality and the structure of the package interface may change in future versions.
 
 } 
+
+\section{Ackowledgements}{
+\itemize{
+\item Heinrich zu Dohna for many caffein induced discussions on the package and reference manual, and for providing comments on the vignette documentation.
+\item Ben Bolker for comments on the initial release of the package and for providing a hint for how to more elegantly handle model parameters as arguments to the ssa() function.
+\item Josh Obrien for copy editing and feedback on the JSS manuscript.
+\item Thomas Petzoldt for comments on the package and the JSS manuscript.
+}
+}
 
 \seealso{
   \code{\link{ssa}},

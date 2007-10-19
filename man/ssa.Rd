@@ -1,4 +1,4 @@
-% $Id: ssa.Rd 157 2007-10-04 15:49:42Z pineda $
+% $Id: ssa.Rd 171 2007-10-14 14:48:36Z pineda $
 \name{ssa}
 \alias{ssa}
 
@@ -30,7 +30,7 @@ ignoreNegativeState = TRUE,
 \arguments{
   \item{x0}{numerical vector of initial states where the component elements must be named using the same notation as the corresponding state variable in the propensity vector, \code{a}.}
   
-  \item{a}{character vector of propensity functions where state variables correspond to the names of the elements in \code{x0} and are surrounded by curly brackets.}
+  \item{a}{character vector of propensity functions where state variables correspond to the names of the elements in \code{x0}.}
   
   \item{nu}{numerical matrix of change if the number of individuals in each state (rows) caused by a single reaction of any given type (columns).}
   
@@ -87,7 +87,7 @@ ignoreNegativeState = TRUE,
 \deqn{S_1 \stackrel{c_1}{\longrightarrow} S_2}{S1 --c1--> S2}
 \deqn{S_2 \stackrel{c_2}{\longrightarrow} 0}{S2 --c2--> 0}
 
-is defined as \code{nu <- matrix(c(-1,0,+1,-1),nrow=2,byrow=TRUE)} where \eqn{c_1}{c1} and \eqn{c_2}{c2} are the per capita reaction probabilities. The propensity vector, \code{a}, defines the probabilities that a particular reaction will occur over the next infinitesimal time interval \eqn{\left[ t,t+dt \right]}{[t,t+dt]}. For example, in the previous example the propensity vector is defined as \code{a <- c("c1*{X1}","c2*{X2}")}. The elements of the propensity vector are character elements of each reactions propensity function where the state variable corrspond the the component elemtn labels in the initial state vector (\code{x0}) and are located between curly brackets.}
+is defined as \code{nu <- matrix(c(-1,0,+1,-1),nrow=2,byrow=TRUE)} where \eqn{c_1}{c1} and \eqn{c_2}{c2} are the per capita reaction probabilities. The propensity vector, \code{a}, defines the probabilities that a particular reaction will occur over the next infinitesimal time interval \eqn{\left[ t,t+dt \right]}{[t,t+dt]}. For example, in the previous example the propensity vector is defined as \code{a <- c("c1*X1","c2*X2")}. The propensity vector consists of character elements of each reaction's propensity function where each state variable requires the corresponding named element label in the initial state vector (\code{x0}).}
 
 \section{Example: Irreversible isomerization}{Perhaps the simplest model that can be formulated using the \acronym{SSA} is the irreversible isomerization (or radioactive decay) model. This model is often used as a first pedagogic example to illustrate the \acronym{SSA} (see e.g. Gillespie 1977). The deterministic formulation of this model is
 
@@ -98,7 +98,7 @@ where the single reaction channel is
 \deqn{S \stackrel{c}{\longrightarrow} 0}{S --c--> 0.} By setting \eqn{X_0=1000} and \eqn{c=0.5} it is now simple to define this model and run it for 10 time steps using the Direct method,
 
 \preformatted{
-out <- ssa(x0=c(X=1000),a=c("c*{X}"),nu=matrix(-1),parms=c(c=0.5),tf=10)
+out <- ssa(x0=c(X=1000),a=c("c*X"),nu=matrix(-1),parms=c(c=0.5),tf=10)
 }  
 
 The resulting time series can then be displayed by,
@@ -120,13 +120,13 @@ ssa.plot(ssa)
   \code{\link{ssa.plot}}
 }
 
-\author{Mario Pineda-Krch (\url{http://pineda-krch/GillespieSSA})}
+\author{Mario Pineda-Krch (\url{http://pineda-krch/gillespiessa})}
 
 \examples{
 ## Irreversible isomerization
 parms <- c(c=0.5)
 x0  <- c(X=10000)
-a   <- c("c*{X}")
+a   <- c("c*X")
 nu  <- matrix(-1)
 out <- ssa(x0,a,nu,parms,tf=10,simName="Irreversible isomerization") # Direct method
 \dontrun{
@@ -148,7 +148,7 @@ points(out$data[,1],out$data[,2]/10,col="blue",cex=0.5,pch=19)
 ## Logistic growth
 parms <- c(b=2, d=1, K=1000)
 x0  <- c(N=500)
-a   <- c("b*{N}", "(d+(b-d)*{N}/K)*{N}")
+a   <- c("b*N", "(d+(b-d)*N/K)*N")
 nu  <- matrix(c(+1,-1),ncol=2)
 out <- ssa(x0,a,nu,parms,tf=10,method="D",maxWallTime=5,simName="Logistic growth")
 \dontrun{
@@ -158,7 +158,7 @@ ssa.plot(out)
 ## Kermack-McKendrick SIR model 
 parms <- c(beta=0.001, gamma=0.1)
 x0  <- c(S=499,I=1,R=0)
-a   <- c("beta*{S}*{I}","gamma*{I}") 
+a   <- c("beta*S*I","gamma*I") 
 nu  <- matrix(c(-1,0,+1,-1,0,+1),nrow=3,byrow=TRUE)
 out <- ssa(x0,a,nu,parms,tf=100,simName="SIR model")
 \dontrun{
@@ -168,7 +168,7 @@ ssa.plot(out)
 ## Lotka predator-prey model
 parms <- c(c1=10, c2=.01, c3=10)
 x0  <- c(Y1=1000,Y2=1000)
-a   <- c("c1*{Y1}","c2*{Y1}*{Y2}","c3*{Y2}")
+a   <- c("c1*Y1","c2*Y1*Y2","c3*Y2")
 nu  <- matrix(c(+1,-1,0,0,+1,-1),nrow=2,byrow=TRUE) 
 out <- ssa(x0,a,nu,parms,tf=100,method="ETL",simName="Lotka predator-prey model")
 \dontrun{

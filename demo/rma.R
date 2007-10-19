@@ -1,24 +1,18 @@
 #===============================================================================
-# Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al., 2007)
+# Rosenzweig-MacArthur predator-prey model 
+# (Pineda-Krch et al., 2007, Pineda-Krch, [submitted JSS manuscript])
 #===============================================================================
 
 # The Rosenzweig-MacArthur predator-prey is defined as
 # dN/dt = r(1-N/K - alpha/(1+wN))NP
 # dP/dt = c*alpha/(1+wN))NP
-# 
-# The model has five reaction channels,
-#     N --BN--> N + N    Prey birh
-#     N --DN--> 0        Prey death 
-# N + P --NP--> P + P    Predation
-#     P --BP--> P + P    Predator birth
-#     P --DP--> 0        Predator death
 #
-# where
-# BN = b
-# DN = d+(b-d)N/K
-# NP = alpha/(1+wN)
-# BP = c*alpha/(1+wN)N
-# DP = g
+# This model has five reactions with the following per capita rates,
+# prey birth:     b
+# prey death:     d+(b-d)N/K
+# predation:      alpha/(1+wN)
+# predator birth: c*alpha/(1+wN)N
+# predator death: g
 #
 # Propensity functions:
 # a1 = b * N
@@ -37,11 +31,11 @@ x0  <- c(N=500, P=500)               # Initial state vector
 nu  <- matrix(c(+1, -1, -1,  0,  0,  # State-change matrix
                  0,  0,  0, +1, -1),     
                  nrow=2,byrow=TRUE) 
-a   <- c("b*{N}",                    # Propensity vector
-         "(d+(b-d)*{N}/K)*{N}",
-         "alpha/(1+w*{N})*{N}*{P}",
-         "c*alpha/(1+w*{N})*{N}*{P}",
-         "g*{P}")   
+a   <- c("b*N",                      # Propensity vector
+         "(d+(b-d)*N/K)*N",
+         "alpha/(1+w*N)*N*P",
+         "c*alpha/(1+w*N)*N*P",
+         "g*P")   
 
 tf <- 100
 simName <- "Rosenzweig-MacArthur predator-prey model"
@@ -49,18 +43,21 @@ simName <- "Rosenzweig-MacArthur predator-prey model"
 # Run the simulations
 
 # Direct method
+set.seed(1)
 out <- ssa(x0,a,nu,parms,tf,method="D",simName,maxWallTime=10)
 ssa.plot(out)
 
 # Explicit tau-leap method
+set.seed(1)
 out <- ssa(x0,a,nu,parms,tf,method="ETL",simName,tau=0.01)
 ssa.plot(out)
 
-# Don't run: wrong results
 # Binomial tau-leap method
-# out <- ssa(x0,a,nu,parms,tf,method="BTL",simName)
-# ssa.plot(out)
+set.seed(1)
+out <- ssa(x0,a,nu,parms,tf,method="BTL",simName)
+ssa.plot(out)
 
 # Optimized tau-leap method
+set.seed(1)
 out <- ssa(x0,a,nu,parms,tf,method="OTL",simName)
 ssa.plot(out)

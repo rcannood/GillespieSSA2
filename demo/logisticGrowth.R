@@ -16,28 +16,32 @@
 # and a_2=d'N.
 
 library(GillespieSSA)
-parms <- c(b=2, d=1, K=1000)            # Parameters
-x0 <- c(N=500)                          # Initial state vector
-nu <- matrix(c(+1,-1),ncol=2)           # State-change matrix
-a  <- c("b*{N}", "(d+(b-d)*{N}/K)*{N}") # Propensity vector
-tf <- 10                                # Final time
+
+parms <- c(b=2, d=1, K=1000)      # Parameters
+x0 <- c(N=500)                    # Initial state vector
+nu <- matrix(c(+1,-1),ncol=2)     # State-change matrix
+a  <- c("b*N", "(d+(b-d)*N/K)*N") # Propensity vector
+tf <- 10                          # Final time
 simName <- "Logistic growth" 
 
 # Run the simulations
 
 # Direct method
-out <- ssa(x0,a,nu,parms,tf,method="D",simName,maxWallTime=5)
+set.seed(1)
+out <- ssa(x0,a,nu,parms,tf,method="D",simName,maxWallTime=10)
 ssa.plot(out) 
  
 # Explict tau-leap method
+set.seed(1)
 out <- ssa(x0,a,nu,parms,tf,method="ETL",simName,tau=0.03,maxWallTime=5)
 ssa.plot(out) 
 
-# (Don't run: wrong results)
 # Run the simulation using the Binomial tau-leap method 
-# out <- ssa(x0,a,nu,parms,tf,method="BTL",simName,f=5,maxWallTime=5)
-# ssa.plot(out) 
+set.seed(1)
+out <- ssa(x0,a,nu,parms,tf,method="BTL",simName,f=5,maxWallTime=5)
+ssa.plot(out) 
 
 # Optimized tau-leap method
+set.seed(1)
 out <- ssa(x0,a,nu,parms,tf,method="OTL",simName,maxWallTime=5)
 ssa.plot(out)

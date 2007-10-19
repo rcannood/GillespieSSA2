@@ -3,7 +3,7 @@
 #===============================================================================
 
 # The SIRS epidemiological metapopulation model is defined in the GillespieSSA 
-# vignette Pineda-Krch (2007)
+# vignette Pineda-Krch (2007) (submitted to JSS)
 
 library(GillespieSSA)
 patchPopSize <- 500 # Patch size
@@ -42,29 +42,32 @@ for (patch in (seq(U))) {
   if (patch==1) j <- U  # Inter-patch index    
   else j <- patch-1
 
-  # Construct the propensity functions for the current patch       # Reaction:
-  a_patch <- c(paste("(1-epsilon)*beta*{S",i,"}*{I",i,"}",sep=""), # 1. Intra-patch infection
-               paste("epsilon*beta*{S",i,"}*{I",j,"}",sep=""),     # 2. Inter-patch infection
-               paste("gamma*{I",i,"}",sep=""),                     # 3. Recovery from  infection
-               paste("rho*(N-{S",i,"}-{I",i,"})",sep=""))          # 4. Loss of immunity
+  # Construct the propensity functions for the current patch   # Reaction:
+  a_patch <- c(paste("(1-epsilon)*beta*S",i,"*I",i,"",sep=""), # 1. Intra-patch infection
+               paste("epsilon*beta*S",i,"*I",j,"",sep=""),     # 2. Inter-patch infection
+               paste("gamma*I",i,"",sep=""),                   # 3. Recovery from  infection
+               paste("rho*(N-S",i,"-I",i,")",sep=""))          # 4. Loss of immunity
   a <- c(a, a_patch)
 } # for()
 
-set.seed(1)
 
 # Run one realization using the Direct method
+set.seed(1)
 out.d <- ssa(x0, a, nu, parms, tf=50, method = "D", simName="SIRS metapopulation model",
            verbose=TRUE, censusInterval=0, consoleInterval=1)
 
 # Run one realization using the Explict tau-leap  method
+set.seed(1)
 out.etl <- ssa(x0, a, nu, parms, tf=50, method = "ETL", simName="SIRS metapopulation model",
            verbose=TRUE, censusInterval=0, consoleInterval=1)
 
 # Run one realization using the Binomial tau-leap method
+set.seed(1)
 out.btl <- ssa(x0, a, nu, parms, tf=50, method = "BTL", simName="SIRS metapopulation model",
            verbose=TRUE, censusInterval=0, consoleInterval=1)
 
 # Run one realization using the Optimized tau-leap method
+set.seed(1)
 out.otl <- ssa(x0, a, nu, parms, tf=50, method = "OTL", simName="SIRS metapopulation model",
            hor=rep(2,length(x0)), verbose=TRUE, censusInterval=0, consoleInterval=1)
 
