@@ -6,6 +6,8 @@
 # M+1 species as follows:
 # S_1 --c1--> S_2 --c2-->...--cM--> S_(M+1)
 
+library(GillespieSSA)
+
 # Rate parameter
 parms <- c(c=1)
 

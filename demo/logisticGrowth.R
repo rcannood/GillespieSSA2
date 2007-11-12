@@ -15,7 +15,7 @@
 # where d'=d+(b-d)N/K. The propensity functions are a_1=bN 
 # and a_2=d'N.
 
-
+library(GillespieSSA)
 parms <- c(b=2, d=1, K=1000)            # Parameters
 x0 <- c(N=500)                          # Initial state vector
 nu <- matrix(c(+1,-1),ncol=2)           # State-change matrix

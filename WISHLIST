@@ -1,1 +1,5 @@
 o ssa() method functions recoded in a low-level compiled language (i.e. C)
+
+o Add routines to ssa.plot() for *not* plotting every censused data point (to speed up plotting of very large data sets)
+
+o More R like notation for ssa() options indicationg intervals (according to Ben Bolker's comment)

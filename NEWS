@@ -1,14 +1,15 @@
-0.3-0
+0.4-0
+o Minor updates to package to bring it up to date with the JSS manuscript (to be submitted to JSS any day now)
+o Added the metapopulation SIRS model described in the JSS manuscript as a demo model to the package
 
+0.3-0
 o bug fixes.
 o fixed error in url of package home page.
 o Revised how model parameters are passed to the {{{ssa()}}} (per Ben Bolker's suggestion). Model parameters are now passed directly to {{{ssa()}}} as a named vector and hence they do not have to be declared in the global environment.
 
 0.2-0
-
 o mainly bug fixes.
 
 0.1-0
-
 o initial release 
 o version presented at useR! 2007 (as poster)

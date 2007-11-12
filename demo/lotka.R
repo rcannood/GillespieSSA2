@@ -10,6 +10,8 @@
 # Y1 + Y2 --c2--> Y2 + Y2 
 #      Y1 --c3--> 0
 
+library(GillespieSSA)
+
 # Define parameters
 parms <- c(c1=10, c2=.01, c3=10)
 

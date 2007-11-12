@@ -1,4 +1,4 @@
-% $Id: ssa.Rd 155 2007-10-04 06:19:46Z pineda $
+% $Id: ssa.Rd 157 2007-10-04 15:49:42Z pineda $
 \name{ssa}
 \alias{ssa}
 
@@ -146,9 +146,9 @@ points(out$data[,1],out$data[,2]/10,col="blue",cex=0.5,pch=19)
 }
 
 ## Logistic growth
-parms <- c(b=2, d=1)
+parms <- c(b=2, d=1, K=1000)
 x0  <- c(N=500)
-a   <- c("b*{N}", "((b-d)*{N}/1000)*{N}")
+a   <- c("b*{N}", "(d+(b-d)*{N}/K)*{N}")
 nu  <- matrix(c(+1,-1),ncol=2)
 out <- ssa(x0,a,nu,parms,tf=10,method="D",maxWallTime=5,simName="Logistic growth")
 \dontrun{

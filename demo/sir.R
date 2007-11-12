@@ -11,6 +11,8 @@
 #  S + I --beta--> I
 #      I --gamma-> R
 
+library(GillespieSSA)
+
 # Define parameters
 parms <- c(beta=.001, gamma=.100)
 
