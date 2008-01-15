@@ -1,12 +1,19 @@
-% $Id: ssa.otl.Rd 155 2007-10-04 06:19:46Z pineda $
+% $Id: ssa.otl.Rd 213 2008-01-14 20:39:21Z pineda $
 \name{ssa.otl}
 \alias{ssa.otl}
 
 \title{Optimized tau-leap method (OTL)}
-\description{Optimized tau-leap method implementation of the \acronym{SSA} as described by Cao et al. (2006).}
+\description{Optimized tau-leap method implementation of the \acronym{SSA} as described by Cao et al. (2006). It is usually called from within \code{\link{ssa}}, but can be invoked directly.}
 
 \usage{
-ssa.otl(x,a,nu,hor,nc,epsilon,dtf,nd)
+ssa.otl(x = stop("missing state vector (x)"),
+        a = stop("missing propensity vector (a)"),
+       nu = stop("missing state-change matrix (nu)"),
+      hor = stop("missing highest order reaction vector (hot)"),
+       nc = stop("missing critical reactions threshold parameter (nc)"),
+  epsilon = stop("missing error control parameter"),
+      dtf = stop("missing direct method threshold factor (dtf)"),
+       nd = stop("missing OTL suspension duration parameter (nd)"))
 }
 
 \arguments{
@@ -34,7 +41,23 @@ ssa.otl(x,a,nu,hor,nc,epsilon,dtf,nd)
 }
 
 \examples{
-## Not intended to be invoked stand alone
+a = function(parms,x){
+ b <- parms[1]
+ d <- parms[2]
+ K <- parms[3]
+ N <- x[1]
+ return(c(b*N , N*b + (b-d)*N/K))
+} 
+parms <- c(2,1,1000,500)
+x <- 500
+nu <- matrix(c(+1, -1),ncol=2)
+t <- 0
+for (i in seq(100)) {
+  out <- ssa.otl(x,a(parms,x),nu,hor=1,nc=10,epsilon=0.03,dtf=10,nd=100)  
+  x <- x + out$nu_j
+  t <- t + 1
+  cat("t:",t,", x:",x,"\n")
+}
 }
 
 \keyword{misc}

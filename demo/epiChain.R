@@ -2,8 +2,7 @@
 # SIRS metapopulation model (Pineda-Krch, 2007)
 #===============================================================================
 
-# The SIRS epidemiological metapopulation model is defined in the GillespieSSA 
-# vignette Pineda-Krch (2007) (submitted to JSS)
+# The SIRS epidemiological metapopulation model is defined in Pineda-Krch (2007)
 
 library(GillespieSSA)
 patchPopSize <- 500 # Patch size
@@ -50,45 +49,25 @@ for (patch in (seq(U))) {
   a <- c(a, a_patch)
 } # for()
 
+# Run the simulations
+nf <- layout(matrix(c(1,2,3,4),ncol=2, byrow=T))
 
 # Run one realization using the Direct method
 set.seed(1)
-out.d <- ssa(x0, a, nu, parms, tf=50, method = "D", simName="SIRS metapopulation model",
-           verbose=TRUE, censusInterval=0, consoleInterval=1)
+out <- ssa(x0, a, nu, parms, tf=50, method = "D", simName="SIRS metapopulation model", verbose=TRUE, consoleInterval=1)
+ssa.plot(out,by=5,show.title=TRUE,show.legend=FALSE)
 
 # Run one realization using the Explict tau-leap  method
 set.seed(1)
-out.etl <- ssa(x0, a, nu, parms, tf=50, method = "ETL", simName="SIRS metapopulation model",
-           verbose=TRUE, censusInterval=0, consoleInterval=1)
+out <- ssa(x0, a, nu, parms, tf=50, method = "ETL", simName="SIRS metapopulation model", verbose=TRUE, consoleInterval=1)
+ssa.plot(out,by=5,show.title=FALSE,show.legend=FALSE)
 
 # Run one realization using the Binomial tau-leap method
 set.seed(1)
-out.btl <- ssa(x0, a, nu, parms, tf=50, method = "BTL", simName="SIRS metapopulation model",
-           verbose=TRUE, censusInterval=0, consoleInterval=1)
+out <- ssa(x0, a, nu, parms, tf=50, method = "BTL", simName="SIRS metapopulation model", verbose=TRUE, consoleInterval=1)
+ssa.plot(out,by=5,show.title=FALSE,show.legend=FALSE)
 
 # Run one realization using the Optimized tau-leap method
 set.seed(1)
-out.otl <- ssa(x0, a, nu, parms, tf=50, method = "OTL", simName="SIRS metapopulation model",
-           hor=rep(2,length(x0)), verbose=TRUE, censusInterval=0, consoleInterval=1)
-
-# Plot the results
-nf <- layout(matrix(c(1,2,3,4),ncol=2,byrow=TRUE))
-matplot(out.d$data[,1],out.d$data[,seq(3,length(x0),2)],
-        pch=19,cex=0.1,xlab="Time",ylab="Frequency infectious")
-title("Direct method")
-mtext(paste(round(out.d$stats$elapsedWallTime,1),"seconds"))
-
-matplot(out.etl$data[,1],out.etl$data[,seq(3,length(x0),2)],
-        pch=19,cex=0.1,xlab="Time",ylab="Frequency infectious")
-title("Explicit tau-leap method")
-mtext(paste(round(out.etl$stats$elapsedWallTime,1),"seconds"))
-
-matplot(out.btl$data[,1],out.btl$data[,seq(3,length(x0),2)],
-        pch=19,cex=0.1,xlab="Time",ylab="Frequency infectious")
-title("Binomial tau-leap method")
-mtext(paste(round(out.btl$stats$elapsedWallTime,1),"seconds"))
-
-matplot(out.otl$data[,1],out.otl$data[,seq(3,length(x0),2)],
-        pch=19,cex=0.1,xlab="Time",ylab="Frequency infectious")
-title("Optimized tau-leap method")
-mtext(paste(round(out.otl$stats$elapsedWallTime,1),"seconds"))
+out <- ssa(x0, a, nu, parms, tf=50, method = "OTL", simName="SIRS metapopulation model", hor=rep(2,length(x0)), verbose=TRUE, consoleInterval=1)
+ssa.plot(out,by=5,show.title=FALSE,show.legend=FALSE)

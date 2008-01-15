@@ -17,29 +17,28 @@ nu <- matrix(c(-1, -2, +2,  0,                 # State-change matrix
                 0,  0,  0, +1),
                 nrow=3,byrow=TRUE)
 a  <- c("c1*s1", "c2*s1*s1", "c3*s2", "c4*s2") # Propensity vector
-tf <- 30                                       # Final time
+tf <- 10                                       # Final time
 simName <- "Decaying-Dimerizing Reaction Set"
 
 # Run simulations 
+nf <- layout(matrix(c(1,2,3,4),ncol=2, byrow=T))
 
 # Direct method
 set.seed(1)
-out <- ssa(x0,a,nu,parms,tf,method="D",simName,
-           consoleInterval=0.1,censusInterval=0.1,
-           verbose=TRUE,maxWallTime=10) 
-ssa.plot(out)
+out <- ssa(x0,a,nu,parms,tf,method="D",simName,verbose=TRUE,consoleInterval=1) 
+ssa.plot(out,show.title=TRUE,show.legend=FALSE)
 
 # Explict tau-leap method
 set.seed(1)
-out <- ssa(x0,a,nu,parms,tf,method="ETL",simName,tau=0.003) 
-ssa.plot(out) 
+out <- ssa(x0,a,nu,parms,tf,method="ETL",simName,tau=0.003,verbose=TRUE,consoleInterval=1) 
+ssa.plot(out,show.title=FALSE,show.legend=FALSE) 
 
 # Binomial tau-leap method
 set.seed(1)
-out <- ssa(x0,a,nu,parms,tf,method="BTL",simName) 
-ssa.plot(out) 
+out <- ssa(x0,a,nu,parms,tf,method="BTL",simName,verbose=TRUE,consoleInterval=1) 
+ssa.plot(out,show.title=FALSE,show.legend=FALSE) 
 
-# Binomial tau-leap method
+# Optimized tau-leap method
 set.seed(1)
-out <- ssa(x0,a,nu,parms,tf,method="OTL",simName) 
-ssa.plot(out) 
+out <- ssa(x0,a,nu,parms,tf,method="OTL",simName,verbose=TRUE,consoleInterval=1) 
+ssa.plot(out,show.title=FALSE,show.legend=FALSE) 

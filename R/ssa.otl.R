@@ -1,14 +1,14 @@
-# $Id: ssa.otl.R 155 2007-10-04 06:19:46Z pineda $
+# $Id: ssa.otl.R 212 2008-01-14 14:57:13Z pineda $
 
 `ssa.otl` <-
-function(x,       # State vector (i.e. vector of population sizes of all the species) 
-         a,       # Propensity vector
-         nu,      # State change matrix 
-         hor,     # Highest order reaction vector (one entry per species in x)
-         nc,      # Number of critical reactions threshold parameter
-         epsilon, # Error control parameter
-         dtf,     # Direct method threshold factor for temporarily suspending the OTL method 
-         nd       # Number of direct method steps to perform during an OTL suspension
+function(x = stop("missing state vector (x)"),
+         a = stop("missing propensity vector (a)"),
+        nu = stop("missing state-change matrix (nu)"),
+       hor = stop("missing highest order reaction vector (hot)"),
+        nc = stop("missing critical reactions threshold parameter (nc)"),
+   epsilon = stop("missing error control parameter"),
+       dtf = stop("missing direct method threshold factor (dtf)"),
+        nd = stop("missing OTL suspension duration parameter (nd)")
         ) {
 
   verbose <- FALSE
@@ -87,7 +87,7 @@ if (is.na(tau1)) browser() # DEBUG
     } else {                                                     # Step 5b
       if (verbose) cat("Selecting tau2...\n")
       tau <- tau2
-      jc <- sample(seq_len(dim(nu)[2]),size=1,prob=(a/sum(a[!Jncr]))) # Pick one of the critical reactions that will fire once
+      jc <- sample(seq(dim(nu)[2]),size=1,prob=(a/sum(a[!Jncr]))) # Pick one of the critical reactions that will fire once
       k <- rep(0,dim(nu)[2])                                     # Setting up an empty vector
       k[jc] <- 1                                                 # Add the selected critical reaction that is firing
       k[Jncr %in% TRUE] <- rpois(sum(Jncr),(a*tau))              # The number of firings of non-critical reactions is drawn from a Poisson distribution

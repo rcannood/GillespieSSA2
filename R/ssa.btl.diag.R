@@ -1,9 +1,9 @@
-# $Id: ssa.btl.diag.R 155 2007-10-04 06:19:46Z pineda $
+# $Id: ssa.btl.diag.R 211 2008-01-11 23:31:17Z pineda $
 
 `ssa.btl.diag` <-
-function(a,        # Vector of evaluated propensity functions 
+function(x,        # State vector
+         a,        # Vector of evaluated propensity functions 
          nu_tile,  # State-change matrix 
-         x,        # State vector
          f) {      # Coarse-graining factor (see p.4 in Chatterjee et al. (2005))
 
   coercing <- FALSE
@@ -23,7 +23,7 @@ function(a,        # Vector of evaluated propensity functions
   #mask <- apply(nu_tile,2,function(x) any(x<0))
   
   # Loop over all reaction channels having a non-zero (>0) propensity fun 
-  for (j in seq_len(U*M)[a>0]) {
+  for (j in seq(U*M)[a>0]) {
     f <- ceiling((j/M)-1)
     jp <- j-f*M  # Intra-patch reaction channel index (j->jp)
     x1 <- 1+f*N

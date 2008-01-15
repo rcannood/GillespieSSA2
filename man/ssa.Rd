@@ -1,4 +1,4 @@
-% $Id: ssa.Rd 171 2007-10-14 14:48:36Z pineda $
+% $Id: ssa.Rd 217 2008-01-15 09:28:24Z pineda $
 \name{ssa}
 \alias{ssa}
 
@@ -67,7 +67,7 @@ ignoreNegativeState = TRUE,
   \item{maxWallTime}{maximum wall time duration (in seconds) that the simulation is allowed to run for before terminated. This option is usefull, in particular, for systems that can end up growing uncontrolably.} 
 } 
 
-\details{Although the \code{ssa} can be invoked by specifying the system arguments (initial state vector \code{x0}, propensity vector \code{a}, state-change matrix \code{nu}), the final time (\code{tf}), and the \acronym{SSA} method to use, substantial improvements in speed and accuracy can be obtained by adjusting the additional (and optional) \code{ssa} arguments. By default \code{ssa} (tries to) use fairly safe default values for the these arguments, prioritizing computational accuracy over computational speed. These default values are, however, \strong{not} fool proof, and occasionally one will have to hand tweak them in order for a stochastic model to run appropriately.}
+\details{Although \code{ssa} can be invoked by only specifying the system arguments (initial state vector \code{x0}, propensity vector \code{a}, state-change matrix \code{nu}), the final time (\code{tf}), and the \acronym{SSA} method to use, substantial improvements in speed and accuracy can be obtained by adjusting the additional (and optional) \code{ssa} arguments. By default \code{ssa} (tries to) use conservative default values for the these arguments, prioritizing computational accuracy over computational speed. These default values are, however, \strong{not} fool proof for the approzimate methods, and occasionally one will have to hand tweak them in order for a stochastic model to run appropriately.}
 
 \value{Returns a list object with the following elements,
   \item{data}{a numerical matrix object of the simulation time series where the first column is the time vector and subsequent columns are the state frequencies.} 
@@ -83,7 +83,7 @@ ignoreNegativeState = TRUE,
   \item{arg\$...}{sub-list with elements containing all the arguments and their values used to invoke \code{ssa} (see Usage and Arguments list above).}
 }
 
-\section{Preparing a run}{In order for \acronym{SSA} to be used the stochastic model needs at least four components, the initial state vector (\code{x0}), state-change matrix (\code{nu}), propensity vector (\code{a}), and the final time of the simulation (\code{tf}). The initial state vector defines the population sizes in all the states at \eqn{t=0}, e.g. for a system with two species \code{X1} and \code{X2} where both have an initial population size of 1000 the initial state vector is defined as \code{x0 <- c(X1=1000,X2=1000)}. The elements of the vector have to be labelled using the same notation as the state variables used in the propensity functions. The state-change matrix defines the change in the number of individuals in each state (rows) as caused by one reaction of a given type (columns). For example, the state-change matrix for system with the species \eqn{S_1}{S1} and \eqn{S_2}{S2} with two reactions 
+\section{Preparing a run}{In order to invoke  \acronym{SSA} the stochastic model needs at least four components, the initial state vector (\code{x0}), state-change matrix (\code{nu}), propensity vector (\code{a}), and the final time of the simulation (\code{tf}). The initial state vector defines the population sizes in all the states at \eqn{t=0}, e.g. for a system with two species \code{X1} and \code{X2} where both have an initial population size of 1000 the initial state vector is defined as \code{x0 <- c(X1=1000,X2=1000)}. The elements of the vector have to be labelled using the same notation as the state variables used in the propensity functions. The state-change matrix defines the change in the number of individuals in each state (rows) as caused by one reaction of a given type (columns). For example, the state-change matrix for system with the species \eqn{S_1}{S1} and \eqn{S_2}{S2} with two reactions 
 \deqn{S_1 \stackrel{c_1}{\longrightarrow} S_2}{S1 --c1--> S2}
 \deqn{S_2 \stackrel{c_2}{\longrightarrow} 0}{S2 --c2--> 0}
 
@@ -104,7 +104,7 @@ out <- ssa(x0=c(X=1000),a=c("c*X"),nu=matrix(-1),parms=c(c=0.5),tf=10)
 The resulting time series can then be displayed by,
 
 \preformatted{
-ssa.plot(ssa)
+ssa.plot(out)
 }
 
 }
@@ -124,54 +124,57 @@ ssa.plot(ssa)
 
 \examples{
 ## Irreversible isomerization
+## Large initial population size (X=1000)
+\dontrun{
 parms <- c(c=0.5)
 x0  <- c(X=10000)
 a   <- c("c*X")
 nu  <- matrix(-1)
 out <- ssa(x0,a,nu,parms,tf=10,simName="Irreversible isomerization") # Direct method
-\dontrun{
 plot(out$data[,1],out$data[,2]/10000,col="red",cex=0.5,pch=19)
 }
 
+## Smaller initial population size (X=100)
+\dontrun{
 x0  <- c(X=100)
 out <- ssa(x0,a,nu,parms,tf=10) # Direct method
-\dontrun{
 points(out$data[,1],out$data[,2]/100,col="green",cex=0.5,pch=19)
 }
 
+## Small initial population size (X=10)
+\dontrun{
 x0  <- c(X=10)
 out <- ssa(x0,a,nu,parms,tf=10) # Direct method
-\dontrun{
 points(out$data[,1],out$data[,2]/10,col="blue",cex=0.5,pch=19)
 }
 
 ## Logistic growth
+\dontrun{
 parms <- c(b=2, d=1, K=1000)
 x0  <- c(N=500)
 a   <- c("b*N", "(d+(b-d)*N/K)*N")
 nu  <- matrix(c(+1,-1),ncol=2)
 out <- ssa(x0,a,nu,parms,tf=10,method="D",maxWallTime=5,simName="Logistic growth")
-\dontrun{
 ssa.plot(out)
 }
 
 ## Kermack-McKendrick SIR model 
+\dontrun{
 parms <- c(beta=0.001, gamma=0.1)
 x0  <- c(S=499,I=1,R=0)
 a   <- c("beta*S*I","gamma*I") 
 nu  <- matrix(c(-1,0,+1,-1,0,+1),nrow=3,byrow=TRUE)
 out <- ssa(x0,a,nu,parms,tf=100,simName="SIR model")
-\dontrun{
 ssa.plot(out)
 }
 
 ## Lotka predator-prey model
+\dontrun{
 parms <- c(c1=10, c2=.01, c3=10)
 x0  <- c(Y1=1000,Y2=1000)
 a   <- c("c1*Y1","c2*Y1*Y2","c3*Y2")
 nu  <- matrix(c(+1,-1,0,0,+1,-1),nrow=2,byrow=TRUE) 
 out <- ssa(x0,a,nu,parms,tf=100,method="ETL",simName="Lotka predator-prey model")
-\dontrun{
 ssa.plot(out)
 }
 }

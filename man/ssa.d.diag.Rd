@@ -13,7 +13,7 @@ ssa.d.diag(a,nu)
 \item{nu}{state-change matrix.} 
 }
 
-\details{Performs one time step using the Direct method. Intended to be invoked by \code{\link{ssa}}.}
+\details{Performs one time step using the Direct method. It is usually called from within \code{\link{ssa}}, but can be invoked directly, see \code{\link{ssa.d}} for Examples.}
 
 \value{A list with two elements, 1) the time leap (\code{tau}) and 2) the realized state change vector (\code{nu_j}).}
 

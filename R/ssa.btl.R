@@ -1,10 +1,10 @@
-# $Id: ssa.btl.R 155 2007-10-04 06:19:46Z pineda $
+# $Id: ssa.btl.R 212 2008-01-14 14:57:13Z pineda $
 
 `ssa.btl` <-
-function(a,   # Vector of evaluated propensity functions 
-         nu,  # State-change matrix 
-         x,   # State vector
-         f) { # Coarse-graining factor (see p.4 in Chatterjee et al. (2005))
+function(x = stop("missing state vector (x)"),
+         a = stop("missing propensity vector (a)"),
+        nu = stop("missing state-change matrix (nu)"),
+         f = stop("missing coarse-graining factor (f)")) { # See p.4 in Chatterjee et al. (2005)
 
   coercing <- FALSE
 
@@ -15,9 +15,9 @@ function(a,   # Vector of evaluated propensity functions
   M <- length(a)    # Number of reaction channels
   tilde_x <- x    
   nu_j <- matrix(rep(0,length(x)))
-  
+ 
   # Loop over all reaction channels having propensity fun>0 
-  for (j in seq_len(M)[a>0]) {    
+  for (j in seq(M)[a>0]) {    
     if (any(nu[,j]<0)) { # do this if there are limiting reactions
       mask <- nu[,j]<0
       L <- min(floor(tilde_x[mask]/abs(nu[mask,j])))

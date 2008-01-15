@@ -1,4 +1,4 @@
-# $Id: ssa.otl.diag.R 117 2007-08-30 15:38:07Z pineda $
+# $Id: ssa.otl.diag.R 211 2008-01-11 23:31:17Z pineda $
 
 `ssa.otl.diag` <-
 function(x,       # State vector (i.e. vector of population sizes of all the species) 
@@ -95,7 +95,7 @@ if (any(lambda<0)) {cat("1\n"); browser()}
 pr <- (a/sum(a[!Jncr])) # Fudge for negative probabilities
 pr[pr<0] <- 0
 if (any(pr<0)) { cat("3\n"); browser()}
-      jc <- sample(seq_len(M*U),size=1,prob=pr) # Pick one of the critical reactions that will fire once
+      jc <- sample(seq(M*U),size=1,prob=pr) # Pick one of the critical reactions that will fire once
       k <- rep(0,(M*U))                          # Setting up an empty vector
       k[jc] <- 1                                 # Add the selected critical reaction that is firing
 lambda <- (a*tau) # Fudge for negative probabilities

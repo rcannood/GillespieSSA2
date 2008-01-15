@@ -1,23 +1,15 @@
-# $Id: ssa.plot.R 155 2007-10-04 06:19:46Z pineda $
+# $Id: ssa.plot.R 207 2008-01-09 15:19:24Z pineda $
 
 ssa.plot <- function(out = stop("requires simulation output object"), 
-             plot.device = "x11", 
                     file = "ssaplot",
                       by = 1,
                plot.from = 2,
                  plot.to = dim(out$data)[2],
-                 plot.by = 1){ # number: increment of the sequence.
-
+                 plot.by = 1, # number: increment of the sequence.
+              show.title = TRUE,
+             show.legend = TRUE){
   if ((plot.from == 1) || (plot.from > dim(out$data)[2])|| (plot.from > plot.to)) stop("error in plot.from/plot.to arguments")
-                    
-  # Set the correct graphics device
-  if (plot.device == "x11") x11()
-  else if (plot.device=="pdf")  pdf(file=paste(file,".pdf",sep=""))
-  else if (plot.device=="png")  png(file=paste(file,".png",sep=""))
-  else if (plot.device=="jpeg") png(file=paste(file,".jpeg",sep=""))
-  else if (plot.device=="bmp")  png(file=paste(file,".bmp",sep=""))
-  else stop("unrecognized graphics device")
-  
+                      
   # Render the plot(s)
   colorVector <- rainbow(dim(out$data)[2]-1)
   mask <- seq(1,dim(out$data)[1],by)
@@ -29,21 +21,13 @@ ssa.plot <- function(out = stop("requires simulation output object"),
           bty="n",
           xlab="Time",
           ylab="Frequency")
-  title(out$args$simName)
+  if (show.title) title(out$args$simName)
   legendTxt <- names(out$arg$x0)
 
   # If there are more states than 20 the legend starts to look crazy, so we don't show it...
-  if (length(legendTxt) < 20) legend("topright",legend=legendTxt,bty="y",pch=19,col=colorVector) 
+  if (length(legendTxt) < 20 & show.legend) legend("topright",legend=legendTxt,bty="y",pch=19,col=colorVector) 
 
-  if (by==1) stepShowStr <- paste(" (showing all steps)")
-  else stepShowStr <- paste(" (points plotted every ",by," steps)",sep="")
-
-  textStr <- paste("Method: ", out$args$method,", Elapsed wall time: ",round(out$stats$elapsedWallTime,2)," sec, ",out$stats$nSteps," steps",stepShowStr,sep="") 
-  if (out$arg$method=="OTL") textStr <- paste(textStr,", ",out$stats$nSuspendedTauLeaps," (",round((out$stats$nSuspendedTauLeaps/out$stats$nSteps),2),"%) susp. tau-leaps",sep="")
+  stepShowStr <- paste("(",by," steps/point)",sep="")
+  textStr <- paste(out$args$method,", ",round(out$stats$elapsedWallTime,2)," sec, ",out$stats$nSteps," steps ",stepShowStr,sep="") 
   mtext(textStr,line=0,cex=0.75)
-  
-  # Wrap up
-  if (plot.device == "x11") return()
-  dev.off()
-  cat("ssa.plot saved as ",file,"\n",sep="")
 }

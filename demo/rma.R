@@ -37,27 +37,28 @@ a   <- c("b*N",                      # Propensity vector
          "c*alpha/(1+w*N)*N*P",
          "g*P")   
 
-tf <- 100
+tf <- 10
 simName <- "Rosenzweig-MacArthur predator-prey model"
 
 # Run the simulations
+nf <- layout(matrix(c(1,2,3,4),ncol=2, byrow=T))
 
 # Direct method
 set.seed(1)
-out <- ssa(x0,a,nu,parms,tf,method="D",simName,maxWallTime=10)
-ssa.plot(out)
+out <- ssa(x0,a,nu,parms,tf,method="D",simName,verbose=TRUE,consoleInterval=1)
+ssa.plot(out,show.title=TRUE,show.legend=TRUE)
 
 # Explicit tau-leap method
 set.seed(1)
-out <- ssa(x0,a,nu,parms,tf,method="ETL",simName,tau=0.01)
-ssa.plot(out)
+out <- ssa(x0,a,nu,parms,tf,method="ETL",simName,tau=0.01,verbose=TRUE,consoleInterval=1)
+ssa.plot(out,show.title=FALSE,show.legend=FALSE)
 
 # Binomial tau-leap method
 set.seed(1)
-out <- ssa(x0,a,nu,parms,tf,method="BTL",simName)
-ssa.plot(out)
+out <- ssa(x0,a,nu,parms,tf,method="BTL",simName,verbose=TRUE,consoleInterval=1)
+ssa.plot(out,show.title=FALSE,show.legend=FALSE)
 
 # Optimized tau-leap method
 set.seed(1)
-out <- ssa(x0,a,nu,parms,tf,method="OTL",simName)
-ssa.plot(out)
+out <- ssa(x0,a,nu,parms,tf,method="OTL",simName,verbose=TRUE,consoleInterval=1)
+ssa.plot(out,show.title=FALSE,show.legend=FALSE)

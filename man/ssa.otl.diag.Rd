@@ -20,7 +20,7 @@ ssa.otl.diag(x,a,nu_tile,hor,nc,epsilon,dtf,nd)
 \item{nd}{number of Direct method steps to perform during an \code{OTL} suspension.}
 }
 
-\details{Performs one time step using the Explicit tau-leap method. Intended to be invoked by \code{\link{ssa}}.}
+\details{Performs one time step using the Explicit tau-leap method. It is usually called from within \code{\link{ssa}}, but can be invoked directly, see \code{\link{ssa.otl}} for Examples.}
 
 \value{A list with three elements, 1) the time leap (\code{tau}) and 2) the realized state change vector (\code{nu_j}), and 3) a boolean value (\code{suspendedTauLeapMethod}) indicating if the simulation should revert to the Direct method for \code{nd} time steps.}
 

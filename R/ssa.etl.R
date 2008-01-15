@@ -1,7 +1,9 @@
-# $Id: ssa.etl.R 155 2007-10-04 06:19:46Z pineda $
+# $Id: ssa.etl.R 212 2008-01-14 14:57:13Z pineda $
 
 `ssa.etl` <-
-function(a, nu, tau) {
+function(a = stop("missing propensity vector (a)"), 
+        nu = stop("missing state-change matrix (nu)"),
+       tau = stop("missing step size (tau)")) {
   M <- length(a)
   k <- rpois(M,(a*tau))
   # MPK: Strictly speaking it is not correct to call the realized state-change

@@ -1,4 +1,4 @@
-% $Id: GillespieSSA-package.Rd 173 2007-10-15 17:30:30Z pineda $
+% $Id: GillespieSSA-package.Rd 212 2008-01-14 14:57:13Z pineda $
 \name{GillespieSSA-package}
 \alias{GillespieSSA-package}
 \alias{GillespieSSA}
@@ -32,7 +32,7 @@ There are numerous exact Monte Carlo procedures implementing the \acronym{SSA}. 
 Approximate implementations of the \acronym{SSA} sacrifices exactness for large improvements in computational efficiency. The most common technique used is tau-leaping where reaction-bundles are attempted in coarse-grained time increments \eqn{\tau}{tau}. Speed-ups of several orders of magnitude compared to the Direct method are common. Tau-leaping must be used with care, however, as it is not as foolproof as the Direct method.}
 
 \section{Example models}{
-Individual demo models can be run by issuing \code{demo(<moel name>)}, alternativelly all of the demo models can be run using \code{demo(GillespieSSA)}. The following example models are available:
+Individual demo models can be run by issuing \code{demo(<model name>)}, alternativelly all of the demo models can be run using \code{demo(GillespieSSA)}. The following example models are available:
 
 \tabular{l}{
 Decaying-Dimerization Reaction Set (Gillespie, 2001)\cr 
@@ -58,14 +58,14 @@ Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al., 2007, Pineda-Krch,
 Metapopulation SIRS model (Pineda-Krch, [submitted JSS manuscript])\cr 
 \code{file.show(system.file("demo/epiChain.R", package = "GillespieSSA"))} \cr
 }
-Note, the last three models are part of a manuscript currently submitted to the Journal of Statistical Software.
+Note, the last three models are part of a manuscript to be published in the Journal of Statistical Software (preprint avaliable on request).
 }
 
 \section{How to cite this package}{
 \preformatted{
-  author = Mario Pineda-Krch,
-  title  = GillespieSSA: a stochastic simulation package for R,
-  year   = 2007, 
+  author = Mario Pineda-Krch
+  title  = GillespieSSA: a stochastic simulation package for R
+  year   = 2007
   url    = http://pineda-krch.com/gillespiessa
 }
 }
@@ -108,6 +108,7 @@ Note that \pkg{GillespieSSA} is under active development. Although the package m
 \item Ben Bolker for comments on the initial release of the package and for providing a hint for how to more elegantly handle model parameters as arguments to the ssa() function.
 \item Josh Obrien for copy editing and feedback on the JSS manuscript.
 \item Thomas Petzoldt for comments on the package and the JSS manuscript.
+\item Three anonymous referees whos comments substantially improved some of the functionality.
 }
 }
 
