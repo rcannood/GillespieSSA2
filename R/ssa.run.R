@@ -1,4 +1,4 @@
-# $Id: ssa.run.R 214 2008-01-15 09:03:09Z pineda $
+# $Id: ssa.run.R 219 2008-01-17 15:05:36Z pineda $
 ssa.run <- function(x0,a,nu,parms,tf,method,tau,f,epsilon,nc,hor,dtf,nd,
                     ignoreNegativeState,consoleInterval,censusInterval,
                     verbose,maxWallTime) {
@@ -45,6 +45,7 @@ ssa.run <- function(x0,a,nu,parms,tf,method,tau,f,epsilon,nc,hor,dtf,nd,
   # Evaluate the initial transition rates by evaluating the propensity functions
   parse_a <- parse(text=.a)
   for (.i in seq(length(parse_a))) eval_a[.i] <- eval(parse_a[.i])
+  if (any(eval_a<0)) stop("negative propensity function")
 
   # If required (depends on the solver method) check if hor vector is defined 
   # as NA in which case the user did not submitt his/her own hor vector as an 
@@ -96,6 +97,7 @@ ssa.run <- function(x0,a,nu,parms,tf,method,tau,f,epsilon,nc,hor,dtf,nd,
   currentRow <- 2 # First row contains (t0,x0)
   suspendedTauLeapMethod <- FALSE
   nSuspendedTauLeaps <- 0
+
   while( (.t<tf) & (any(.x>0)) & 
          (all(.x>=0)) & (any(eval_a>0)) & 
          (elapsedWallTime<=maxWallTime) ) {

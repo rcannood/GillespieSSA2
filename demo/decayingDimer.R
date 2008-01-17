@@ -9,7 +9,6 @@
 #      S2 --c3--> S1 + S1
 #      S2 --c4--> S3
 
-library(GillespieSSA)
 parms <- c(c1=1.0, c2=0.002, c3=0.5, c4=0.04)  # Define parameters
 x0 <- c(s1=10000, s2=0, s3=0)                  # Initial state vector
 nu <- matrix(c(-1, -2, +2,  0,                 # State-change matrix

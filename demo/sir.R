@@ -11,8 +11,6 @@
 # transmission: beta
 # recovery:     gamma
 
-library(GillespieSSA)
-
 # Define parameters
 parms <- c(beta=.001, gamma=.100)
 

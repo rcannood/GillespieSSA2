@@ -4,7 +4,6 @@
 
 # The SIRS epidemiological metapopulation model is defined in Pineda-Krch (2007)
 
-library(GillespieSSA)
 patchPopSize <- 500 # Patch size
 U <- 20 # Number of patches
 

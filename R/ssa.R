@@ -1,4 +1,4 @@
-# $Id: ssa.R 214 2008-01-15 09:03:09Z pineda $
+# $Id: ssa.R 219 2008-01-17 15:05:36Z pineda $
 
 `ssa` <-
 function(         x0 = stop("undefined 'x0'"), 
@@ -63,7 +63,7 @@ function(         x0 = stop("undefined 'x0'"),
   
   # Run the simulation
   out.rxn <- ssa.run(x0,a,nu,parms,tf,method,tau,f,epsilon,nc,hor,dtf,nd,ignoreNegativeState,consoleInterval,censusInterval,verbose,maxWallTime) 
-  
+
   # Wrap up the simulation
   out.summary <- ssa.terminate(args,out.rxn,tf,method,maxWallTime,verbose)
   return(out.summary)  

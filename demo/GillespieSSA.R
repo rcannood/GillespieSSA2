@@ -12,6 +12,7 @@ demo(lotka)
 demo(sir)
 
 # Models from Pineda-Krch, [described in paper published in the Journal of Statistical Software] 
+demo(radioactiveDecay)
 demo(rma)
-demo(lgr)
+demo(logisticGrowth)
 demo(epiChain)

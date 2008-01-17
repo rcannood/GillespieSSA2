@@ -21,8 +21,6 @@
 # a4 = c*alpha/(1+wN) * N * P
 # a5 = g * P
 
-library(GillespieSSA)
-
 # Define parameters 
 # (B in Figure 1 in Pineda-Krch et al. 2007)
 parms <- c(b=2, d=1, K=1000, alpha=0.005, 
