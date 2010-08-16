@@ -1,8 +1,8 @@
 #===============================================================================
-# SIRS metapopulation model (Pineda-Krch, 2007)
+# SIRS metapopulation model (Pineda-Krch, 2008)
 #===============================================================================
 
-# The SIRS epidemiological metapopulation model is defined in Pineda-Krch (2007)
+# The SIRS epidemiological metapopulation model is defined in Pineda-Krch (2008)
 
 patchPopSize <- 500 # Patch size
 U <- 20 # Number of patches

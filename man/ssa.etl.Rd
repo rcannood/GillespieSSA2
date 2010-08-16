@@ -1,4 +1,3 @@
-% $Id: ssa.etl.Rd 213 2008-01-14 20:39:21Z pineda $
 \name{ssa.etl}
 \alias{ssa.etl}
 
@@ -16,7 +15,7 @@ ssa.etl(a = stop("missing propensity vector (a)"),
 \item{tau}{tau-leap.}
 }
 
-\details{Performs one time step using the Explicit tau-leap method. Intended to be invoked by \code{\link{ssa}}.}}
+\details{Performs one time step using the Explicit tau-leap method. Intended to be invoked by \code{\link{ssa}}.}
 
 \value{A list with two elements, 1) the time leap (\code{tau}) and 2) the realized state change vector (\code{nu_j}).}
 

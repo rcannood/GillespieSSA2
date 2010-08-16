@@ -1,9 +1,8 @@
-% $Id: ssa.d.Rd 76 2007-08-19 04:30:03Z pineda $
 \name{ssa.nutiling}
 \alias{ssa.nutiling}
 
 \title{Direct method nu-diagonalization mapping}
-\description{Auxilliary function for \code{ssa.d.diag} performing virtual mapping of nu-diagonalized systems.}
+\description{Auxiliary function for \code{ssa.d.diag} performing virtual mapping of nu-diagonalized systems.}
 \usage{
 ssa.nutiling(a,nu,j)
 }

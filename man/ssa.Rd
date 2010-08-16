@@ -1,4 +1,3 @@
-% $Id: ssa.Rd 217 2008-01-15 09:28:24Z pineda $
 \name{ssa}
 \alias{ssa}
 
@@ -60,14 +59,14 @@ ignoreNegativeState = TRUE,
   
   \item{consoleInterval}{(approximate) interval at which \code{ssa} produces simulation status output on the console (assumes \code{verbose=TRUE}). If \code{consoleInterval=0} console output is generated each time step (or tau-leap). If \code{consoleInterval=Inf} no console output is generated. Note, \code{verbose=FALSE} disables all console output. \strong{Console output drastically slows down simulations.}} 
 
-  \item{censusInterval}{(approximate) interval between recording the state of the system. If \code{censusInterval=0} \eqn{(t,x)} is recorded at each time step (or tau-leap). If \code{censusInterval=Inf} only \eqn{(t_0,x_0)}{(t0,x0)} and \eqn{(t_f,x_t)}{(tf,xf)} is recorded. Note, the size of the time step (or tau-leaps) ultimatelly limits the interval between subsequent recordings of the system state since the state of the system cannot be recorded at a finer time interval the size of the time steps (or tau-leaps).}  
+  \item{censusInterval}{(approximate) interval between recording the state of the system. If \code{censusInterval=0} \eqn{(t,x)} is recorded at each time step (or tau-leap). If \code{censusInterval=Inf} only \eqn{(t_0,x_0)}{(t0,x0)} and \eqn{(t_f,x_t)}{(tf,xf)} is recorded. Note, the size of the time step (or tau-leaps) ultimately limits the interval between subsequent recordings of the system state since the state of the system cannot be recorded at a finer time interval the size of the time steps (or tau-leaps).}  
 
   \item{verbose}{boolean object indicating if the status of the simulation simulation should be displayed on the console. If \code{verbose=TRUE} the elapsed wall time and \eqn{(t,x)} is displayed on the console every \code{consoleInterval} time step and a brief summary is displayed at the end of the simulation. If \code{verbose=FALSE} the simulation runs \emph{entirely} silent (overriding \code{consoleInterval}). \strong{Verbose runs drastically slows down simulations.}} 
   
   \item{maxWallTime}{maximum wall time duration (in seconds) that the simulation is allowed to run for before terminated. This option is usefull, in particular, for systems that can end up growing uncontrolably.} 
 } 
 
-\details{Although \code{ssa} can be invoked by only specifying the system arguments (initial state vector \code{x0}, propensity vector \code{a}, state-change matrix \code{nu}), the final time (\code{tf}), and the \acronym{SSA} method to use, substantial improvements in speed and accuracy can be obtained by adjusting the additional (and optional) \code{ssa} arguments. By default \code{ssa} (tries to) use conservative default values for the these arguments, prioritizing computational accuracy over computational speed. These default values are, however, \strong{not} fool proof for the approzimate methods, and occasionally one will have to hand tweak them in order for a stochastic model to run appropriately.}
+\details{Although \code{ssa} can be invoked by only specifying the system arguments (initial state vector \code{x0}, propensity vector \code{a}, state-change matrix \code{nu}), the final time (\code{tf}), and the \acronym{SSA} method to use, substantial improvements in speed and accuracy can be obtained by adjusting the additional (and optional) \code{ssa} arguments. By default \code{ssa} (tries to) use conservative default values for the these arguments, prioritizing computational accuracy over computational speed. These default values are, however, \strong{not} fool proof for the approximate methods, and occasionally one will have to hand tweak them in order for a stochastic model to run appropriately.}
 
 \value{Returns a list object with the following elements,
   \item{data}{a numerical matrix object of the simulation time series where the first column is the time vector and subsequent columns are the state frequencies.} 

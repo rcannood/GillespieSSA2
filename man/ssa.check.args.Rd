@@ -1,4 +1,3 @@
-% $Id: ssa.d.Rd 76 2007-08-19 04:30:03Z pineda $
 \name{ssa.check.args}
 \alias{ssa.check.args}
 
@@ -39,7 +38,7 @@ ssa.check.args(x0,a,nu,tf,method,tau,f,epsilon,nc,hor,dtf,nd,
   
   \item{consoleInterval}{(approximate) interval at which \code{ssa} produces simulation status output on the console (assumes \code{verbose=TRUE}). If \code{consoleInterval=0} console output is generated each time step (or tau-leap). If \code{consoleInterval=Inf} no console output is generated. Note, \code{verbose=FALSE} disables all console output. \strong{Console output drastically slows down simulations.}} 
 
-  \item{censusInterval}{(approximate) interval between recording the state of the system. If \code{censusInterval=0} \eqn{(t,x)} is recorded at each time step (or tau-leap). If \code{censusInterval=Inf} only \eqn{(t_0,x_0)}{(t0,x0)} and \eqn{(t_f,x_t)}{(tf,xf)} is recorded. Note, the size of the time step (or tau-leaps) ultimatelly limits the interval between subsequent recordings of the system state since the state of the system cannot be recorded at a finer time interval the size of the time steps (or tau-leaps).}  
+  \item{censusInterval}{(approximate) interval between recording the state of the system. If \code{censusInterval=0} \eqn{(t,x)} is recorded at each time step (or tau-leap). If \code{censusInterval=Inf} only \eqn{(t_0,x_0)}{(t0,x0)} and \eqn{(t_f,x_t)}{(tf,xf)} is recorded. Note, the size of the time step (or tau-leaps) ultimately limits the interval between subsequent recordings of the system state since the state of the system cannot be recorded at a finer time interval the size of the time steps (or tau-leaps).}  
 
   \item{verbose}{boolean object indicating if the status of the simulation simulation should be displayed on the console. If \code{verbose=TRUE} the elapsed wall time and \eqn{(t,x)} is displayed on the console every \code{consoleInterval} time step and a brief summary is displayed at the end of the simulation. If \code{verbose=FALSE} the simulation runs \emph{entirely} silent (overriding \code{consoleInterval}). \strong{Verbose runs drastically slows down simulations.}} 
 } 

@@ -1,6 +1,6 @@
 #===============================================================================
 # Rosenzweig-MacArthur predator-prey model 
-# (Pineda-Krch et al., 2007, Pineda-Krch, [submitted JSS manuscript])
+# (Pineda-Krch et al., 2007, Pineda-Krch, 2008)
 #===============================================================================
 
 # The Rosenzweig-MacArthur predator-prey is defined as

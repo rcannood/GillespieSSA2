@@ -1,4 +1,3 @@
-% $Id: ssa.otl.Rd 76 2007-08-19 04:30:03Z pineda $
 \name{ssa.otl.diag}
 \alias{ssa.otl.diag}
 

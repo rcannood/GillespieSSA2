@@ -1,4 +1,3 @@
-% $Id: ssa.plot.Rd 212 2008-01-14 14:57:13Z pineda $
 \name{ssa.plot}
 \alias{ssa.plot}
 
@@ -23,10 +22,10 @@ ssa.plot(        out = stop("requires simulation output object"),
 \item{plot.to}{last population to plot the time series for (see note)}
 \item{plot.by}{increment in the sequence of populations to plot the time series for (see note)}
 \item{show.title}{boolean object indicating if the plot should display a title}
-\item{show.legend}{boolean object indicationg if the legend is displayed}
+\item{show.legend}{boolean object indicating if the legend is displayed}
 }
 
-\note{The options \code{by}, \code{plot.from}, \code{plot.to}, and \code{plot.by} can be used to plot a sparser sequense of data points. To plot the population sizes using a larger time interval the \code{by} option can be set, e.g. to plot only every 10th time point \code{by=10}. To plot only specific populations the \code{plot.from}, \code{plot.to}, and \code{plot.by} options can be set to subset the state vector. Note that the indexing of the populations is based on the \eqn{(t,\mathbf{X})}{(t,X)} vector, i.e. the first column is the time vector while the first population is index by 2 and the last population by \eqn{N+1}. Display of a plot title above the plot and legend is optional (and are set with the arguments {{{show.title}}} and {{{show.legend}}}. Above the plot panel miscellaneous information for the simulation are displayed, i.e. method, elapsed wall time, number of time steps executed, and the number of time steps per data point.}
+\note{The options \code{by}, \code{plot.from}, \code{plot.to}, and \code{plot.by} can be used to plot a sparser sequence of data points. To plot the population sizes using a larger time interval the \code{by} option can be set, e.g. to plot only every 10th time point \code{by=10}. To plot only specific populations the \code{plot.from}, \code{plot.to}, and \code{plot.by} options can be set to subset the state vector. Note that the indexing of the populations is based on the \eqn{(t,\mathbf{X})}{(t,X)} vector, i.e. the first column is the time vector while the first population is index by 2 and the last population by \eqn{N+1}. Display of a plot title above the plot and legend is optional (and are set with the arguments {{{show.title}}} and {{{show.legend}}}. Above the plot panel miscellaneous information for the simulation are displayed, i.e. method, elapsed wall time, number of time steps executed, and the number of time steps per data point.}
 
 \seealso{
   \link{GillespieSSA-package},
@@ -35,7 +34,7 @@ ssa.plot(        out = stop("requires simulation output object"),
 
 \examples{
 \dontrun{
-## Define the Kermack-McKendrick SIR model abd run once unsing the Direct method
+## Define the Kermack-McKendrick SIR model and run once using the Direct method
 parms <- c(beta=.001, gamma=.100)
 x0 <- c(S=500, I=1, R=0)                      # Initial state vector
 nu <- matrix(c(-1,0,1,-1,0,1),nrow=3,byrow=T) # State-change matrix

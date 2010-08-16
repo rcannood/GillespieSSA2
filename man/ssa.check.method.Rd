@@ -1,4 +1,3 @@
-% $Id: ssa.d.Rd 76 2007-08-19 04:30:03Z pineda $
 \name{ssa.check.method}
 \alias{ssa.check.method}
 

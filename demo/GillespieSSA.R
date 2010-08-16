@@ -11,7 +11,7 @@ demo(logisticGrowth)
 demo(lotka)
 demo(sir)
 
-# Models from Pineda-Krch, [described in paper published in the Journal of Statistical Software] 
+# Models from Pineda-Krch (2008) 
 demo(radioactiveDecay)
 demo(rma)
 demo(logisticGrowth)

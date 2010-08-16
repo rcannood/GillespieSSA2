@@ -1,4 +1,3 @@
-% $Id: ssa.d.Rd 76 2007-08-19 04:30:03Z pineda $
 \name{ssa.terminate}
 \alias{ssa.terminate}
 
@@ -22,7 +21,7 @@ ssa.terminate(args,out.rxn,tf,method,maxWallTime,verbose)
   \item{verbose}{boolean value indicating if some basic simulation statistics should be displayed on the console.} 
 } 
 
-\details{Terminates an invokation of the \code{link{ssa}} wrapper function. Returns the same list object as \code{\link{ssa}}. This function is called from within \code{\link{ssa}} and is not intended to be invoked stand alone.}
+\details{Terminates an invocation of the \code{link{ssa}} wrapper function. Returns the same list object as \code{\link{ssa}}. This function is called from within \code{\link{ssa}} and is not intended to be invoked stand alone.}
 
 \seealso{
   \code{\link{ssa}}

@@ -1,4 +1,3 @@
-% $Id: ssa.d.Rd 76 2007-08-19 04:30:03Z pineda $
 \name{ssa.run}
 \alias{ssa.run}
 
@@ -45,10 +44,10 @@ ssa.run(x0,a,nu,parms,tf,method,tau,f,epsilon,nc,hor,dtf,nd,
 
   \item{verbose}{boolean object indicating if the status of the simulation simulation should be displayed on the console. If \code{verbose=TRUE} the elapsed wall time and \eqn{(t,x)} is displayed on the console every \code{consoleInterval} time step and a brief summary is displayed at the end of the simulation. If \code{verbose=FALSE} the simulation runs \emph{entirely} silent (overriding \code{consoleInterval}). \strong{Verbose runs drastically slows down simulations.}} 
   
-  \item{maxWallTime}{maximum wall time duration (in seconds) that the simulation is allowed to run for before terminated. This option is usefull, in particular, for systems that can end up growing uncontrollably.}
+  \item{maxWallTime}{maximum wall time duration (in seconds) that the simulation is allowed to run for before terminated. This option is useful, in particular, for systems that can end up growing uncontrollably.}
 } 
 
-\details{Invokes a specific method function until the termination criteria are fullfilled. Updates the state vector, time, and re-evaluates the propensity functions inbetween time steps. Also collects simulation data and returns it as a list object. This function is called from within \code{\link{ssa}} and is not intended to be invoked stand alone.}
+\details{Invokes a specific method function until the termination criteria are fulfilled. Updates the state vector, time, and re-evaluates the propensity functions in-between time steps. Also collects simulation data and returns it as a list object. This function is called from within \code{\link{ssa}} and is not intended to be invoked stand alone.}
 
 \value{Returns a list object with the following elements,
   \item{timeSeries}{a numerical matrix object of the simulation time series where the first column is the time vector and subsequent columns are the state frequencies.} 

@@ -1,4 +1,3 @@
-% $Id: GillespieSSA-package.Rd 212 2008-01-14 14:57:13Z pineda $
 \name{GillespieSSA-package}
 \alias{GillespieSSA-package}
 \alias{GillespieSSA}
@@ -32,7 +31,7 @@ There are numerous exact Monte Carlo procedures implementing the \acronym{SSA}. 
 Approximate implementations of the \acronym{SSA} sacrifices exactness for large improvements in computational efficiency. The most common technique used is tau-leaping where reaction-bundles are attempted in coarse-grained time increments \eqn{\tau}{tau}. Speed-ups of several orders of magnitude compared to the Direct method are common. Tau-leaping must be used with care, however, as it is not as foolproof as the Direct method.}
 
 \section{Example models}{
-Individual demo models can be run by issuing \code{demo(<model name>)}, alternativelly all of the demo models can be run using \code{demo(GillespieSSA)}. The following example models are available:
+Individual demo models can be run by issuing \code{demo(<model name>)}, alternatively all of the demo models can be run using \code{demo(GillespieSSA)}. The following example models are available:
 
 \tabular{l}{
 Decaying-Dimerization Reaction Set (Gillespie, 2001)\cr 
@@ -50,22 +49,22 @@ Lotka predator-prey model (Gillespie, 1977; Kot, 2001)\cr
 Kermack-McKendrick SIR model (Brown & Rothery, 1993)\cr 
 \code{file.show(system.file("demo/sir.R", package = "GillespieSSA"))} \cr
 \cr
-Logistic growth (Pearl-Verhulst model) (Kot, 2001, Pineda-Krch, [submitted JSS manuscript])
+Logistic growth (Pearl-Verhulst model) (Kot, 2001, Pineda-Krch, 2008)
 \cr
-Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al., 2007, Pineda-Krch, [submitted JSS manuscript]) \cr
+Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al., 2007, Pineda-Krch, 2008) \cr
 \code{file.show(system.file("demo/rma.R", package = "GillespieSSA"))} \cr
 \cr
-Metapopulation SIRS model (Pineda-Krch, [submitted JSS manuscript])\cr 
+Metapopulation SIRS model (Pineda-Krch, 2008)\cr 
 \code{file.show(system.file("demo/epiChain.R", package = "GillespieSSA"))} \cr
 }
-Note, the last three models are part of a manuscript to be published in the Journal of Statistical Software (preprint avaliable on request).
+Note, the last three models are part of a manuscript to be published in the Journal of Statistical Software (preprint available on request).
 }
 
 \section{How to cite this package}{
 \preformatted{
   author = Mario Pineda-Krch
   title  = GillespieSSA: a stochastic simulation package for R
-  year   = 2007
+  year   = 2010
   url    = http://pineda-krch.com/gillespiessa
 }
 }
@@ -81,14 +80,14 @@ Note, the last three models are part of a manuscript to be published in the Jour
   \item Gillespie D.T. 2001. Approximate accelerated stochastic simulation of chemically reacting systems. J. Chem. Phys. 115:1716-1733. \url{http://dx.doi.org/10.1063/1.1378322 }
   \item Gillespie D.T. 2007. Stochastic simulation of chemical kinetics. Annu. Rev. Chem. 58:35 \url{http://dx.doi.org/10.1146/annurev.physchem.58.032806.104637}
   \item Kot M. 2001. Elements of mathematical ecology. Cambridge University Press. \url{http://dx.doi.org/10.2277/052180213X}
-  \item Pineda-Krch M. 2007. Implementing the stochastic simulation algorithm in R. Submitted to the Journal of Statistical Software (preprint available on request).
+  \item Pineda-Krch M. 2008. Implementing the stochastic simulation algorithm in R. Submitted to the Journal of Statistical Software 25(12): 1-18. \url{http://www.jstatsoft.org/v25/i12}
   \item Pineda-Krch M., Blok H.J., Dieckmann U., and Doebeli M. 2007. A tale of two cycles --- distinguishing quasi-cycles and limit cycles in finite predator-prey populations. Oikos 116:53-64. \url{http://dx.doi.org/10.1111/j.2006.0030-1299.14940.x} 
 }
 }
 
 \author{Mario Pineda-Krch (\url{http://pineda-krch.com})}
 
-\section{License}{This package is distributed under the terms of the \acronym{GNU} General Public License (\acronym{GPL}) version 3 (or newer). Copyright 2007 Mario Pineda-Krch.\cr
+\section{License}{This package is distributed under the terms of the \acronym{GNU} General Public License (\acronym{GPL}) version 3 (or newer). Copyright 2007, 2008, 2010 Mario Pineda-Krch.\cr
 \cr
 This file is part of the \R package \pkg{GillespieSSA}.\cr
 \cr
@@ -98,17 +97,15 @@ This file is part of the \R package \pkg{GillespieSSA}.\cr
 \cr
 You should have received a copy of the \acronym{GNU} General Public License along with this program. If not, see <\url{http://www.gnu.org/licenses/}>.
 
-Note that \pkg{GillespieSSA} is under active development. Although the package may be considered stable functionality and the structure of the package interface may change in future versions.
-
 } 
 
-\section{Ackowledgements}{
+\section{Acknowledgements}{
 \itemize{
 \item Heinrich zu Dohna for many caffein induced discussions on the package and reference manual, and for providing comments on the vignette documentation.
 \item Ben Bolker for comments on the initial release of the package and for providing a hint for how to more elegantly handle model parameters as arguments to the ssa() function.
 \item Josh Obrien for copy editing and feedback on the JSS manuscript.
-\item Thomas Petzoldt for comments on the package and the JSS manuscript.
-\item Three anonymous referees whos comments substantially improved some of the functionality.
+\item Thomas Petzoldt for comments on the package, the JSS manuscript and for preparing version 0.5-4.
+\item Three anonymous referees whose comments substantially improved some of the functionality.
 }
 }
 
