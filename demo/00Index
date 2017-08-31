@@ -1,9 +1,0 @@
-GillespieSSA      GillespieSSA demonstration (running all demos below)
-decayingDimer     Decaying-Dimerization Reaction Set model
-linearChain       Linear-chain model
-logisticGrowth    Logistic growth model (Pearl-Verhulst model)
-lotka             Lotka predator-prey model
-rma               Rosenzweig-MacArthur predator-prey model
-sir               Kermack-McKendrick SIR model
-epiChain          SIRS metapopulation model
-radioactiveDecay  Radioactive decay model (Irreversible isomerization reaction set)

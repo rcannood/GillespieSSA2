@@ -1,29 +1,28 @@
-Package: GillespieSSA
-Title: Gillespie's Stochastic Simulation Algorithm (SSA)
-Version: 0.5-4
-Date: 2010-08-16
+Package: fastgssa
+Type: Package
+Title: Gillespie's Stochastic Simulation Algorithm (GSSA) implemented in Rcpp
+Version: 0.6-0
+Date: 2016-04-04
 Author: Mario Pineda-Krch <mpineda@math.ualbeta.ca>
-Maintainer: ORPHANED
-Depends: R (>= 2.0.0)
-Description: GillespieSSA provides a simple to use, intuitive, and
-        extensible interface to several stochastic simulation
-        algorithms for generating simulated trajectories of finite
-        population continuous-time model. Currently it implements
-        Gillespie's exact stochastic simulation algorithm (Direct
-        method) and several approximate methods (Explicit tau-leap,
-        Binomial tau-leap, and Optimized tau-leap). The package also
-        contains a library of template models that can be run as demo
-        models and can easily be customized and extended. Currently the
-        following models are included, decaying-dimerization reaction
-        set, linear chain system, logistic growth model, Lotka
-        predator-prey model, Rosenzweig-MacArthur predator-prey model,
-        Kermack-McKendrick SIR model, and a metapopulation SIRS model.
+Maintainer: Robrecht Cannoodt <robrecht.cannoodt@gmail.com>
+Description: fastgssa provides a simple to use, intuitive, and
+    extensible interface to several stochastic simulation
+    algorithms for generating simulated trajectories of finite
+    population continuous-time model. Currently it implements
+    Gillespie's exact stochastic simulation algorithm (Direct
+    method) and several approximate methods (Explicit tau-leap,
+    Binomial tau-leap, and Optimized tau-leap). The package also
+    contains a library of template models that can be run as demo
+    models and can easily be customized and extended. Currently the
+    following models are included, decaying-dimerization reaction
+    set, linear chain system, logistic growth model, Lotka
+    predator-prey model, Rosenzweig-MacArthur predator-prey model,
+    Kermack-McKendrick SIR model, and a metapopulation SIRS model.
 License: GPL (>= 3)
-URL: http://pineda-krch.com/gillespiessa
-Packaged: 2010-08-16 17:09:04 UTC; mpineda
-Repository: CRAN
-Date/Publication: 2012-01-15 12:32:46
-NeedsCompilation: no
-X-CRAN-Original-Maintainer: Mario Pineda-Krch <mpineda@math.ualbeta.ca>
-X-CRAN-Comment: Orphaned on 2014-01-12 as maintainer address
-        <mpineda@math.ualbeta.ca> bounced.
+LazyData: TRUE
+Imports:
+    Rcpp (>= 0.12.3),
+    RcppArmadillo
+Suggests: testthat
+LinkingTo: Rcpp, RcppArmadillo
+RoxygenNote: 5.0.1
