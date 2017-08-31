@@ -20,11 +20,8 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP fastgssa_ssa_nutiling(SEXP, SEXP, SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_fastgssa_ssa_nutiling", (DL_FUNC) &_fastgssa_ssa_nutiling, 3},
-    {"fastgssa_ssa_nutiling", (DL_FUNC) &fastgssa_ssa_nutiling, 3},
     {NULL, NULL, 0}
 };
 
