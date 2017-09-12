@@ -457,7 +457,7 @@ ssa.em.diag.fun <- function(x, a, nu, method_state, h, noise_strength) {
 }
 #' @title Euler-Maruyama method (EM)
 #'
-#' Euler-Maruyama method implementation
+#' @description Euler-Maruyama method implementation
 #' @param h h parameter
 #' @param noise_strength noise_strength parameter
 #' @return an object of to be used by \code{\link{ssa}}.

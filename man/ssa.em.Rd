@@ -2,9 +2,7 @@
 % Please edit documentation in R/ssa_methods.R
 \name{ssa.em}
 \alias{ssa.em}
-\title{Euler-Maruyama method (EM)
-
-Euler-Maruyama method implementation}
+\title{Euler-Maruyama method (EM)}
 \usage{
 ssa.em(h = 0.01, noise_strength = 2)
 }
@@ -15,6 +13,9 @@ ssa.em(h = 0.01, noise_strength = 2)
 }
 \value{
 an object of to be used by \code{\link{ssa}}.
+}
+\description{
+Euler-Maruyama method implementation
 }
 \seealso{
 \link{fastgssa-package}, \code{\link{ssa}}
