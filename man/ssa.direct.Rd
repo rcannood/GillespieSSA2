@@ -21,4 +21,3 @@ Gillespie (1977)
 \keyword{datagen}
 \keyword{misc}
 \keyword{ts}
-

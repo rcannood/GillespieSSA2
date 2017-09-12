@@ -24,4 +24,3 @@ Chatterjee et al. (2005)
 \keyword{datagen}
 \keyword{misc}
 \keyword{ts}
-

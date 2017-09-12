@@ -2,8 +2,8 @@
 % Please edit documentation in R/fastgssa-package.R
 \docType{package}
 \name{fastgssa-package}
-\alias{fastgssa}
 \alias{fastgssa-package}
+\alias{fastgssa}
 \title{Gillespie Stochastic Simulation Algorithm package}
 \description{
 Package description and overview of basic SSA theory
@@ -46,9 +46,7 @@ number of individuals in population \eqn{i} caused by one reaction of type
 reaction \eqn{j} will occur in the next infinitesimal time interval
 \eqn{\left[t,t+dt\right]}{[t,t+dt]}.
 }
-\author{
-Robrecht Cannoodt
-}
+
 \references{
 \itemize{
   \item Brown D. and Rothery P. 1993. Models in biology: mathematics, statistics, and computing. John Wiley & Sons.
@@ -67,6 +65,8 @@ Robrecht Cannoodt
 \seealso{
 \code{\link{ssa}}, \code{\link{ssa.direct}}, \code{\link{ssa.etl}}, \code{\link{ssa.btl}}, \code{\link{ssa.otl}}
 }
+\author{
+Robrecht Cannoodt
+}
 \keyword{distribution}
 \keyword{package}
-

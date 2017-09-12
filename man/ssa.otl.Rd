@@ -7,6 +7,8 @@
 ssa.otl(x0, hor = NaN, nc = 10, epsilon = 0.03, dtf = 10, nd = 100)
 }
 \arguments{
+\item{x0}{x0 param}
+
 \item{hor}{highest order reaction vector (one entry per species in \code{x})}
 
 \item{nc}{number of critical reactions threshold parameter.}
@@ -32,4 +34,3 @@ Cao et al. (2006)
 \keyword{datagen}
 \keyword{misc}
 \keyword{ts}
-

@@ -23,6 +23,9 @@ LazyData: TRUE
 Imports:
     Rcpp (>= 0.12.3),
     RcppArmadillo
-Suggests: testthat
+Suggests: 
+    testthat,
+    dplyr,
+    GillespieSSA
 LinkingTo: Rcpp, RcppArmadillo
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

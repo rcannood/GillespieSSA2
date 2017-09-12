@@ -303,6 +303,7 @@ ssa.otl.diag.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) 
 #'
 #' @description Optimized tau-leap method implementation of the \acronym{SSA} as described by Cao et al. (2006).
 #'
+#' @param x0 x0 param
 #' @param hor highest order reaction vector (one entry per species in \code{x})
 #' @param nc number of critical reactions threshold parameter.
 #' @param epsilon error control parameter.
@@ -454,10 +455,11 @@ ssa.em.fun <- function(x, a, nu, method_state, h, noise_strength) {
 ssa.em.diag.fun <- function(x, a, nu, method_state, h, noise_strength) {
   error("Diag deterministic not supported yet")
 }
-#' @title Euler–Maruyama method (EM)
+#' @title Euler-Maruyama method (EM)
 #'
-#' @description Euler–Maruyama method implementation of https://en.wikipedia.org/wiki/Euler%E2%80%93Maruyama_method.
-#'
+#' Euler-Maruyama method implementation
+#' @param h h parameter
+#' @param noise_strength noise_strength parameter
 #' @return an object of to be used by \code{\link{ssa}}.
 #' @seealso \link{fastgssa-package}, \code{\link{ssa}}
 #' @keywords misc datagen ts

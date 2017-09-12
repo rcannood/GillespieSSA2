@@ -5,8 +5,9 @@
 \title{Invoking the stochastic simulation algorithm}
 \usage{
 ssa(initial.state, propensity.funs, nu, final.time, parms = NULL,
-  method = ssa.direct(), stop.on.negstate = TRUE, census.interval = 0,
-  verbose = FALSE, max.duration = Inf, recalculate.all = F)
+  method = ssa.direct(), stop.on.negstate = TRUE,
+  stop.on.propensity = TRUE, census.interval = 0, verbose = FALSE,
+  max.duration = Inf, recalculate.all = F)
 }
 \arguments{
 \item{initial.state}{numerical vector of initial states where the component elements
@@ -33,6 +34,8 @@ encountering a negative population size (i.e. does not throw an error). If
 \code{stop.on.negstate=FALSE} the simulation stops with an error message
 when encountering a negative population size.}
 
+\item{stop.on.propensity}{Whether or not to stop at a certain propensity}
+
 \item{census.interval}{(approximate) interval between recording the state of
 the system. If \code{census.interval=0} \eqn{(t,x)} is recorded at each time
 step (or tau-leap). If \code{census.interval=Inf} only
@@ -49,6 +52,8 @@ If \code{verbose} is a numeric, it will only be displayed about every \code{verb
 \item{max.duration}{maximum wall time duration (in seconds) that the
 simulation is allowed to run for before terminated. This option is usefull,
 in particular, for systems that can end up growing uncontrolably.}
+
+\item{recalculate.all}{todo documentation}
 }
 \value{
 Returns a list object with the following elements,
@@ -114,6 +119,7 @@ Selecting the appropriate \acronym{SSA} method is a trade-off between
   propensity function where each state variable requires the corresponding
   named element label in the initial state vector (\code{initial.state}).
 }
+
 \examples{
 
 ## Irreversible isomerization
@@ -172,13 +178,12 @@ ssa.plot(out)
 }
 
 }
-\author{
-Robrecht Cannoodt
-}
 \seealso{
 \link{fastgssa-package}, \code{\link{ssa.direct}}, \code{\link{ssa.etl}}, \code{\link{ssa.btl}}, \code{\link{ssa.otl}}
+}
+\author{
+Robrecht Cannoodt
 }
 \keyword{datagen}
 \keyword{misc}
 \keyword{ts}
-

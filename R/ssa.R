@@ -74,6 +74,8 @@ process.parms <- function(parms) {
 #' @param max.duration maximum wall time duration (in seconds) that the
 #'   simulation is allowed to run for before terminated. This option is usefull,
 #'   in particular, for systems that can end up growing uncontrolably.
+#' @param stop.on.propensity Whether or not to stop at a certain propensity
+#' @param recalculate.all todo documentation
 #'
 #' @return Returns a list object with the following elements,
 #'   \item{timeseries}{a data frame of the simulation time series where the first column is the time vector and subsequent columns are the state frequencies.}

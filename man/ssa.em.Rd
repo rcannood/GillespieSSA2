@@ -2,15 +2,19 @@
 % Please edit documentation in R/ssa_methods.R
 \name{ssa.em}
 \alias{ssa.em}
-\title{Euler–Maruyama method (EM)}
+\title{Euler-Maruyama method (EM)
+
+Euler-Maruyama method implementation}
 \usage{
 ssa.em(h = 0.01, noise_strength = 2)
 }
+\arguments{
+\item{h}{h parameter}
+
+\item{noise_strength}{noise_strength parameter}
+}
 \value{
 an object of to be used by \code{\link{ssa}}.
-}
-\description{
-Euler–Maruyama method implementation of https://en.wikipedia.org/wiki/Euler%E2%80%93Maruyama_method.
 }
 \seealso{
 \link{fastgssa-package}, \code{\link{ssa}}
@@ -18,4 +22,3 @@ Euler–Maruyama method implementation of https://en.wikipedia.org/wiki/Euler%E2
 \keyword{datagen}
 \keyword{misc}
 \keyword{ts}
-
