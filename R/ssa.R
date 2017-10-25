@@ -195,7 +195,8 @@ ssa <- function(
   census.interval = 0,
   verbose = FALSE,
   max.duration = Inf,
-  recalculate.all = F
+  recalculate.all = F,
+  extra_functions = list()
 ) {
   # Take a snapshot of all the options so they can be saved later
   args <- list(initial.state = initial.state, propensity.funs = propensity.funs, nu = nu, final.time = final.time, parms = parms, method.name = method$name, method.args = method$params)
@@ -253,12 +254,6 @@ ssa <- function(
   t.next.census <- census.interval
   t.next.console <- 0
 
-  # Initialise output
-  timeseries.output <- vector('list', 1000)
-  timeseries.output[[1]] <- c(t = t, x)
-  timeseries.index <- 2
-  step.sizes <- c()
-
   # Parse the propensity functions
   parsed.pfs <- parse.propensity.functions(propensity.funs, names(state.env))
   parsed.pf.funs <- lapply(parsed.pfs, function(pf) pf$fun)
@@ -266,9 +261,17 @@ ssa <- function(
     setNames(which(sapply(parsed.pfs, function(pf) varname %in% pf$var.names)), NULL)
   })
 
+  # Initialise output
+  timeseries.output <- vector('list', 1000)
+  timeseries.output[[1]] <- c(t = t, x, setNames(a, names(propensity.funs)))
+  timeseries.index <- 2
+  step.sizes <- c()
+
   # Evaluate initial transition rates
   a <- sapply(parsed.pf.funs, function(f) f(state.env))
   if (stop.on.propensity && any(a < 0)) stop("negative propensity function")
+
+  print(a)
 
   #############################################################################
   # We are ready to roll, start the simulation loop...
@@ -307,12 +310,18 @@ ssa <- function(
 
     out <- do.call(out.fun, c(list(x = x, a = a, nu = nu, method_state = method_state), method.params))
 
+    xprev <- x
+
     t <- t + out$tau
     x <- x + out$nu_j
 
-        # Check that no states are negative (can occur in some tau-leaping methods)
+    # Check that no states are negative (can occur in some tau-leaping methods)
     if (stop.on.negstate && any(x < 0)) {
-      stop("the state vector ", sQuote("x"), " contains negative values\n")
+      stop("the state vector ", sQuote("x"), " contains negative values\n", paste0(names(x)[which(x<0)], sep=" "))
+    }
+
+    for(extra_function in extra_functions) {
+      x <- extra_function(x, xprev)
     }
 
     # Record step size
@@ -359,7 +368,8 @@ ssa <- function(
       stop("negative propensity function - coersing to zero\n")
     }
 
-    a[is.na(a) | a < 0] <- 0 # Replace NA with zero (0/0 gives NA)
+    # a[is.na(a) | a < 0] <- 0 # Replace NA with zero (0/0 gives NA)
+    a[is.na(a)] <- 0 # Replace NA with zero (0/0 gives NA)
 
     time.end <- Sys.time()
     elapsed.time <- difftime(time.end, time.start, units = "secs")
@@ -372,7 +382,7 @@ ssa <- function(
   }
 
   # Record the final state of the system
-  timeseries.output[[timeseries.index]] <- c(t = t, x)
+  timeseries.output[[timeseries.index]] <- c(t = t, x, setNames(a, names(propensity.funs)))
   timeseries <- data.frame(do.call("rbind", timeseries.output[seq_len(timeseries.index)]))
 
   # Stop timer
