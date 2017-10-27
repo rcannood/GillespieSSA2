@@ -18,16 +18,18 @@ ssa.nutiling <- function(a, nu, j) {
   )
   return(nu_j)
 }
+#' @importFrom stats runif
 ssa.direct.fun <- function(x, a, nu, method_state) {
   j    <- sample(seq_along(a), size=1, prob=a)
   nu_j <- nu[,j]
-  tau  <- -log(runif(1))/sum(a)
+  tau  <- -log(stats::runif(1))/sum(a)
   list(tau = tau, nu_j = nu_j, j = which(nu_j != 0), method_state = method_state)
 }
+#' @importFrom stats runif
 ssa.direct.diag.fun <- function(x, a, nu, method_state) {
   j    <- sample(seq_along(a), size=1, prob=a)
   nu_j <- ssa.nutiling(a, nu, j)
-  tau  <- -log(runif(1))/sum(a)
+  tau  <- -log(stats::runif(1))/sum(a)
   list(tau = tau, nu_j = nu_j, j = which(nu_j != 0), method_state = method_state)
 }
 #' @title Direct method (D)
@@ -41,7 +43,7 @@ ssa.direct.diag.fun <- function(x, a, nu, method_state) {
 #' @export
 ssa.direct <- function() {
   ssa.method(
-    nam = "direct",
+    name = "direct",
     fun = ssa.direct.fun,
     diag_fun = ssa.direct.diag.fun,
     params = c(),
@@ -49,19 +51,20 @@ ssa.direct <- function() {
   )
 }
 
-
+#' @importFrom stats rpois
 ssa.etl.fun <- function(x, a, nu, method_state, tau) {
   M <- length(a)
-  k <- rpois(M, (a*tau))
+  k <- stats::rpois(M, (a*tau))
   # MPK: Strictly speaking it is not correct to call the realized state-change
   # vector nu_j here since, in leap methods, actually is not reaction specific.
   # In Pineda-Krch (JSS ms) it is refered to as the \bm{\tilde{nu}}
   nu_j <- (nu %*% k)[,1]
   list(tau = tau, nu_j = nu_j, j = which(nu_j != 0), method_state = method_state)
 }
+#' @importFrom stats rpois
 ssa.etl.diag.fun <- function(x, a, nu, method_state, tau) {   # RC: did not optimise this method yet
   MU <- length(a)         # Toto nr of reaction channels
-  k  <- rpois(MU,(a*tau)) # Nr of firings per channel
+  k  <- stats::rpois(MU,(a*tau)) # Nr of firings per channel
   M  <- ncol(nu)          # Nr of reaction channel per patch (nu)
   U  <- MU/M              # Nr of tilings
   nu_j <- NULL
@@ -90,7 +93,7 @@ ssa.etl <- function(tau = 0.3) {
   )
 }
 
-
+#' @importFrom stats rpois runif
 ssa.otl.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) { # RC: did not optimise this method yet
   if (method_state$suspensions != 0) {
     method_state$suspensions <- method_state$suspensions - 1
@@ -151,20 +154,20 @@ ssa.otl.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) { # R
       }
 
       # 4. Compute the second candidate time leap from the set of critical reactions, tau2. If there are no critical reactions tau2=Inf
-      tau2 <- -log(runif(1))/sum(a[!Jncr])
+      tau2 <- -log(stats::runif(1))/sum(a[!Jncr])
 
       # 5. Select the actual tau from the two candidate tau (the smaller of the two)
       # and determine the number of firings each reaction will have
       if (tau1 < tau2) {                                           # Step 5a
         tau <- tau1
         k <- as.numeric(!Jncr)                                     # Sets all critical reactions to one firings and non-critical to zero firings
-        k[k==0] <- rpois(sum(Jncr),(a[Jncr]*tau))                  # Sets the number of firings for non-critical reactions
+        k[k==0] <- stats::rpois(sum(Jncr),(a[Jncr]*tau))                  # Sets the number of firings for non-critical reactions
       } else {                                                     # Step 5b
         tau <- tau2
         jc <- sample(seq(dim(nu)[2]),size=1,prob=(a/sum(a[!Jncr]))) # Pick one of the critical reactions that will fire once
         k <- rep(0,dim(nu)[2])                                     # Setting up an empty vector
         k[jc] <- 1                                                 # Add the selected critical reaction that is firing
-        k[Jncr %in% TRUE] <- rpois(sum(Jncr),(a*tau))              # The number of firings of non-critical reactions is drawn from a Poisson distribution
+        k[Jncr %in% TRUE] <- stats::rpois(sum(Jncr),(a*tau))              # The number of firings of non-critical reactions is drawn from a Poisson distribution
       }
 
       # 6. Update the state vector and check for negative elements. If negative elements are found reduce
@@ -181,6 +184,7 @@ ssa.otl.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) { # R
     return(list(tau = tau, nu_j = nu_j, j = which(nu_j != 0), method_state = method_state))
   }
 }
+#' @importFrom stats runif rpois
 ssa.otl.diag.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) { # RC: did not optimise this method yet
   if (method_state$suspensions != 0) {
     method_state$suspensions <- method_state$suspensions - 1
@@ -250,12 +254,12 @@ ssa.otl.diag.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) 
       # direct method steps.
       if (tau1 < (dtf*1/sum(a))) {
         method_state$suspensions <- nd-1
-        return(ssa.direct.diasg.fun(x, a, nu, method_state)) # already run a direct
+        return(ssa.direct.diag.fun(x, a, nu, method_state)) # already run a direct
       }
 
       # 4. Compute the second candidate time leap from the set of critical
       # reactions, tau2. If there are no critical reactions tau2=Inf
-      tau2 <- -log(runif(1))/sum(a[!Jncr])
+      tau2 <- -log(stats::runif(1))/sum(a[!Jncr])
 
       # 5. Select the actual tau from the two candidate tau (the smaller of the
       # two) and determine the number of firings each reaction will have
@@ -265,7 +269,7 @@ ssa.otl.diag.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) 
         lambda <- (a[Jncr]*tau) # Fudge for negative probabilities
         lambda[lambda<0] <- 0
         if (any(lambda<0)) {cat("1\n"); browser()}
-        k[k==0] <- rpois(sum(Jncr),lambda)  # Sets the number of firings for non-critical reactions
+        k[k==0] <- stats::rpois(sum(Jncr),lambda)  # Sets the number of firings for non-critical reactions
       } else {                                     # Step 5b
         tau <- tau2
         pr <- (a/sum(a[!Jncr])) # Fudge for negative probabilities
@@ -277,7 +281,7 @@ ssa.otl.diag.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) 
         lambda <- (a*tau) # Fudge for negative probabilities
         lambda[lambda<0] <- 0
         if (any(lambda<0)) {cat("2\n"); browser()}
-        k[Jncr %in% TRUE] <- rpois(sum(Jncr),(a*tau))  # The number of firings of non-critical reactions is drawn from a Poisson distribution
+        k[Jncr %in% TRUE] <- stats::rpois(sum(Jncr),(a*tau))  # The number of firings of non-critical reactions is drawn from a Poisson distribution
       }
 
       # 6. Update the state vector and check for negative elements. If negative
@@ -334,7 +338,7 @@ ssa.otl <- function(x0, hor = NaN, nc = 10, epsilon = 0.03, dtf = 10, nd = 100) 
 }
 
 
-
+#' @importFrom stats rbinom rpois
 ssa.btl.fun <- function(x, a, nu, method_state, f) { # RC: did not optimise this method yet
   coercing <- FALSE
 
@@ -357,9 +361,9 @@ ssa.btl.fun <- function(x, a, nu, method_state, f) { # RC: did not optimise this
       } else {
         p <- a[j]*tau/L
       }
-      k <- rbinom(1,L,p)
+      k <- stats::rbinom(1,L,p)
     } else { # do this if there are no limiting reactions
-      k <- rpois(1,(a[j]*tau))
+      k <- stats::rpois(1,(a[j]*tau))
     }
 
     # Update tilde_x for the current reaction j
@@ -374,6 +378,8 @@ ssa.btl.fun <- function(x, a, nu, method_state, f) { # RC: did not optimise this
 
   list(tau = tau, nu_j = nu_j, j = which(nu_j != 0), method_state = method_state)
 }
+
+#' @importFrom stats rbinom rpois
 ssa.btl.diag.fun <- function(x, a, nu, method_state, f) { # RC: did not optimise this method yet
   coercing <- FALSE
 
@@ -403,10 +409,10 @@ ssa.btl.diag.fun <- function(x, a, nu, method_state, f) { # RC: did not optimise
         coercing <- TRUE
       } else {
         p <- a[j]*tau/L
-        k <- rbinom(1,L,p)
+        k <- stats::rbinom(1,L,p)
       }
     } else { # do this if there are no limiting reactions
-      k <- rpois(1,(a[j]*tau))
+      k <- stats::rpois(1,(a[j]*tau))
     }
 
     # Update tilde_x for the current reaction j
@@ -434,7 +440,7 @@ ssa.btl.diag.fun <- function(x, a, nu, method_state, f) { # RC: did not optimise
 ssa.btl <- function(f = 10) {
   if (f <= 1) stop(sQuote("f"), " has to be >1")
   ssa.method(
-    nam = "BTL",
+    name = "BTL",
     fun = ssa.btl.fun,
     diag_fun = ssa.btl.diag.fun,
     params = c(f = f),
@@ -443,17 +449,17 @@ ssa.btl <- function(f = 10) {
 }
 
 
-
+#' @importFrom stats rnorm
 ssa.em.fun <- function(x, a, nu, method_state, h, noise_strength) {
   tau <- h
-  nu_j <- rowSums(t(t(nu) * a)) * h + sqrt(abs(x)) * noise_strength * rnorm(length(x), 0, h)
+  nu_j <- rowSums(t(t(nu) * a)) * h + sqrt(abs(x)) * noise_strength * stats::rnorm(length(x), 0, h)
   # this is the fastest way according to
   # http://stackoverflow.com/questions/3643555/multiply-rows-of-matrix-by-vector
 
   list(tau = tau, nu_j = nu_j, j = which(nu_j != 0), method_state = method_state)
 }
 ssa.em.diag.fun <- function(x, a, nu, method_state, h, noise_strength) {
-  error("Diag deterministic not supported yet")
+  stop("Diag deterministic not supported yet")
 }
 #' @title Euler-Maruyama method (EM)
 #'
@@ -466,7 +472,7 @@ ssa.em.diag.fun <- function(x, a, nu, method_state, h, noise_strength) {
 #' @export
 ssa.em <- function(h = 0.01, noise_strength = 2) {
   ssa.method(
-    nam = "em",
+    name = "em",
     fun = ssa.em.fun,
     diag_fun = ssa.em.diag.fun,
     params = c(h = h, noise_strength = noise_strength),

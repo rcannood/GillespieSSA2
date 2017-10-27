@@ -76,6 +76,7 @@ process.parms <- function(parms) {
 #'   in particular, for systems that can end up growing uncontrolably.
 #' @param stop.on.propensity Whether or not to stop at a certain propensity
 #' @param recalculate.all todo documentation
+#' @param extra.functions Function in the form of `function(x, xprev)` to apply to each iteration.
 #'
 #' @return Returns a list object with the following elements,
 #'   \item{timeseries}{a data frame of the simulation time series where the first column is the time vector and subsequent columns are the state frequencies.}
@@ -121,8 +122,10 @@ process.parms <- function(parms) {
 #'   propensity function where each state variable requires the corresponding
 #'   named element label in the initial state vector (\code{initial.state}).
 #'
-#' @author Robrecht Cannoodt
 #' @seealso \link{fastgssa-package}, \code{\link{ssa.direct}}, \code{\link{ssa.etl}}, \code{\link{ssa.btl}}, \code{\link{ssa.otl}}
+#'
+#' @importFrom stats sd setNames
+#' @importFrom utils flush.console
 #'
 #' @keywords misc datagen ts
 #' @examples
@@ -134,7 +137,8 @@ process.parms <- function(parms) {
 #' initial.state  <- c(X=10000)
 #' a   <- c("c*X")
 #' nu  <- matrix(-1)
-#' out <- ssa(initial.state,a,nu,parms,final.time=10,simName="Irreversible isomerization") # Direct method
+#' # Direct method
+#' out <- ssa(initial.state,a,nu,parms,final.time=10,simName="Irreversible isomerization")
 #' plot(out$data[,1],out$data[,2]/10000,col="red",cex=0.5,pch=19)
 #' }
 #'
@@ -158,7 +162,8 @@ process.parms <- function(parms) {
 #' initial.state  <- c(N=500)
 #' a   <- c("b*N", "(d+(b-d)*N/K)*N")
 #' nu  <- matrix(c(+1,-1),ncol=2)
-#' out <- ssa(initial.state,a,nu,parms,final.time=10,method="D",max.duration=5,simName="Logistic growth")
+#' out <- ssa(initial.state,a,nu,parms,final.time=10,method="D",
+#'            max.duration=5,simName="Logistic growth")
 #' ssa.plot(out)
 #' }
 #'
@@ -178,7 +183,8 @@ process.parms <- function(parms) {
 #' initial.state  <- c(Y1=1000,Y2=1000)
 #' a   <- c("c1*Y1","c2*Y1*Y2","c3*Y2")
 #' nu  <- matrix(c(+1,-1,0,0,+1,-1),nrow=2,byrow=TRUE)
-#' out <- ssa(initial.state,a,nu,parms,final.time=100,method="ETL",simName="Lotka predator-prey model")
+#' out <- ssa(initial.state,a,nu,parms,final.time=100,method="ETL",
+#'            simName="Lotka predator-prey model")
 #' ssa.plot(out)
 #' }
 #'
@@ -196,7 +202,7 @@ ssa <- function(
   verbose = FALSE,
   max.duration = Inf,
   recalculate.all = F,
-  extra_functions = list()
+  extra.functions = list()
 ) {
   # Take a snapshot of all the options so they can be saved later
   args <- list(initial.state = initial.state, propensity.funs = propensity.funs, nu = nu, final.time = final.time, parms = parms, method.name = method$name, method.args = method$params)
@@ -258,12 +264,12 @@ ssa <- function(
   parsed.pfs <- parse.propensity.functions(propensity.funs, names(state.env))
   parsed.pf.funs <- lapply(parsed.pfs, function(pf) pf$fun)
   varname.map <- lapply(names(x), function(varname) {
-    setNames(which(sapply(parsed.pfs, function(pf) varname %in% pf$var.names)), NULL)
+    stats::setNames(which(sapply(parsed.pfs, function(pf) varname %in% pf$var.names)), NULL)
   })
 
   # Initialise output
   timeseries.output <- vector('list', 1000)
-  timeseries.output[[1]] <- c(t = t, x, setNames(a, names(propensity.funs)))
+  timeseries.output[[1]] <- c(t = t, x, stats::setNames(a, names(propensity.funs)))
   timeseries.index <- 2
   step.sizes <- c()
 
@@ -288,7 +294,7 @@ ssa <- function(
   if (verbose) {
     cat("Running ", method$name, " method with console output every ", console.interval, " time step\n", sep="")
     cat("Start wall time: ", format(time.start), "...\n" , sep = "")
-    flush.console()
+    utils::flush.console()
   }
 
   # Is the system nu-tiled along the diagonal?
@@ -304,7 +310,7 @@ ssa <- function(
 
     if (verbose && t.next.console <= t) {
       cat("(", elapsed.time, "s) t=", t, " : ", paste(x, collapse=","), "\n", sep="")
-      flush.console()
+      utils::flush.console()
       t.next.console <- t.next.console + console.interval
     }
 
@@ -320,7 +326,7 @@ ssa <- function(
       stop("the state vector ", sQuote("x"), " contains negative values\n", paste0(names(x)[which(x<0)], sep=" "))
     }
 
-    for(extra_function in extra_functions) {
+    for (extra_function in extra.functions) {
       x <- extra_function(x, xprev)
     }
 
@@ -330,7 +336,7 @@ ssa <- function(
     # Record the simulation state
     if (t.next.census <= t) {
       x[x<0] = 0
-      timeseries.output[[timeseries.index]] <- c(t = t, x, setNames(a, names(propensity.funs)))
+      timeseries.output[[timeseries.index]] <- c(t = t, x, stats::setNames(a, names(propensity.funs)))
       timeseries.index <- timeseries.index + 1
       t.next.census <- t + census.interval
 
@@ -378,11 +384,11 @@ ssa <- function(
   # Display the last time step on the console
   if (verbose) {
     cat("t=", t, " : ", paste(x, collapse = ","), "\n", sep = "")
-    flush.console()
+    utils::flush.console()
   }
 
   # Record the final state of the system
-  timeseries.output[[timeseries.index]] <- c(t = t, x, setNames(a, names(propensity.funs)))
+  timeseries.output[[timeseries.index]] <- c(t = t, x, stats::setNames(a, names(propensity.funs)))
   timeseries <- data.frame(do.call("rbind", timeseries.output[seq_len(timeseries.index)]))
 
   # Stop timer
@@ -401,7 +407,7 @@ ssa <- function(
     elapsed.wall.time  = elapsed.time,
     number.of.steps    = length(step.sizes),
     mean.step.size     = mean(step.sizes),
-    sd.step.size       = sd(step.sizes)
+    sd.step.size       = stats::sd(step.sizes)
   )
   if (verbose) {
     cat("final time = ", t, "\n", sep="")

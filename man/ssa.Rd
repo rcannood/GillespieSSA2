@@ -7,7 +7,7 @@
 ssa(initial.state, propensity.funs, nu, final.time, parms = NULL,
   method = ssa.direct(), stop.on.negstate = TRUE,
   stop.on.propensity = TRUE, census.interval = 0, verbose = FALSE,
-  max.duration = Inf, recalculate.all = F)
+  max.duration = Inf, recalculate.all = F, extra.functions = list())
 }
 \arguments{
 \item{initial.state}{numerical vector of initial states where the component elements
@@ -54,6 +54,8 @@ simulation is allowed to run for before terminated. This option is usefull,
 in particular, for systems that can end up growing uncontrolably.}
 
 \item{recalculate.all}{todo documentation}
+
+\item{extra.functions}{Function in the form of `function(x, xprev)` to apply to each iteration.}
 }
 \value{
 Returns a list object with the following elements,
@@ -129,7 +131,8 @@ parms <- c(c=0.5)
 initial.state  <- c(X=10000)
 a   <- c("c*X")
 nu  <- matrix(-1)
-out <- ssa(initial.state,a,nu,parms,final.time=10,simName="Irreversible isomerization") # Direct method
+# Direct method
+out <- ssa(initial.state,a,nu,parms,final.time=10,simName="Irreversible isomerization")
 plot(out$data[,1],out$data[,2]/10000,col="red",cex=0.5,pch=19)
 }
 
@@ -153,7 +156,8 @@ parms <- c(b=2, d=1, K=1000)
 initial.state  <- c(N=500)
 a   <- c("b*N", "(d+(b-d)*N/K)*N")
 nu  <- matrix(c(+1,-1),ncol=2)
-out <- ssa(initial.state,a,nu,parms,final.time=10,method="D",max.duration=5,simName="Logistic growth")
+out <- ssa(initial.state,a,nu,parms,final.time=10,method="D",
+           max.duration=5,simName="Logistic growth")
 ssa.plot(out)
 }
 
@@ -173,16 +177,14 @@ parms <- c(c1=10, c2=.01, c3=10)
 initial.state  <- c(Y1=1000,Y2=1000)
 a   <- c("c1*Y1","c2*Y1*Y2","c3*Y2")
 nu  <- matrix(c(+1,-1,0,0,+1,-1),nrow=2,byrow=TRUE)
-out <- ssa(initial.state,a,nu,parms,final.time=100,method="ETL",simName="Lotka predator-prey model")
+out <- ssa(initial.state,a,nu,parms,final.time=100,method="ETL",
+           simName="Lotka predator-prey model")
 ssa.plot(out)
 }
 
 }
 \seealso{
 \link{fastgssa-package}, \code{\link{ssa.direct}}, \code{\link{ssa.etl}}, \code{\link{ssa.btl}}, \code{\link{ssa.otl}}
-}
-\author{
-Robrecht Cannoodt
 }
 \keyword{datagen}
 \keyword{misc}
