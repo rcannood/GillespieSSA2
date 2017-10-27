@@ -277,7 +277,10 @@ ssa <- function(
   a <- sapply(parsed.pf.funs, function(f) f(state.env))
   if (stop.on.propensity && any(a < 0)) stop("negative propensity function")
 
-  print(a)
+  if (verbose) {
+    cat("Initial transition states:\n")
+    print(a)
+  }
 
   #############################################################################
   # We are ready to roll, start the simulation loop...
