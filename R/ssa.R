@@ -261,17 +261,15 @@ ssa <- function(
     setNames(which(sapply(parsed.pfs, function(pf) varname %in% pf$var.names)), NULL)
   })
 
+  # Evaluate initial transition rates
+  a <- sapply(parsed.pf.funs, function(f) f(state.env))
+  if (stop.on.propensity && any(a < 0)) stop("negative propensity function")
+
   # Initialise output
   timeseries.output <- vector('list', 1000)
   timeseries.output[[1]] <- c(t = t, x, setNames(a, names(propensity.funs)))
   timeseries.index <- 2
   step.sizes <- c()
-
-  # Evaluate initial transition rates
-  a <- sapply(parsed.pf.funs, function(f) f(state.env))
-  if (stop.on.propensity && any(a < 0)) stop("negative propensity function")
-
-  print(a)
 
   #############################################################################
   # We are ready to roll, start the simulation loop...
@@ -329,6 +327,7 @@ ssa <- function(
 
     # Record the simulation state
     if (t.next.census <= t) {
+      if(any(x<0)) warning("X smaller than 0")
       x[x<0] = 0
       timeseries.output[[timeseries.index]] <- c(t = t, x, setNames(a, names(propensity.funs)))
       timeseries.index <- timeseries.index + 1
