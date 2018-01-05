@@ -247,6 +247,8 @@ ssa <- function(
     stop("each value in ", sQuote("initial.state"), " and ", sQuote("parms"), " needs a unique name")
   }
 
+  x.went.negative <- FALSE # record that x ever went negative
+
   # Initialize time-related counters
   if (is.numeric(verbose)) {
     console.interval <- verbose
@@ -342,8 +344,8 @@ ssa <- function(
 
     # Record the simulation state
     if (t.next.census <= t) {
-      if(any(x<0)) warning("X smaller than 0")
-      x[x<0] = 0
+      if(any(x<0)) x.went.negative <- TRUE
+      x[x<0] <- 0
       timeseries.output[[timeseries.index]] <- c(t = t, x, stats::setNames(a, names(propensity.funs)))
       timeseries.index <- timeseries.index + 1
       t.next.census <- t + census.interval
@@ -421,6 +423,9 @@ ssa <- function(
     cat("final time = ", t, "\n", sep="")
     print(stats)
   }
+
+  # Add warnings if something happens during simulation
+  if (x.went.negative) {warnings("Negative state vectors were clipped to zero")}
 
   # Output results
   list(
