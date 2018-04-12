@@ -4,7 +4,7 @@ Title: Gillespie's Stochastic Simulation Algorithm (GSSA) implemented in Rcpp
 Version: 0.6-0
 Date: 2016-04-04
 Author: Mario Pineda-Krch <mpineda@math.ualbeta.ca>
-Maintainer: Robrecht Cannoodt <robrecht.cannoodt@gmail.com>
+Maintainer: Robrecht Cannoodt <rcannood@gmail.com>
 Description: fastgssa provides a simple to use, intuitive, and
     extensible interface to several stochastic simulation
     algorithms for generating simulated trajectories of finite
