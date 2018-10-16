@@ -1,9 +1,9 @@
-#' parms <- c(c=0.5)
-#' initial.state  <- c(X=10000)
+#' parms <- c(c = 0.5)
+#' initial.state  <- c(X = 10000)
 #' a   <- c("c*X")
 #' nu  <- matrix(-1)
-#' out <- ssa(initial.state,a,nu,parms,final.time=10,simName="Irreversible isomerization") # Direct method
-#' plot(out$data[,1],out$data[,2]/10000,col="red",cex=0.5,pch=19)
+#' out <- ssa(initial.state,a,nu,parms,final.time = 10,simName = "Irreversible isomerization") # Direct method
+#' plot(out$data[,1],out$data[,2]/10000,col = "red",cex = 0.5,pch = 19)
 #'
 #' a <- runif(100)
 #' nu <- matrix(runif(100 * length(a)), ncol = length(a))

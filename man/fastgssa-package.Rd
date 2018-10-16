@@ -27,15 +27,15 @@ model, and a metapopulation \acronym{SIRS} model.
 The stochastic simulation algorithm (\acronym{SSA}) is a procedure
 for constructing simulated trajectories of finite populations in continuous time.
 If \eqn{X_i(t)} is the number of individuals in population \eqn{i}
-(\eqn{i=1,\ldots,N}{i=1,...,N}) at time \eqn{t} the \acronym{SSA} estimates
+(\eqn{i = 1,\ldots,N}{i = 1,...,N}) at time \eqn{t} the \acronym{SSA} estimates
 the state vector \eqn{ \mathbf{X}(t) \equiv (X_1(t),\ldots,X_N(t)) }{ X(t) =
 (X_1(t),...,X_N(t))}, given that the system initially (at time \eqn{t_0})
-was in state \eqn{\mathbf{X}(t_0)=\mathbf{x_0}}{X(t_0)=x_0}. Reactions,
+was in state \eqn{\mathbf{X}(t_0) = \mathbf{x_0}}{X(t_0) = x_0}. Reactions,
 single instantaneous events changing at least one of the populations (e.g.
 birth, death, movement, collision, predation, infection, etc), cause the
 state of the system to change over time. The \acronym{SSA} procedure samples
 the time \eqn{\tau}{tau} to the next reaction \eqn{R_j}
-(\eqn{j=1,\ldots,M}{j=1,...,M}) and updates the system state
+(\eqn{j = 1,\ldots,M}{j = 1,...,M}) and updates the system state
 \eqn{\mathbf{X}(t)}{X(t)} accordingly. Each reaction \eqn{R_j} is
 characterized mathematically by two quantities; its state-change vector
 \eqn{\bm{\nu}_j \equiv ( \nu_{1j},\ldots,\nu_{Nj} )}{nu_j =

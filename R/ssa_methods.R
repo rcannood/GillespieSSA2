@@ -20,14 +20,14 @@ ssa.nutiling <- function(a, nu, j) {
 }
 #' @importFrom stats runif
 ssa.direct.fun <- function(x, a, nu, method_state) {
-  j    <- sample(seq_along(a), size=1, prob=a)
+  j    <- sample(seq_along(a), size = 1, prob = a)
   nu_j <- nu[,j]
   tau  <- -log(stats::runif(1))/sum(a)
   list(tau = tau, nu_j = nu_j, j = which(nu_j != 0), method_state = method_state)
 }
 #' @importFrom stats runif
 ssa.direct.diag.fun <- function(x, a, nu, method_state) {
-  j    <- sample(seq_along(a), size=1, prob=a)
+  j    <- sample(seq_along(a), size = 1, prob = a)
   nu_j <- ssa.nutiling(a, nu, j)
   tau  <- -log(stats::runif(1))/sum(a)
   list(tau = tau, nu_j = nu_j, j = which(nu_j != 0), method_state = method_state)
@@ -69,7 +69,7 @@ ssa.etl.diag.fun <- function(x, a, nu, method_state, tau) {   # RC: did not opti
   U  <- MU/M              # Nr of tilings
   nu_j <- NULL
   for(f in (seq(U)-1))
-    nu_j <- c(nu_j, rowSums(matrix(rep(k[1:M+f*M],nrow(nu)),byrow=TRUE,ncol=M)*nu))
+    nu_j <- c(nu_j, rowSums(matrix(rep(k[1:M+f*M],nrow(nu)),byrow = TRUE,ncol = M)*nu))
   list(tau = tau, nu_j = nu_j, j = which(nu_j != 0), method_state = method_state)
 }
 #' @title Explicit tau-leap method (ETL)
@@ -109,7 +109,7 @@ ssa.otl.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) { # R
     # negative entries. Despite the warning the end result is correct, i.e. the
     # number of firings for such a channel becomes Inf.
     options(warn = -1)
-    L <- apply(floor(x/abs(tmp_nu)),2,min,na.rm=TRUE)
+    L <- apply(floor(x/abs(tmp_nu)),2,min,na.rm = TRUE)
     options(warn = 0)
 
     Jncr <- L >= nc                     # Indices of the non-critical reactions
@@ -125,7 +125,7 @@ ssa.otl.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) { # R
       g[hor==22] <- (2+1/(x[hor==2]-1)) # Intraspecific second-order reaction (S1+S1->...)
 
       # Define mu ($\hat{\mu$}_i(\matnbf{x}) in Eq. 32a)
-      tmp_nu <- matrix(nu[apply(nu, 1, function(x) any(x != 0))],ncol=dim(nu)[2]) # Remove non-reacting species from nu
+      tmp_nu <- matrix(nu[apply(nu, 1, function(x) any(x != 0))],ncol = dim(nu)[2]) # Remove non-reacting species from nu
       tmp <- tmp_nu[,Jncr]*a[Jncr]
       if (is.matrix(tmp)) mu <- rowSums(tmp)
       else mu <- tmp
@@ -153,7 +153,7 @@ ssa.otl.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) { # R
         # return(list(tau = NA, nu_j = NA, j = NA, method_state = method_state))
       }
 
-      # 4. Compute the second candidate time leap from the set of critical reactions, tau2. If there are no critical reactions tau2=Inf
+      # 4. Compute the second candidate time leap from the set of critical reactions, tau2. If there are no critical reactions tau2 = Inf
       tau2 <- -log(stats::runif(1))/sum(a[!Jncr])
 
       # 5. Select the actual tau from the two candidate tau (the smaller of the two)
@@ -164,7 +164,7 @@ ssa.otl.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) { # R
         k[k==0] <- stats::rpois(sum(Jncr),(a[Jncr]*tau))                  # Sets the number of firings for non-critical reactions
       } else {                                                     # Step 5b
         tau <- tau2
-        jc <- sample(seq(dim(nu)[2]),size=1,prob=(a/sum(a[!Jncr]))) # Pick one of the critical reactions that will fire once
+        jc <- sample(seq(dim(nu)[2]),size = 1,prob = (a/sum(a[!Jncr]))) # Pick one of the critical reactions that will fire once
         k <- rep(0,dim(nu)[2])                                     # Setting up an empty vector
         k[jc] <- 1                                                 # Add the selected critical reaction that is firing
         k[Jncr %in% TRUE] <- stats::rpois(sum(Jncr),(a*tau))              # The number of firings of non-critical reactions is drawn from a Poisson distribution
@@ -172,7 +172,7 @@ ssa.otl.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) { # R
 
       # 6. Update the state vector and check for negative elements. If negative elements are found reduce
       # tau1 by half and return to step 3
-      nu_j <- rowSums(matrix(rep(k,nrow(nu)),byrow=TRUE,ncol=length(a))*nu)
+      nu_j <- rowSums(matrix(rep(k,nrow(nu)),byrow = TRUE,ncol = length(a))*nu)
       if (any((x+nu_j)<0)) {
         tau1 <- tau1/2
         calculateTau <- TRUE
@@ -206,7 +206,7 @@ ssa.otl.diag.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) 
     L <- NULL
     options(warn = -1)
     for(f in (seq(U)-1))
-      L <- c(L, apply(floor(x[1:N+f*N]/abs(nu_negative)),2,min,na.rm=TRUE))
+      L <- c(L, apply(floor(x[1:N+f*N]/abs(nu_negative)),2,min,na.rm = TRUE))
     options(warn = 0)
     Jncr <- L >= nc  # Indices of the non-critical reactions
 
@@ -222,7 +222,7 @@ ssa.otl.diag.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) 
 
       # Define mu ($\hat{\mu$}_i(\matnbf{x}) in Eq. 32a)
       # Define sigma ($\hat{\sigma}^2_i(\mathbf{x})$ in Eq. 32b)
-      nu_reacting <- matrix(nu[apply(nu,1,any)],ncol=M) # Remove non-reacting species (i.e. rows) from nu
+      nu_reacting <- matrix(nu[apply(nu,1,any)],ncol = M) # Remove non-reacting species (i.e. rows) from nu
       mu <- NULL
       sigmaSq <- NULL
       for(f in (seq(U)-1)) {
@@ -241,7 +241,7 @@ ssa.otl.diag.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) 
       leftTerm  <- max(epsilon*x/g,1) / abs(mu)
       rightTerm <- max(epsilon*x/g,1)^2 / abs(sigmaSq)
       tau1      <- min(leftTerm[Irs],rightTerm[Irs])
-      if (is.infinite(tau1)) cat("tau1=Inf\n") # DEBUG
+      if (is.infinite(tau1)) cat("tau1 = Inf\n") # DEBUG
       if (is.na(tau1)) browser() # DEBUG
     } # if (sum(Jncr) == 0)
 
@@ -258,7 +258,7 @@ ssa.otl.diag.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) 
       }
 
       # 4. Compute the second candidate time leap from the set of critical
-      # reactions, tau2. If there are no critical reactions tau2=Inf
+      # reactions, tau2. If there are no critical reactions tau2 = Inf
       tau2 <- -log(stats::runif(1))/sum(a[!Jncr])
 
       # 5. Select the actual tau from the two candidate tau (the smaller of the
@@ -275,7 +275,7 @@ ssa.otl.diag.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) 
         pr <- (a/sum(a[!Jncr])) # Fudge for negative probabilities
         pr[pr<0] <- 0
         if (any(pr<0)) { cat("3\n"); browser()}
-        jc <- sample(seq(M*U),size=1,prob=pr) # Pick one of the critical reactions that will fire once
+        jc <- sample(seq(M*U),size = 1,prob = pr) # Pick one of the critical reactions that will fire once
         k <- rep(0,(M*U))                          # Setting up an empty vector
         k[jc] <- 1                                 # Add the selected critical reaction that is firing
         lambda <- (a*tau) # Fudge for negative probabilities
@@ -290,7 +290,7 @@ ssa.otl.diag.fun <- function(x, a, nu, method_state, hor, nc, epsilon, dtf, nd) 
       # Update the state-change vector by nu-tiling
       nu_j <- NULL
       for(f in (seq(U)-1))
-        nu_j <- c(nu_j, rowSums(matrix(rep(k[1:M+f*M],dim(nu)[1]),byrow=TRUE,ncol=M)*nu))
+        nu_j <- c(nu_j, rowSums(matrix(rep(k[1:M+f*M],dim(nu)[1]),byrow = TRUE,ncol = M)*nu))
 
       if (any((x+nu_j)<0)) {
         tau1 <- tau1/2
@@ -367,7 +367,7 @@ ssa.btl.fun <- function(x, a, nu, method_state, f) { # RC: did not optimise this
     }
 
     # Update tilde_x for the current reaction j
-    tmp_nu_j <- matrix(rep(k,nrow(nu)), byrow=TRUE, ncol=1)*nu[,j]
+    tmp_nu_j <- matrix(rep(k,nrow(nu)), byrow = TRUE, ncol = 1)*nu[,j]
     tilde_x <- tilde_x + tmp_nu_j
 
     # Record the current state change (it is returned by ssa.btl)

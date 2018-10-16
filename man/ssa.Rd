@@ -29,16 +29,16 @@ state (rows) caused by a single reaction of any given type (columns).}
 
 \item{stop.on.negstate}{boolean object indicating if negative state
 values should be ignored (this can occur in the \code{etl} method). If
-\code{stop.on.negstate=TRUE} the simulation finishes gracefully when
+\code{stop.on.negstate = TRUE} the simulation finishes gracefully when
 encountering a negative population size (i.e. does not throw an error). If
-\code{stop.on.negstate=FALSE} the simulation stops with an error message
+\code{stop.on.negstate = FALSE} the simulation stops with an error message
 when encountering a negative population size.}
 
 \item{stop.on.propensity}{Whether or not to stop at a certain propensity}
 
 \item{census.interval}{(approximate) interval between recording the state of
-the system. If \code{census.interval=0} \eqn{(t,x)} is recorded at each time
-step (or tau-leap). If \code{census.interval=Inf} only
+the system. If \code{census.interval = 0} \eqn{(t,x)} is recorded at each time
+step (or tau-leap). If \code{census.interval = Inf} only
 \eqn{(t_0,x_0)}{(t0,initial.state)} and \eqn{(t_f,x_t)}{(final.time,xf)} is recorded. Note, the
 size of the time step (or tau-leaps) ultimately limits the interval between
 subsequent recordings of the system state since the state of the system
@@ -99,10 +99,10 @@ Selecting the appropriate \acronym{SSA} method is a trade-off between
   model needs at least four components, the initial state vector (\code{initial.state}),
   state-change matrix (\code{nu}), propensity vector (\code{a}), and the final
   time of the simulation (\code{final.time}). The initial state vector defines the
-  population sizes in all the states at \eqn{t=0}, e.g. for a system with two
+  population sizes in all the states at \eqn{t = 0}, e.g. for a system with two
   species \code{X1} and \code{X2} where both have an initial population size
   of 1000 the initial state vector is defined as \code{initial.state <-
-  c(X1=1000,X2=1000)}. The elements of the vector have to be labelled using
+  c(X1 = 1000,X2 = 1000)}. The elements of the vector have to be labelled using
   the same notation as the state variables used in the propensity functions.
   The state-change matrix defines the change in the number of individuals in
   each state (rows) as caused by one reaction of a given type (columns). For
@@ -111,7 +111,7 @@ Selecting the appropriate \acronym{SSA} method is a trade-off between
   \stackrel{c_1}{\longrightarrow} S_2}{S1 --c1--> S2} \deqn{S_2
   \stackrel{c_2}{\longrightarrow} 0}{S2 --c2--> 0}
 
-  is defined as \code{nu <- matrix(c(-1,0,+1,-1),nrow=2,byrow=TRUE)} where
+  is defined as \code{nu <- matrix(c(-1,0,+1,-1),nrow = 2,byrow = TRUE)} where
   \eqn{c_1}{c1} and \eqn{c_2}{c2} are the per capita reaction probabilities.
   The propensity vector, \code{a}, defines the probabilities that a particular
   reaction will occur over the next infinitesimal time interval \eqn{\left[
@@ -125,60 +125,60 @@ Selecting the appropriate \acronym{SSA} method is a trade-off between
 \examples{
 
 ## Irreversible isomerization
-## Large initial population size (X=1000)
+## Large initial population size (X = 1000)
 \dontrun{
-parms <- c(c=0.5)
-initial.state  <- c(X=10000)
+parms <- c(c = 0.5)
+initial.state  <- c(X = 10000)
 a   <- c("c*X")
 nu  <- matrix(-1)
 # Direct method
-out <- ssa(initial.state,a,nu,parms,final.time=10,simName="Irreversible isomerization")
-plot(out$data[,1],out$data[,2]/10000,col="red",cex=0.5,pch=19)
+out <- ssa(initial.state,a,nu,parms,final.time = 10,simName = "Irreversible isomerization")
+plot(out$data[,1],out$data[,2]/10000,col = "red",cex = 0.5,pch = 19)
 }
 
-## Smaller initial population size (X=100)
+## Smaller initial population size (X = 100)
 \dontrun{
-initial.state  <- c(X=100)
-out <- ssa(initial.state,a,nu,parms,final.time=10) # Direct method
-points(out$data[,1],out$data[,2]/100,col="green",cex=0.5,pch=19)
+initial.state  <- c(X = 100)
+out <- ssa(initial.state,a,nu,parms,final.time = 10) # Direct method
+points(out$data[,1],out$data[,2]/100,col = "green",cex = 0.5,pch = 19)
 }
 
-## Small initial population size (X=10)
+## Small initial population size (X = 10)
 \dontrun{
-initial.state  <- c(X=10)
-out <- ssa(initial.state,a,nu,parms,final.time=10) # Direct method
-points(out$data[,1],out$data[,2]/10,col="blue",cex=0.5,pch=19)
+initial.state  <- c(X = 10)
+out <- ssa(initial.state,a,nu,parms,final.time = 10) # Direct method
+points(out$data[,1],out$data[,2]/10,col = "blue",cex = 0.5,pch = 19)
 }
 
 ## Logistic growth
 \dontrun{
-parms <- c(b=2, d=1, K=1000)
-initial.state  <- c(N=500)
+parms <- c(b = 2, d = 1, K = 1000)
+initial.state  <- c(N = 500)
 a   <- c("b*N", "(d+(b-d)*N/K)*N")
-nu  <- matrix(c(+1,-1),ncol=2)
-out <- ssa(initial.state,a,nu,parms,final.time=10,method="D",
-           max.duration=5,simName="Logistic growth")
+nu  <- matrix(c(+1,-1),ncol = 2)
+out <- ssa(initial.state,a,nu,parms,final.time = 10,method = "D",
+           max.duration = 5,simName = "Logistic growth")
 ssa.plot(out)
 }
 
 ## Kermack-McKendrick SIR model
 \dontrun{
-parms <- c(beta=0.001, gamma=0.1)
-initial.state  <- c(S=499,I=1,R=0)
+parms <- c(beta = 0.001, gamma = 0.1)
+initial.state  <- c(S = 499,I = 1,R = 0)
 a   <- c("beta*S*I","gamma*I")
-nu  <- matrix(c(-1,0,+1,-1,0,+1),nrow=3,byrow=TRUE)
-out <- ssa(initial.state,a,nu,parms,final.time=100,simName="SIR model")
+nu  <- matrix(c(-1,0,+1,-1,0,+1),nrow = 3,byrow = TRUE)
+out <- ssa(initial.state,a,nu,parms,final.time = 100,simName = "SIR model")
 ssa.plot(out)
 }
 
 ## Lotka predator-prey model
 \dontrun{
-parms <- c(c1=10, c2=.01, c3=10)
-initial.state  <- c(Y1=1000,Y2=1000)
+parms <- c(c1 = 10, c2 = .01, c3 = 10)
+initial.state  <- c(Y1 = 1000,Y2 = 1000)
 a   <- c("c1*Y1","c2*Y1*Y2","c3*Y2")
-nu  <- matrix(c(+1,-1,0,0,+1,-1),nrow=2,byrow=TRUE)
-out <- ssa(initial.state,a,nu,parms,final.time=100,method="ETL",
-           simName="Lotka predator-prey model")
+nu  <- matrix(c(+1,-1,0,0,+1,-1),nrow = 2,byrow = TRUE)
+out <- ssa(initial.state,a,nu,parms,final.time = 100,method = "ETL",
+           simName = "Lotka predator-prey model")
 ssa.plot(out)
 }
 
