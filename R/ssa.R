@@ -1,32 +1,3 @@
-parse.propensity.functions <- function(propensity.funs, var.names) {
-  names(propensity.funs) <- NULL
-  lapply(propensity.funs, function(string) {
-    aag <- strsplit(gsub("([A-Za-z][A-Za-z0-9_]*)", " \\1 ", string), " ")[[1]]
-    aag.match <- match(aag, var.names)
-    ix <- !is.na(aag.match)
-    found.var.names <- unique(aag[ix])
-    aag[ix] <- paste0("vec[[", aag.match[ix], "]]")
-    new.aa <- paste0("function(vec) ", paste(aag, collapse = ""))
-    aa.fun <- eval(parse(text = new.aa))
-    list(fun = aa.fun, var.names = found.var.names)
-  })
-}
-
-process.parms <- function(parms) {
-  if (is.null(parms)) {
-    t(c(t = 0))
-  } else if (is.vector(parms)) {
-    t(c(t = 0, parms))
-  } else if (is.data.frame(parms)) {
-    as.matrix(parms)
-  } else if (is.matrix(parms)) {
-    parms
-  } else {
-    stop(sQuote("parms"), " needs to be NULL, a vector, a data frame or a matrix")
-  }
-}
-
-
 #' Invoking the stochastic simulation algorithm
 #'
 #' Main interface function to the implemented \acronym{SSA} methods. Runs a
@@ -43,40 +14,29 @@ process.parms <- function(parms) {
 #' approximate methods, and occasionally one will have to hand tweak them in
 #' order for a stochastic model to run appropriately.
 #'
-#' @param initial.state numerical vector of initial states where the component elements
+#' @param initial_state numerical vector of initial states where the component elements
 #'   must be named using the same notation as the corresponding state variable in
 #'   the propensity vector, \code{a}.
-#' @param propensity.funs character vector of propensity functions where state variables
+#' @param propensity_funs character vector of propensity functions where state variables
 #'   correspond to the names of the elements in \code{initial.state}.
 #' @param nu numerical matrix of change if the number of individuals in each
 #'   state (rows) caused by a single reaction of any given type (columns).
-#' @param final.time final time.
-#' @param parms named vector of model parameters.
+#' @param final_time final time.
+#' @param params named vector of model parameters.
 #' @param method which method to use. Must be one of: \code{\link{ssa.direct}},
 #'   \code{\link{ssa.btl}}, \code{\link{ssa.etl}}, or \code{\link{ssa.otl}}
-#' @param stop.on.negstate boolean object indicating if negative state
+#' @param stop_on_neg_state boolean object indicating if negative state
 #'   values should be ignored (this can occur in the \code{etl} method). If
 #'   \code{stop.on.negstate = TRUE} the simulation finishes gracefully when
 #'   encountering a negative population size (i.e. does not throw an error). If
 #'   \code{stop.on.negstate = FALSE} the simulation stops with an error message
 #'   when encountering a negative population size.
-#' @param census.interval (approximate) interval between recording the state of
-#'   the system. If \code{census.interval = 0} \eqn{(t,x)} is recorded at each time
-#'   step (or tau-leap). If \code{census.interval = Inf} only
-#'   \eqn{(t_0,x_0)}{(t0,initial.state)} and \eqn{(t_f,x_t)}{(final.time,xf)} is recorded. Note, the
-#'   size of the time step (or tau-leaps) ultimately limits the interval between
-#'   subsequent recordings of the system state since the state of the system
-#'   cannot be recorded at a finer time interval the size of the time steps (or
-#'   tau-leaps).
 #' @param verbose If \code{TRUE}, intermediary information pertaining to the simulation will be displayed at each step.
 #'   If \code{verbose} is a numeric, it will only be displayed about every \code{verbose} seconds.
 #'   \strong{Verbose runs drastically slows down simulations.}
-#' @param max.duration maximum wall time duration (in seconds) that the
+#' @param max_duration maximum wall time duration (in seconds) that the
 #'   simulation is allowed to run for before terminated. This option is usefull,
 #'   in particular, for systems that can end up growing uncontrolably.
-#' @param stop.on.propensity Whether or not to stop at a certain propensity
-#' @param recalculate.all todo documentation
-#' @param extra.functions Function in the form of `function(x, xprev)` to apply to each iteration.
 #'
 #' @return Returns a list object with the following elements,
 #'   \item{timeseries}{a data frame of the simulation time series where the first column is the time vector and subsequent columns are the state frequencies.}
@@ -188,249 +148,122 @@ process.parms <- function(parms) {
 #' ssa.plot(out)
 #' }
 #'
-#' @export ssa
+#' @useDynLib fastgssa
 ssa <- function(
-  initial.state,
-  propensity.funs,
+  initial_state,
+  propensity_funs,
   nu,
-  final.time,
-  parms = NULL,
-  method = ssa.direct(),
-  stop.on.negstate = TRUE,
-  stop.on.propensity = TRUE,
-  census.interval = 0,
+  final_time,
+  params = NULL,
+  method = make_ssa_em(.01, 2),
+  stop_on_neg_state = TRUE,
   verbose = FALSE,
-  max.duration = Inf,
-  recalculate.all = F,
-  extra.functions = list()
+  max_duration = Inf,
+  console_interval = 1
 ) {
-  # Take a snapshot of all the options so they can be saved later
-  args <- list(initial.state = initial.state, propensity.funs = propensity.funs, nu = nu, final.time = final.time, parms = parms, method.name = method$name, method.args = method$params)
-
-  # Do some basic check of the argument types
-  if (!is.numeric(initial.state))                    stop(sQuote("initial.state"), " is not numeric")
-  if (!is.character(propensity.funs))                stop(sQuote("propensity.funs"), " is not of character type")
-  if (!is.numeric(nu))                               stop(sQuote("nu"), " is not numeric")
-  if (!is.numeric(final.time))                       stop(sQuote("final.time"), " is not numeric")
-  if (!is.numeric(census.interval))                  stop(sQuote("census.interval"), " is not numeric")
-  if (!stop.on.negstate %in% c(T, F))                stop(sQuote("stop.on.negstate"), " is not boolean")
-  if (!is.numeric(verbose) && !verbose %in% c(T, F)) stop(sQuote("verbose"), " must be numeric or boolean")
-  if (class(method) != "fastgssa::ssamethod")        stop(sQuote("method"), " needs to be produced by ssa.direct(), ssa.btl(...), ssa.etl(...), or ssa.otl(...)")
-
-  # Check the consistency of the system dimensions, i.e. number of rows and
-  # columns in the state-change matrix and the number of elements in the initial
-  # state vector and the vector of propensity functions
-  if (length(propensity.funs) / ncol(nu) != length(initial.state) / nrow(nu))
-    stop("inconsistent system dimensions (unequal 'nu' tessallation)")
-  if ((length(propensity.funs) %% ncol(nu)) > 0 || (length(initial.state) %% nrow(nu)) > 0)
-    stop("inconsistent system dimensions (fractional tessallation)")
-
-  # construct state space
-  parms <- process.parms(parms)
-  if (nrow(parms) < 1) {
-    stop("if ", sQuote("parms"), " is a matrix or a data frame, it needs at least one row, else make it NULL.")
-  }
-  if (colnames(parms)[[1]] != "t") {
-    stop("the first column of ", sQuote("parms"), " needs to be called ", sQuote("t"), " if parms is a matrix or a data.frame")
-  }
-  parms.time <- parms[, 1]
-  parms <- parms[, -1, drop = F]
-  parms.index <- 1
-
-  x <- initial.state
-  p <- parms[parms.index,]
-  state.env <- c(x, p)
-  varname.ix <- match(names(x), names(state.env))
-  parname.ix <- match(names(p), names(state.env))
-
-  if (length(unique(names(state.env))) != length(state.env)) {
-    stop("each value in ", sQuote("initial.state"), " and ", sQuote("parms"), " needs a unique name")
-  }
-
-  x.went.negative <- FALSE # record that x ever went negative
-
-  # Initialize time-related counters
-  if (is.numeric(verbose)) {
-    console.interval <- verbose
-    verbose <- T
-  } else if (verbose) {
-    console.interval <- 0
-  } else {
-    console.interval <- Inf
-  }
-  t <- 0
-  t.next.census <- census.interval
-  t.next.console <- 0
-
-  # Parse the propensity functions
-  parsed.pfs <- parse.propensity.functions(propensity.funs, names(state.env))
-  parsed.pf.funs <- lapply(parsed.pfs, function(pf) pf$fun)
-  varname.map <- lapply(names(x), function(varname) {
-    stats::setNames(which(sapply(parsed.pfs, function(pf) varname %in% pf$var.names)), NULL)
-  })
-
-  # Evaluate initial transition rates
-  a <- sapply(parsed.pf.funs, function(f) f(state.env))
-  if (stop.on.propensity && any(a < 0)) stop("negative propensity function")
-
-  # Initialise output
-  timeseries.output <- vector('list', 1000)
-  timeseries.output[[1]] <- c(t = t, x, stats::setNames(a, names(propensity.funs)))
-  timeseries.index <- 2
-  step.sizes <- c()
-
-  # Evaluate initial transition rates
-  a <- sapply(parsed.pf.funs, function(f) f(state.env))
-  if (stop.on.propensity && any(a < 0)) stop("negative propensity function")
-
-  if (verbose) {
-    cat("Initial transition states:\n")
-    print(a)
-  }
-
-  #############################################################################
-  # We are ready to roll, start the simulation loop...
-  # Continue the simulation loop as long as we have not reached the end time,
-  # all of the populations have not gone extincs, as long as no population is
-  # negative (occasinal by-product of the ETL method), and as long as at
-  # least one propensity function is larger than zero
-  #############################################################################
-
-  # Start the timer
-  time.start <- Sys.time()
-  elapsed.time <- 0
-
-  if (verbose) {
-    cat("Running ", method$name, " method with console output every ", console.interval, " time step\n", sep = "")
-    cat("Start wall time: ", format(time.start), "...\n" , sep = "")
-    utils::flush.console()
-  }
-
-  # Is the system nu-tiled along the diagonal?
-  nu.tiled <- length(propensity.funs) > ncol(nu) && length(initial.state) > nrow(nu)
-
-  # Prepare method functions
-  out.fun <- if (nu.tiled) method$diag.fun else method$fun
-  method_state <- method$initial_method_state
-  method.params <- method$params
-
-  while ( t < final.time)  {
-  #while ( t < final.time  &&  any(x > 0)  &&  all(x >= 0)  &&  any(a > 0)  &&  elapsed.time <= max.duration )  {
-
-    if (verbose && t.next.console <= t) {
-      cat("(", elapsed.time, "s) t = ", t, " : ", paste(x, collapse = ","), "\n", sep = "")
-      utils::flush.console()
-      t.next.console <- t.next.console + console.interval
-    }
-
-    out <- do.call(out.fun, c(list(x = x, a = a, nu = nu, method_state = method_state), method.params))
-
-    xprev <- x
-
-    t <- t + out$tau
-    x <- x + out$nu_j
-
-    # Check that no states are negative (can occur in some tau-leaping methods)
-    if (stop.on.negstate && any(x < 0)) {
-      stop("the state vector ", sQuote("x"), " contains negative values\n", paste0(names(x)[which(x<0)], sep = " "))
-    }
-
-    for (extra_function in extra.functions) {
-      x <- extra_function(x, xprev)
-    }
-
-    # Record step size
-    step.sizes <- c(step.sizes, out$tau)
-
-    # Record the simulation state
-    if (t.next.census <= t) {
-      if(any(x<0)) x.went.negative <- TRUE
-      x[x<0] <- 0
-      timeseries.output[[timeseries.index]] <- c(t = t, x, stats::setNames(a, names(propensity.funs)))
-      timeseries.index <- timeseries.index + 1
-      t.next.census <- t + census.interval
-
-      # Expand the time series list if necessary
-      if (timeseries.index > length(timeseries.output)) {
-        new.ts <- vector(mode = "list", length = length(timeseries.output) * 2)
-        new.ts[seq_along(timeseries.output)] <- timeseries.output
-        timeseries.output <- new.ts
-      }
-    }
-
-    # Update values for x
-    state.env[varname.ix] <- x
-
-    # Update values for p, if necessary
-    if ((parms.index + 1) < length(parms.time) && t >= parms.time[[parms.index+1]]) {
-      state.env[parname.ix] <- parms[parms.index+1,]
-      parms.index <- parms.index + 1
-      parm.update <- T
-    } else {
-      parm.update <- F
-    }
-
-    # Evaluate the transition rates for the next time step
-    if (recalculate.all || parm.update) {
-      a <- sapply(parsed.pf.funs, function(f) f(state.env))
-    } else {
-      props.to.evaluate <- unique(unlist(varname.map[out$j]))
-      for (ai in props.to.evaluate) {
-        a[[ai]] <- parsed.pf.funs[[ai]](state.env)
-      }
-    }
-
-    if (stop.on.propensity && any(a < 0, na.rm = T)) {
-      stop("negative propensity function - coersing to zero\n")
-    }
-
-    # a[is.na(a) | a < 0] <- 0 # Replace NA with zero (0/0 gives NA)
-    a[is.na(a)] <- 0 # Replace NA with zero (0/0 gives NA)
-
-    time.end <- Sys.time()
-    elapsed.time <- difftime(time.end, time.start, units = "secs")
-  }
-
-  # Display the last time step on the console
-  if (verbose) {
-    cat("t = ", t, " : ", paste(x, collapse = ","), "\n", sep = "")
-    utils::flush.console()
-  }
-
-  # Record the final state of the system
-  timeseries.output[[timeseries.index]] <- c(t = t, x, stats::setNames(a, names(propensity.funs)))
-  timeseries <- data.frame(do.call("rbind", timeseries.output[seq_len(timeseries.index)]))
-
-  # Stop timer
-  time.end <- Sys.time()
-
-  # Calculate some stats for the used method
-  stats <- data.frame(
-    method             = method$name,
-    final.time.reached = t >= final.time,
-    extinction         = all(x == 0),
-    negative.state     = any(x < 0),
-    zero.prop          = all(a == 0),
-    max.duration       = elapsed.time >= max.duration,
-    start.time         = time.start,
-    end.time           = time.end,
-    elapsed.wall.time  = elapsed.time,
-    number.of.steps    = length(step.sizes),
-    mean.step.size     = mean(step.sizes),
-    sd.step.size       = stats::sd(step.sizes)
+  # check parameters
+  assert_that(
+    is.numeric(initial_state),
+    !is.null(names(initial_state)),
+    is.character(propensity_funs),
+    dynutils::is_sparse(nu),
+    is.numeric(final_time),
+    is.numeric(console_interval),
+    is.logical(verbose),
+    # is(method, "fastgssa::ssa_method"),
+    # TODO: check propensity_funs and method
+    length(initial_state) == nrow(nu),
+    length(propensity_funs) == ncol(nu),
+    is.numeric(params),
+    length(params) == 0 || !is.null(names(params)),
+    !any(c("state", "time", "params") %in% names(params)),
+    !any(c("state", "time", "params") %in% names(initial_state)),
+    !any(duplicated(c(names(initial_state), names(params))))
   )
-  if (verbose) {
-    cat("final time = ", t, "\n", sep = "")
-    print(stats)
-  }
 
-  # Add warnings if something happens during simulation
-  if (x.went.negative) {warnings("Negative state vectors were clipped to zero")}
+  state <- initial_state
+  time <- 0
 
-  # Output results
-  list(
-    timeseries = timeseries,
-    stats = stats,
-    args  = args
+  prop_fun_comp <- compile_propensity_functions(
+    propensity_funs = propensity_funs,
+    state = state,
+    params = params,
+    env = environment()
   )
+
+  output <- simulate(
+    transition_fun = prop_fun_comp,
+    ssa_alg = method,
+    initial_state = initial_state,
+    params = params,
+    nu = as.matrix(nu),
+    final_time = final_time,
+    max_duration = max_duration,
+    stop_on_neg_state = stop_on_neg_state,
+    verbose = verbose,
+    console_interval = console_interval
+  )
+
+  output$output <-
+    output$output[map_int(output$output, length) > 0] %>%
+    map_df(
+      function(l) {
+        tibble(
+          time = l$time,
+          state = list(l$state),
+          transition_rates = list(l$transition_rates)
+        )
+      }
+    )
+
+  output
+}
+
+#' @importFrom stringr str_count str_replace_all str_extract_all str_replace
+#' @importFrom RcppXPtrUtils cppXPtr
+#' @export
+compile_propensity_functions <- function(propensity_funs, state, params, env = parent.frame()) {
+  buffer_size <- max(str_count(propensity_funs, "="))
+  rcpp_prop_funs <- map_chr(
+    propensity_funs,
+    function(prop_fun) {
+      buffer_names <- prop_fun %>% str_extract_all("[A-Za-z_0-9]* *=") %>% first() %>% str_replace_all("[ =]", "")
+      prop_split <- gsub("([A-Za-z][A-Za-z0-9_]*)", " \\1 ", prop_fun) %>% strsplit(" ") %>% first() %>% discard(~ .=="")
+
+      state_match <- match(prop_split, names(state))
+      state_ix <- which(!is.na(state_match))
+      prop_split[state_ix] <- paste0("state[", state_match[state_ix] - 1, "]")
+
+      params_match <- match(prop_split, names(params))
+      params_ix <- which(!is.na(params_match))
+      prop_split[params_ix] <- paste0("params[", params_match[params_ix] - 1, "]")
+
+      buffer_match <- match(prop_split, buffer_names)
+      buffer_ix <- which(!is.na(buffer_match))
+      prop_split[buffer_ix] <- paste0("buffer[", buffer_match[buffer_ix] - 1, "]")
+
+      paste(prop_split, collapse = "")
+    }
+  )
+
+  buffers <- rcpp_prop_funs %>% str_replace(";[^=]*$", ";") %>% {ifelse(grepl("=", .), ., "")} %>% str_replace_all("([^;]*;)", "    \\1\n")
+  calculations <- rcpp_prop_funs %>% str_replace("^.*;", "") %>% {paste0("  transition_rates[", seq_along(.)-1, "] = ", ., ";\n")}
+
+  rcpp_code <- paste0("void calculate_transition_rates(
+  const NumericVector& state,
+  const NumericVector& params,
+  const NumericVector& time,
+  NumericVector& transition_rates
+) {
+",
+  ifelse(buffer_size == 0, "", paste0("    NumericVector buffer = no_init(", buffer_size, ");\n")),
+  paste(paste0(buffers, calculations), collapse = ""),
+"}
+")
+  tmpdir <- dynutils::safe_tempdir("fastgssa")
+  on.exit(unlink(tmpdir, recursive = TRUE, force = TRUE))
+
+  transition_functon <- RcppXPtrUtils::cppXPtr(rcpp_code, cacheDir = tmpdir)
+
+  transition_functon
 }

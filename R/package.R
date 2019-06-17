@@ -46,7 +46,7 @@
 #'
 #' @author Robrecht Cannoodt
 #'
-#' @seealso \code{\link{ssa}}, \code{\link{ssa.direct}}, \code{\link{ssa.etl}}, \code{\link{ssa.btl}}, \code{\link{ssa.otl}}
+#' @seealso \code{\link{ssa}}, \code{\link{ssa_direct}}
 #'
 #' @references \itemize{
 #'   \item Brown D. and Rothery P. 1993. Models in biology: mathematics, statistics, and computing. John Wiley & Sons.
@@ -62,6 +62,8 @@
 #'   \item Pineda-Krch M., Blok H.J., Dieckmann U., and Doebeli M. 2007. A tale of two cycles --- distinguishing quasi-cycles and limit cycles in finite predator-prey populations. Oikos 116:53-64. \url{http://dx.doi.org/10.1111/j.2006.0030-1299.14940.x}
 #' }
 #' @keywords package distribution
+#'
+#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep discard invoke pmap map2 map2_df set_names imap
 NULL
 
 

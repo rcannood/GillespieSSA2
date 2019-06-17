@@ -1,10 +1,16 @@
 Package: fastgssa
 Type: Package
 Title: Gillespie's Stochastic Simulation Algorithm (GSSA) implemented in Rcpp
-Version: 0.6-0
-Date: 2016-04-04
-Author: Mario Pineda-Krch <mpineda@math.ualbeta.ca>
-Maintainer: Robrecht Cannoodt <rcannood@gmail.com>
+Version: 0.0.1
+Authors@R: c(
+    person(
+      "Robrecht", 
+      "Cannoodt", 
+      email = "rcannood@gmail.com", 
+      role = c("aut", "cre"),
+      comment = c(ORCID = "0000-0003-3641-729X")
+    )
+  )
 Description: fastgssa provides a simple to use, intuitive, and
     extensible interface to several stochastic simulation
     algorithms for generating simulated trajectories of finite
@@ -21,11 +27,13 @@ Description: fastgssa provides a simple to use, intuitive, and
 License: GPL (>= 3)
 LazyData: TRUE
 Imports:
+    assertthat,
+    purrr,
     Rcpp (>= 0.12.3),
-    RcppArmadillo
+    RcppXPtrUtils,
+    stringr
 Suggests: 
     testthat,
-    dplyr,
-    GillespieSSA
-LinkingTo: Rcpp, RcppArmadillo
+    dplyr
+LinkingTo: Rcpp
 RoxygenNote: 6.0.1
