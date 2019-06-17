@@ -12,3 +12,6 @@ an object of to be used by \code{\link{ssa}}.
 \description{
 Direct method implementation of the \acronym{SSA} as described by Gillespie (1977).
 }
+\references{
+Gillespie (1977)
+}

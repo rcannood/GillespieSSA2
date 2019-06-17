@@ -14,7 +14,7 @@ public:
   void step(
       const NumericVector& state,
       const NumericVector& transition_rates,
-      const NumericMatrix& nu,
+      const IntegerMatrix& nu,
       double* dtime,
       NumericVector& dstate
   ) {

@@ -5,7 +5,8 @@
 #include "ssa.hpp"
 #include "ssa_em.hpp"
 #include "ssa_direct.hpp"
-#include <limits>
+#include "ssa_etl.hpp"
+#include "ssa_btl.hpp"
 
 using namespace Rcpp;
 
@@ -17,7 +18,7 @@ List simulate(
     SEXP ssa_alg,
     const NumericVector& initial_state,
     const NumericVector& params,
-    const NumericMatrix& nu,
+    const IntegerMatrix& nu,
     const double final_time,
     const double census_interval,
     const double max_walltime,
@@ -59,41 +60,46 @@ List simulate(
    utils::flush.console()
   }*/
 
+  // preallocate dtime and dstate
+  double dtime = 0.0;
+  NumericVector dstate(state.size());
+
   while (simtime < final_time && (walltime_curr - walltime_start) <= max_walltime)  {
     walltime_curr = time(NULL);
 
+    // check for interrupt
     if (walltime_nextinterrupt <= walltime_curr) {
       checkUserInterrupt();
       walltime_nextinterrupt += 1;
     }
 
+    // print if so desired
     if (verbose && walltime_nextconsole <= walltime_curr) {
       Rcout << walltime_curr << " | time = " << simtime << " : " << "STATE" << std::endl;
       walltime_nextconsole += console_interval;
     }
 
-    double dtime = 0.0;
-    NumericVector dstate(state.size());
+    // make a transition step
     // TODO: pass time and state directly to step, instead of dtime and dstate?
-
     ssa_alg_->step(state, transition_rates, nu, &dtime, dstate);
-    // step(state, transition_rates, nu, dtime, dstate);
-
     state += dstate;
     simtime += dtime;
 
-    /*# Check that no states are negative (can occur in some tau-leaping methods)
-     invalid_ix <- is.na(state) | state < 0
-     if (any(invalid_ix)) {
-     if (stop_on_neg_state) {
-     stop("state vector contains negative values\n", paste(names(state)[invalid_ix], collapse = ", "))
-     } else {
-     state[invalid_ix] <- 0
-     }
-     }*/
+    // Check that no states are negative (can occur in some tau-leaping methods)
+    for (int i = 0; i < state.length(); i++) {
+      if (state[i] < 0) {
+        if (stop_on_neg_state) {
+          stop("state vector contains negative value at position " + i);
+        } else {
+          state[i] = 0;
+        }
+      }
+    }
 
+    // recalculate transition rates
     transition_fun_(state, params, simtime, transition_rates);
 
+    // perform census if so desired
     if (simtime_nextcensus <= simtime) {
       simtime_nextcensus += census_interval;
       if (output_nexti == output.size()) {
@@ -136,7 +142,6 @@ List simulate(
     _["output"] = output,
     _["stats"] = stats
   );
-  // return(output);
 }
 
 #endif

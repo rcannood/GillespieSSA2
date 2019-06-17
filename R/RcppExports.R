@@ -5,11 +5,19 @@ simulate <- function(transition_fun, ssa_alg, initial_state, params, nu, final_t
     .Call('_fastgssa_simulate', PACKAGE = 'fastgssa', transition_fun, ssa_alg, initial_state, params, nu, final_time, census_interval, max_walltime, stop_on_neg_state, verbose, console_interval)
 }
 
+make_ssa_btl <- function(f) {
+    .Call('_fastgssa_make_ssa_btl', PACKAGE = 'fastgssa', f)
+}
+
 make_ssa_direct <- function() {
     .Call('_fastgssa_make_ssa_direct', PACKAGE = 'fastgssa')
 }
 
-make_ssa_em <- function(h, noise_strength) {
-    .Call('_fastgssa_make_ssa_em', PACKAGE = 'fastgssa', h, noise_strength)
+make_ssa_em <- function(tau, noise_strength) {
+    .Call('_fastgssa_make_ssa_em', PACKAGE = 'fastgssa', tau, noise_strength)
+}
+
+make_ssa_etl <- function(tau) {
+    .Call('_fastgssa_make_ssa_etl', PACKAGE = 'fastgssa', tau)
 }
 

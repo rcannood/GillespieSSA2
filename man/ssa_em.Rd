@@ -4,10 +4,10 @@
 \alias{ssa_em}
 \title{Euler-Maruyama method (EM)}
 \usage{
-ssa_em(h = 0.01, noise_strength = 2)
+ssa_em(tau = 0.01, noise_strength = 2)
 }
 \arguments{
-\item{h}{h parameter}
+\item{tau}{tau parameter}
 
 \item{noise_strength}{noise_strength parameter}
 }

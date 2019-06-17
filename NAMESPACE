@@ -2,8 +2,10 @@
 
 export(compile_propensity_functions)
 export(ssa)
+export(ssa_btl)
 export(ssa_direct)
 export(ssa_em)
+export(ssa_etl)
 importFrom(RcppXPtrUtils,cppXPtr)
 importFrom(assertthat,assert_that)
 importFrom(dynutils,is_sparse)

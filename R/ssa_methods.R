@@ -13,18 +13,18 @@ ssa_method <- function(name, params, factory) {
 #'
 #' Euler-Maruyama method implementation
 #'
-#' @param h h parameter
+#' @param tau tau parameter
 #' @param noise_strength noise_strength parameter
 #'
 #' @importFrom stats rnorm
 #'
 #' @export
-ssa_em <- function(h = 0.01, noise_strength = 2) {
+ssa_em <- function(tau = 0.01, noise_strength = 2) {
   ssa_method(
-    name = "em",
-    params = lst(h, noise_strength),
+    name = "EM",
+    params = lst(tau, noise_strength),
     factory = function() {
-      make_ssa_em(h, noise_strength)
+      make_ssa_em(tau, noise_strength)
     }
   )
 }
@@ -35,6 +35,9 @@ ssa_em <- function(h = 0.01, noise_strength = 2) {
 #' Direct method implementation of the \acronym{SSA} as described by Gillespie (1977).
 #'
 #' @return an object of to be used by \code{\link{ssa}}.
+#'
+#' @references Gillespie (1977)
+#'
 #' @export
 ssa_direct <- function() {
   ssa_method(
@@ -42,6 +45,48 @@ ssa_direct <- function() {
     params = list(),
     factory = function() {
       make_ssa_direct()
+    }
+  )
+}
+
+#' Explicit tau-leap method (ETL)
+#'
+#' Explicit tau-leap method implementation of the \acronym{SSA} as described by Gillespie (2001).
+#'
+#' @param tau the step-size (default 0.3).
+#'
+#' @return an object of to be used by \code{\link{ssa}}.
+#'
+#' @references Gillespie (2001)
+#'
+#' @export
+ssa_etl <- function(tau) {
+  ssa_method(
+    name = "ETL",
+    params = lst(tau),
+    factory = function() {
+      make_ssa_etl(tau)
+    }
+  )
+}
+
+#' Binomial tau-leap method (BTL)
+#'
+#' Binomial tau-leap method implementation of the \acronym{SSA} as described by Chatterjee et al. (2005).
+#'
+#' @param f coarse-graining factor (see page 4 in Chatterjee et al. 2005).
+#'
+#' @return an object of to be used by \code{\link{ssa}}.
+#'
+#' @references Chatterjee et al. (2005)
+#'
+#' @export
+ssa_btl <- function(f) {
+  ssa_method(
+    name = "BTL",
+    params = lst(f),
+    factory = function() {
+      make_ssa_btl(f)
     }
   )
 }
