@@ -206,6 +206,7 @@ ssa <- function(
     params = params,
     nu = as.matrix(nu),
     final_time = final_time,
+    census_interval = census_interval,
     max_walltime = max_walltime,
     stop_on_neg_state = stop_on_neg_state,
     verbose = verbose,

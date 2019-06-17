@@ -9,7 +9,7 @@
 
 using namespace Rcpp;
 
-typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, double, NumericVector&);
+typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const double, NumericVector&);
 
 // [[Rcpp::export]]
 List simulate(
