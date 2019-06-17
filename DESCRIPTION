@@ -32,7 +32,8 @@ Imports:
     purrr,
     Rcpp (>= 0.12.3),
     RcppXPtrUtils,
-    stringr
+    stringr,
+    tibble
 Suggests: 
     testthat,
     dplyr

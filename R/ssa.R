@@ -151,6 +151,7 @@
 #' @export
 #'
 #' @importFrom dynutils is_sparse
+#' @importFrom tibble tibble
 ssa <- function(
   initial_state,
   propensity_funs,
