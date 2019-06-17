@@ -5,10 +5,11 @@
 #include "ssa.hpp"
 #include "ssa_em.hpp"
 #include "ssa_direct.hpp"
+#include <limits>
 
 using namespace Rcpp;
 
-typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const NumericVector&, NumericVector&);
+typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, double, NumericVector&);
 
 // [[Rcpp::export]]
 List simulate(
@@ -18,7 +19,8 @@ List simulate(
     const NumericVector& params,
     const NumericMatrix& nu,
     const double final_time,
-    const double max_duration,
+    const double census_interval,
+    const double max_walltime,
     const bool stop_on_neg_state,
     const bool verbose,
     const double console_interval
@@ -28,22 +30,24 @@ List simulate(
   TR_FUN transition_fun_ = *XPtr<TR_FUN>(transition_fun);
   SSA *ssa_alg_ = XPtr<SSA>(ssa_alg);
 
+  double simtime = 0.0;
   NumericVector state = clone(initial_state);
-  NumericVector sim_time = {0};
   NumericVector transition_rates(nu.ncol());
 
   // calculate initial transition rates
-  transition_fun_(state, params, sim_time, transition_rates);
+  transition_fun_(state, params, simtime, transition_rates);
 
   output(0) = List::create(
-    _["time"] = clone(sim_time),
+    _["time"] = simtime,
     _["state"] = clone(state),
     _["transition_rates"] = clone(transition_rates)
   );
   int output_nexti = 1;
 
-  int realtime_start = time(NULL);
-  int realtime_nextconsole = realtime_start, realtime_nextinterrupt = realtime_start, realtime_curr = realtime_start;
+  int walltime_start = time(NULL);
+  int walltime_nextconsole = walltime_start, walltime_nextinterrupt = walltime_start, walltime_curr = walltime_start;
+
+  double simtime_nextcensus = simtime + census_interval;
 
   if (verbose) {
     Rcout << "Running SSA " << ssa_alg_->name << " with console output every " << console_interval << " seconds" << std::endl;
@@ -55,32 +59,28 @@ List simulate(
    utils::flush.console()
   }*/
 
-  while (sim_time[0] < final_time && (realtime_curr - realtime_start) <= max_duration)  {
-    realtime_curr = time(NULL);
+  while (simtime < final_time && (walltime_curr - walltime_start) <= max_walltime)  {
+    walltime_curr = time(NULL);
 
-    if (realtime_nextinterrupt <= realtime_curr) {
+    if (walltime_nextinterrupt <= walltime_curr) {
       checkUserInterrupt();
-      realtime_nextinterrupt += 1;
+      walltime_nextinterrupt += 1;
     }
 
-    if (verbose && realtime_nextconsole <= realtime_curr) {
-      Rcout << realtime_curr << " | sim_time = " << sim_time[0] << " : " << "STATE" << std::endl;
-      realtime_nextconsole += console_interval;
+    if (verbose && walltime_nextconsole <= walltime_curr) {
+      Rcout << walltime_curr << " | time = " << simtime << " : " << "STATE" << std::endl;
+      walltime_nextconsole += console_interval;
     }
 
-    NumericVector dtime(1);
+    double dtime = 0.0;
     NumericVector dstate(state.size());
     // TODO: pass time and state directly to step, instead of dtime and dstate?
 
-    ssa_alg_->step(state, transition_rates, nu, dtime, dstate);
+    ssa_alg_->step(state, transition_rates, nu, &dtime, dstate);
     // step(state, transition_rates, nu, dtime, dstate);
 
     state += dstate;
-
-    sim_time[0] += dtime[0];
-
-    // Rcout << "sim_time: " << sim_time << ", dtime: " << dtime << std::endl;
-
+    simtime += dtime;
 
     /*# Check that no states are negative (can occur in some tau-leaping methods)
      invalid_ix <- is.na(state) | state < 0
@@ -92,38 +92,41 @@ List simulate(
      }
      }*/
 
-    transition_fun_(state, params, sim_time, transition_rates);
+    transition_fun_(state, params, simtime, transition_rates);
 
-    if (output_nexti == output.size()) {
-      output = resize(output, output.size() * 2);
+    if (simtime_nextcensus <= simtime) {
+      simtime_nextcensus += census_interval;
+      if (output_nexti == output.size()) {
+        output = resize(output, output.size() * 2);
+      }
+
+      output(output_nexti) = List::create(
+        _["time"] = simtime,
+        _["state"] = clone(state),
+        _["transition_rates"] = clone(transition_rates)
+      );
+      output_nexti++;
     }
-
-    output(output_nexti) = List::create(
-      _["time"] = clone(sim_time),
-      _["state"] = clone(state),
-      _["transition_rates"] = clone(transition_rates)
-    );
-    output_nexti++;
   }
 
   // Display the last time step on the console
   if (verbose) {
-    Rcout << "sim_time = " << sim_time[0] << " : " << "STATE" << std::endl;
+    Rcout << "time = " << simtime << " : " << "STATE" << std::endl;
   }
 
-  int realtime_end = time(NULL);
-  int realtime_elapsed = realtime_end - realtime_start;
+  int walltime_end = time(NULL);
+  int walltime_elapsed = walltime_end - walltime_start;
 
   DataFrame stats = DataFrame::create(
     _["method"] = ssa_alg_->name,
-    _["final_time_reached"] = sim_time >= final_time,
+    _["final_time_reached"] = simtime >= final_time,
     // _["extinction"] = all(state == 0),
     // _["negative_state"] = any(state < 0),
     // _["zero_prop"] = all(transition_rates == 0),
-    _["max_duration"] = realtime_elapsed >= max_duration,
-    _["realtime_start"] = realtime_start,
-    _["realtime_end"] = realtime_end,
-    _["realtime_elapsed"] = realtime_elapsed
+    _["max_walltime"] = walltime_elapsed >= max_walltime,
+    _["walltime_start"] = walltime_start,
+    _["walltime_end"] = walltime_end,
+    _["walltime_elapsed"] = walltime_elapsed
   );
   // if (verbose) {
   //   //print(stats)

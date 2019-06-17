@@ -5,8 +5,9 @@
 \title{Invoking the stochastic simulation algorithm}
 \usage{
 ssa(initial_state, propensity_funs, nu, final_time, params = NULL,
-  method = make_ssa_em(0.01, 2), stop_on_neg_state = TRUE,
-  verbose = FALSE, max_duration = Inf, console_interval = 1)
+  method = ssa_em(0.01, 2), census_interval = 0,
+  stop_on_neg_state = TRUE, max_walltime = Inf, verbose = FALSE,
+  console_interval = 1)
 }
 \arguments{
 \item{initial_state}{numerical vector of initial states where the component elements
@@ -33,13 +34,13 @@ encountering a negative population size (i.e. does not throw an error). If
 \code{stop.on.negstate = FALSE} the simulation stops with an error message
 when encountering a negative population size.}
 
+\item{max_walltime}{maximum wall time duration (in seconds) that the
+simulation is allowed to run for before terminated. This option is usefull,
+in particular, for systems that can end up growing uncontrolably.}
+
 \item{verbose}{If \code{TRUE}, intermediary information pertaining to the simulation will be displayed at each step.
 If \code{verbose} is a numeric, it will only be displayed about every \code{verbose} seconds.
 \strong{Verbose runs drastically slows down simulations.}}
-
-\item{max_duration}{maximum wall time duration (in seconds) that the
-simulation is allowed to run for before terminated. This option is usefull,
-in particular, for systems that can end up growing uncontrolably.}
 }
 \value{
 Returns a list object with the following elements,

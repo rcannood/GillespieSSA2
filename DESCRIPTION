@@ -28,6 +28,7 @@ License: GPL (>= 3)
 LazyData: TRUE
 Imports:
     assertthat,
+    dynutils,
     purrr,
     Rcpp (>= 0.12.3),
     RcppXPtrUtils,
@@ -37,3 +38,4 @@ Suggests:
     dplyr
 LinkingTo: Rcpp
 RoxygenNote: 6.1.1
+Encoding: UTF-8

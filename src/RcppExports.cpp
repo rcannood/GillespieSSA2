@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // simulate
-List simulate(SEXP transition_fun, SEXP ssa_alg, const NumericVector& initial_state, const NumericVector& params, const NumericMatrix& nu, const double final_time, const double max_duration, const bool stop_on_neg_state, const bool verbose, const double console_interval);
-RcppExport SEXP _fastgssa_simulate(SEXP transition_funSEXP, SEXP ssa_algSEXP, SEXP initial_stateSEXP, SEXP paramsSEXP, SEXP nuSEXP, SEXP final_timeSEXP, SEXP max_durationSEXP, SEXP stop_on_neg_stateSEXP, SEXP verboseSEXP, SEXP console_intervalSEXP) {
+List simulate(SEXP transition_fun, SEXP ssa_alg, const NumericVector& initial_state, const NumericVector& params, const NumericMatrix& nu, const double final_time, const double census_interval, const double max_walltime, const bool stop_on_neg_state, const bool verbose, const double console_interval);
+RcppExport SEXP _fastgssa_simulate(SEXP transition_funSEXP, SEXP ssa_algSEXP, SEXP initial_stateSEXP, SEXP paramsSEXP, SEXP nuSEXP, SEXP final_timeSEXP, SEXP census_intervalSEXP, SEXP max_walltimeSEXP, SEXP stop_on_neg_stateSEXP, SEXP verboseSEXP, SEXP console_intervalSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -17,41 +17,42 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type params(paramsSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type nu(nuSEXP);
     Rcpp::traits::input_parameter< const double >::type final_time(final_timeSEXP);
-    Rcpp::traits::input_parameter< const double >::type max_duration(max_durationSEXP);
+    Rcpp::traits::input_parameter< const double >::type census_interval(census_intervalSEXP);
+    Rcpp::traits::input_parameter< const double >::type max_walltime(max_walltimeSEXP);
     Rcpp::traits::input_parameter< const bool >::type stop_on_neg_state(stop_on_neg_stateSEXP);
     Rcpp::traits::input_parameter< const bool >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< const double >::type console_interval(console_intervalSEXP);
-    rcpp_result_gen = Rcpp::wrap(simulate(transition_fun, ssa_alg, initial_state, params, nu, final_time, max_duration, stop_on_neg_state, verbose, console_interval));
+    rcpp_result_gen = Rcpp::wrap(simulate(transition_fun, ssa_alg, initial_state, params, nu, final_time, census_interval, max_walltime, stop_on_neg_state, verbose, console_interval));
     return rcpp_result_gen;
 END_RCPP
 }
-// ssa_direct
-SEXP ssa_direct();
-RcppExport SEXP _fastgssa_ssa_direct() {
+// make_ssa_direct
+SEXP make_ssa_direct();
+RcppExport SEXP _fastgssa_make_ssa_direct() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(ssa_direct());
+    rcpp_result_gen = Rcpp::wrap(make_ssa_direct());
     return rcpp_result_gen;
 END_RCPP
 }
-// ssa_em
-SEXP ssa_em(double h, double noise_strength);
-RcppExport SEXP _fastgssa_ssa_em(SEXP hSEXP, SEXP noise_strengthSEXP) {
+// make_ssa_em
+SEXP make_ssa_em(double h, double noise_strength);
+RcppExport SEXP _fastgssa_make_ssa_em(SEXP hSEXP, SEXP noise_strengthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type h(hSEXP);
     Rcpp::traits::input_parameter< double >::type noise_strength(noise_strengthSEXP);
-    rcpp_result_gen = Rcpp::wrap(ssa_em(h, noise_strength));
+    rcpp_result_gen = Rcpp::wrap(make_ssa_em(h, noise_strength));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_fastgssa_simulate", (DL_FUNC) &_fastgssa_simulate, 10},
-    {"_fastgssa_ssa_direct", (DL_FUNC) &_fastgssa_ssa_direct, 0},
-    {"_fastgssa_ssa_em", (DL_FUNC) &_fastgssa_ssa_em, 2},
+    {"_fastgssa_simulate", (DL_FUNC) &_fastgssa_simulate, 11},
+    {"_fastgssa_make_ssa_direct", (DL_FUNC) &_fastgssa_make_ssa_direct, 0},
+    {"_fastgssa_make_ssa_em", (DL_FUNC) &_fastgssa_make_ssa_em, 2},
     {NULL, NULL, 0}
 };
 

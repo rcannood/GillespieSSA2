@@ -17,10 +17,10 @@ public:
       const NumericVector& state,
       const NumericVector& transition_rates,
       const NumericMatrix& nu,
-      NumericVector& dtime,
+      double* dtime,
       NumericVector& dstate
   ) {
-    dtime(0) = h;
+    *dtime = h;
 
     for (int i = 0; i < dstate.size(); i++) {
       double out = 0.0;
@@ -33,16 +33,8 @@ public:
   }
 } ;
 
-//' Euler-Maruyama method (EM)
-//'
-//' Euler-Maruyama method implementation
-//'
-//' @param h h parameter
-//' @param noise_strength noise_strength parameter
-//'
-//' @export
 // [[Rcpp::export]]
-SEXP ssa_em(double h, double noise_strength) {
+SEXP make_ssa_em(double h, double noise_strength) {
   SSA_EM *ssa = new SSA_EM(h, noise_strength);
   XPtr<SSA_EM> ptr(ssa);
   return ptr;

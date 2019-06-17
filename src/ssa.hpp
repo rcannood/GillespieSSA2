@@ -10,14 +10,14 @@ class SSA {
 public:
   SSA(std::string name_) : name(name_) {}
   std::string name;
-  
+
   virtual ~SSA() {}
 
   virtual void step(
       const NumericVector& state,
       const NumericVector& transition_rates,
       const NumericMatrix& nu,
-      NumericVector& dtime,
+      double* dtime,
       NumericVector& dstate
   ) {
     stop("step() should have been overridden but wasn't!!!");

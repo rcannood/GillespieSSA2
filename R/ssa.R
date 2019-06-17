@@ -34,7 +34,7 @@
 #' @param verbose If \code{TRUE}, intermediary information pertaining to the simulation will be displayed at each step.
 #'   If \code{verbose} is a numeric, it will only be displayed about every \code{verbose} seconds.
 #'   \strong{Verbose runs drastically slows down simulations.}
-#' @param max_duration maximum wall time duration (in seconds) that the
+#' @param max_walltime maximum wall time duration (in seconds) that the
 #'   simulation is allowed to run for before terminated. This option is usefull,
 #'   in particular, for systems that can end up growing uncontrolably.
 #'
@@ -148,32 +148,34 @@
 #' ssa.plot(out)
 #' }
 #'
-#' @useDynLib fastgssa
+#' @export
+#'
+#' @importFrom dynutils is_sparse
 ssa <- function(
   initial_state,
   propensity_funs,
   nu,
   final_time,
   params = NULL,
-  method = make_ssa_em(.01, 2),
+  method = ssa_em(.01, 2),
+  census_interval = 0,
   stop_on_neg_state = TRUE,
+  max_walltime = Inf,
   verbose = FALSE,
-  max_duration = Inf,
   console_interval = 1
 ) {
   # check parameters
   assert_that(
     is.numeric(initial_state),
     !is.null(names(initial_state)),
-    is.character(propensity_funs),
-    dynutils::is_sparse(nu),
-    is.numeric(final_time),
-    is.numeric(console_interval),
+    is.character(propensity_funs) || is(propensity_funs, "XPtr"),
+    is.matrix(nu) || dynutils::is_sparse(nu),
+    is.numeric(final_time), final_time >= 0,
+    is.numeric(console_interval), console_interval >= 0,
+    is.numeric(census_interval), census_interval >= 0,
     is.logical(verbose),
-    # is(method, "fastgssa::ssa_method"),
-    # TODO: check propensity_funs and method
+    is(method, "fastgssa::ssa_method"),
     length(initial_state) == nrow(nu),
-    length(propensity_funs) == ncol(nu),
     is.numeric(params),
     length(params) == 0 || !is.null(names(params)),
     !any(c("state", "time", "params") %in% names(params)),
@@ -184,21 +186,26 @@ ssa <- function(
   state <- initial_state
   time <- 0
 
-  prop_fun_comp <- compile_propensity_functions(
-    propensity_funs = propensity_funs,
-    state = state,
-    params = params,
-    env = environment()
-  )
+  if (is.character(propensity_funs)) {
+    assert_that(length(propensity_funs) == ncol(nu))
+    propensity_funs <- compile_propensity_functions(
+      propensity_funs = propensity_funs,
+      state = state,
+      params = params,
+      env = environment()
+    )
+  }
+
+  ssa_alg <- method$factory()
 
   output <- simulate(
-    transition_fun = prop_fun_comp,
-    ssa_alg = method,
+    transition_fun = propensity_funs,
+    ssa_alg = ssa_alg,
     initial_state = initial_state,
     params = params,
     nu = as.matrix(nu),
     final_time = final_time,
-    max_duration = max_duration,
+    max_walltime = max_walltime,
     stop_on_neg_state = stop_on_neg_state,
     verbose = verbose,
     console_interval = console_interval
