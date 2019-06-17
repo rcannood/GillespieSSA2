@@ -4,58 +4,42 @@
 \alias{ssa}
 \title{Invoking the stochastic simulation algorithm}
 \usage{
-ssa(initial.state, propensity.funs, nu, final.time, parms = NULL,
-  method = ssa.direct(), stop.on.negstate = TRUE,
-  stop.on.propensity = TRUE, census.interval = 0, verbose = FALSE,
-  max.duration = Inf, recalculate.all = F, extra.functions = list())
+ssa(initial_state, propensity_funs, nu, final_time, params = NULL,
+  method = make_ssa_em(0.01, 2), stop_on_neg_state = TRUE,
+  verbose = FALSE, max_duration = Inf, console_interval = 1)
 }
 \arguments{
-\item{initial.state}{numerical vector of initial states where the component elements
+\item{initial_state}{numerical vector of initial states where the component elements
 must be named using the same notation as the corresponding state variable in
 the propensity vector, \code{a}.}
 
-\item{propensity.funs}{character vector of propensity functions where state variables
+\item{propensity_funs}{character vector of propensity functions where state variables
 correspond to the names of the elements in \code{initial.state}.}
 
 \item{nu}{numerical matrix of change if the number of individuals in each
 state (rows) caused by a single reaction of any given type (columns).}
 
-\item{final.time}{final time.}
+\item{final_time}{final time.}
 
-\item{parms}{named vector of model parameters.}
+\item{params}{named vector of model parameters.}
 
 \item{method}{which method to use. Must be one of: \code{\link{ssa.direct}},
 \code{\link{ssa.btl}}, \code{\link{ssa.etl}}, or \code{\link{ssa.otl}}}
 
-\item{stop.on.negstate}{boolean object indicating if negative state
+\item{stop_on_neg_state}{boolean object indicating if negative state
 values should be ignored (this can occur in the \code{etl} method). If
 \code{stop.on.negstate = TRUE} the simulation finishes gracefully when
 encountering a negative population size (i.e. does not throw an error). If
 \code{stop.on.negstate = FALSE} the simulation stops with an error message
 when encountering a negative population size.}
 
-\item{stop.on.propensity}{Whether or not to stop at a certain propensity}
-
-\item{census.interval}{(approximate) interval between recording the state of
-the system. If \code{census.interval = 0} \eqn{(t,x)} is recorded at each time
-step (or tau-leap). If \code{census.interval = Inf} only
-\eqn{(t_0,x_0)}{(t0,initial.state)} and \eqn{(t_f,x_t)}{(final.time,xf)} is recorded. Note, the
-size of the time step (or tau-leaps) ultimately limits the interval between
-subsequent recordings of the system state since the state of the system
-cannot be recorded at a finer time interval the size of the time steps (or
-tau-leaps).}
-
 \item{verbose}{If \code{TRUE}, intermediary information pertaining to the simulation will be displayed at each step.
 If \code{verbose} is a numeric, it will only be displayed about every \code{verbose} seconds.
 \strong{Verbose runs drastically slows down simulations.}}
 
-\item{max.duration}{maximum wall time duration (in seconds) that the
+\item{max_duration}{maximum wall time duration (in seconds) that the
 simulation is allowed to run for before terminated. This option is usefull,
 in particular, for systems that can end up growing uncontrolably.}
-
-\item{recalculate.all}{todo documentation}
-
-\item{extra.functions}{Function in the form of `function(x, xprev)` to apply to each iteration.}
 }
 \value{
 Returns a list object with the following elements,

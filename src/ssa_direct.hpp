@@ -10,8 +10,6 @@ using namespace Rcpp;
 class SSA_direct : public SSA {
 public:
   SSA_direct() : SSA("direct") {}
-  // SSA_direct() : SSA() {}
-  // SSA_direct(TR_FUN fun) : SSA(fun) {}
 
   void step(
       const NumericVector& state,
