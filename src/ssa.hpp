@@ -13,6 +13,8 @@ public:
 
   virtual ~SSA() {}
 
+  virtual void allocate(const int M, const int N) {}
+
   virtual void step(
       const NumericVector& state,
       const NumericVector& transition_rates,
@@ -20,7 +22,18 @@ public:
       double* dtime,
       NumericVector& dstate
   ) {
-    stop("step() should have been overridden but wasn't!!!");
+    stop("step() should have been overridden but wasn't!");
+  }
+
+  virtual void step_single(
+      const NumericVector& state,
+      const NumericVector& transition_rates,
+      const IntegerVector& nu_row,
+      const IntegerVector& nu_effect,
+      double* dtime,
+      NumericVector& dstate
+  ) {
+    stop("step_single() should have been overridden but wasn't!");
   }
 } ;
 

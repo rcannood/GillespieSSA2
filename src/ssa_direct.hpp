@@ -18,13 +18,44 @@ public:
       double* dtime,
       NumericVector& dstate
   ) {
-    int j = weighted_sample(transition_rates);
-
-    for (int i = 0; i < dstate.size(); i++) {
-      dstate(i) = nu(i, j);
+    // perform weighted sampling
+    double sumtr = sum(transition_rates);
+    double ran = R::runif(0, sumtr);
+    int j = 0;
+    while (ran > transition_rates[j]) {
+      ran -= transition_rates[j];
+      j++;
     }
 
-    *dtime = -log(runif(1, 0, 1)(0)) / sum(transition_rates);
+    // perform a single reaction
+    for (int i = 0; i < dstate.size(); i++) {
+      dstate[i] = nu(i, j);
+    }
+
+    *dtime = -log(R::runif(0, 1)) / sumtr;
+  }
+
+  void step_single(
+      const NumericVector& state,
+      const NumericVector& transition_rates,
+      const IntegerVector& nu_row,
+      const IntegerVector& nu_effect,
+      double* dtime,
+      NumericVector& dstate
+  ) {
+    // perform weighted sampling
+    double sumtr = sum(transition_rates);
+    double ran = R::runif(0, sumtr);
+    int j = 0;
+    while (ran > transition_rates[j]) {
+      ran -= transition_rates[j];
+      j++;
+    }
+
+    // perform a single reaction
+    dstate[nu_row[j]] = nu_effect[j];
+
+    *dtime = -log(R::runif(0, 1)) / sumtr;
   }
 } ;
 

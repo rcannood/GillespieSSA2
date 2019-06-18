@@ -20,16 +20,47 @@ public:
       double* dtime,
       NumericVector& dstate
   ) {
-    *dtime = tau;
+    int M = nu.ncol();
+    int N = nu.nrow();
 
-    for (int i = 0; i < dstate.size(); i++) {
+    for (int i = 0; i < N; i++) {
       double out = 0.0;
-      for (int j = 0; j < transition_rates.size(); j++) {
-        out += nu(i, j) * transition_rates(j) * tau;
+
+      // perform each reaction 'transition_rate' times
+      for (int j = 0; j < M; j++) {
+        out += nu(i, j) * transition_rates[j] * tau;
       }
-      out += sqrt(abs(state(i))) * noise_strength * rnorm(1, 0.0, tau)(0);
-      dstate(i) = out;
+
+      // add noise
+      out += sqrt(abs(state[i])) * noise_strength * R::rnorm(0.0, tau);
+
+      // save value
+      dstate[i] = out;
     }
+
+    *dtime = tau;
+  }
+
+  void step_single(
+      const NumericVector& state,
+      const NumericVector& transition_rates,
+      const IntegerVector& nu_row,
+      const IntegerVector& nu_effect,
+      double* dtime,
+      NumericVector& dstate
+  ) {
+    int M = transition_rates.size();
+    int N = state.size();
+
+    for (int i = 0; i < N; i++) {
+      dstate[i] = sqrt(abs(state[i])) * noise_strength * R::rnorm(0, tau);
+    }
+
+    for (int j = 0; j < M; j++) {
+      dstate[nu_row[j]] += nu_effect[j] * transition_rates[j] * tau;
+    }
+
+    *dtime = tau;
   }
 } ;
 

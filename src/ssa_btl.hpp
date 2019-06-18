@@ -13,6 +13,12 @@ public:
 
   double f;
 
+  // preallocated data structures
+  IntegerVector k;
+  void allocate(const int M, const int N) {
+    k = IntegerVector(M);
+  }
+
   void step(
       const NumericVector& state,
       const NumericVector& transition_rates,
@@ -20,6 +26,9 @@ public:
       double* dtime,
       NumericVector& dstate
   ) {
+    // Fetch commonly used values
+    int M = nu.ncol();
+    int N = nu.nrow();
 
     // Calculate tau
     double tau = f / sum(transition_rates);
@@ -27,47 +36,95 @@ public:
 
     bool coercing = false;
 
-    for (int i = 0; i < dstate.size(); i++) {
-      dstate[i] = 0.0;
-    }
-
     // Loop over all reaction channels having propensity fun>0
-    for (int j = 0; j < transition_rates.size(); j++) {
+    double limiting, limiting_test, prob;
+    for (int j = 0; j < M; j++) {
 
+      // If a transition has non-zero propensity a negative effect,
+      // find out whether it has a limit due to the current state
       if (transition_rates[j] > 0) {
-        double k;
-        double limiting = -1;
-        double calc;
-        for (int i = 0; i < dstate.size(); i++) {
+        limiting = -1;
+        for (int i = 0; i < N; i++) {
           if (nu(i, j) < 0) {
-            calc = (state[i] + dstate[i]) / -nu(i, j);
-            if (limiting == -1 || calc < limiting) {
-              limiting = calc;
+            limiting_test = (state[i] + dstate[i]) / -nu(i, j);
+            if (limiting == -1 || limiting_test < limiting) {
+              limiting = limiting_test;
             }
           }
         }
         if (limiting != -1) {
-          double prob = transition_rates[j] * tau / limiting;
+          prob = transition_rates[j] * tau / limiting;
           if (prob > 1) {
             coercing = true;
             prob = 1;
           }
-          k = rbinom(1, limiting, prob)[0];
+          k[j] = R::rbinom(limiting, prob);
         } else {
-          k = rpois(1, transition_rates[j] * tau)[0];
+          k[j] = R::rpois(transition_rates[j] * tau);
         }
-
-        // dstate += k * nu(_, j);
-        for (int i = 0; i < dstate.size(); i++) {
-          dstate[i] += k * nu(i, j);
-        }
+      } else {
+        k[j] = 0;
       }
+    }
+
+    double sum;
+    for (int i = 0; i < N; i++) {
+      sum = 0.0;
+      for (int j = 0; j < M; j++) {
+        sum += k[j] * nu(i, j);
+      }
+      dstate[i] = sum;
     }
 
     if (coercing) warning("coerced p to unity - consider lowering f");
 
     *dtime = tau;
+  }
 
+  void step_single(
+      const NumericVector& state,
+      const NumericVector& transition_rates,
+      const IntegerVector& nu_row,
+      const IntegerVector& nu_effect,
+      double* dtime,
+      NumericVector& dstate
+  ) {
+    int M = transition_rates.size();
+
+    // Calculate tau
+    double tau = f / sum(transition_rates);
+    if (tau > 1.0) tau = 1.0; // tau cannot be larger than unity
+
+    bool coercing = false;
+
+    // Loop over all reaction channels having propensity fun>0
+    double limiting, prob;
+    int k;
+
+    for (int j = 0; j < M; j++) {
+      int i = nu_row[j];
+      // If a transition has non-zero propensity a negative effect,
+      // find out whether it has a limit due to the current state
+      if (transition_rates[j] <= 0) {
+        k = 0;
+      } else if (nu_effect[j] >= 0) {
+        k = R::rpois(transition_rates[j] * tau);
+      } else {
+        limiting = (state[i] + dstate[i]) / -nu_effect[j];
+        prob = transition_rates[j] * tau / limiting;
+        if (prob > 1) {
+          coercing = true;
+          prob = 1;
+        }
+        k = R::rbinom(limiting, prob);
+      }
+
+      dstate[i] = k * nu_effect[j];
+    }
+
+    if (coercing) warning("coerced p to unity - consider lowering f");
+
+    *dtime = tau;
   }
 } ;
 

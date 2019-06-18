@@ -28,12 +28,36 @@ List simulate(
 ) {
   List output(10);
 
+  // fetch ssa algorithm from pointer
   TR_FUN transition_fun_ = *XPtr<TR_FUN>(transition_fun);
   SSA *ssa_alg_ = XPtr<SSA>(ssa_alg);
 
+  // initialise data structures
   double simtime = 0.0;
   NumericVector state = clone(initial_state);
   NumericVector transition_rates(nu.ncol());
+  double simtime_nextcensus = simtime + census_interval;
+
+  // preallocate data structures
+  ssa_alg_->allocate(nu.ncol(), nu.nrow());
+  double dtime = 0.0;
+  NumericVector dstate(state.size());
+
+  // check whether nu is filled with single values
+  IntegerVector nu_row(nu.ncol()), nu_effect(nu.ncol());
+  bool nu_single = true;
+  for (int j = 0; j < nu.ncol() && nu_single; j++) {
+    for (int i = 0; i < nu.nrow(); i++) {
+      if (nu(i, j) != 0) {
+        if (nu_effect[j] == 0) {
+          nu_effect[j] = nu(i, j);
+          nu_row[j] = i;
+        } else {
+          nu_single = false;
+        }
+      }
+    }
+  }
 
   // calculate initial transition rates
   transition_fun_(state, params, simtime, transition_rates);
@@ -45,24 +69,16 @@ List simulate(
   );
   int output_nexti = 1;
 
+  // track walltime
   int walltime_start = time(NULL);
   int walltime_nextconsole = walltime_start, walltime_nextinterrupt = walltime_start, walltime_curr = walltime_start;
 
-  double simtime_nextcensus = simtime + census_interval;
-
+  // verbose
   if (verbose) {
     Rcout << "Running SSA " << ssa_alg_->name << " with console output every " << console_interval << " seconds" << std::endl;
     Rcout << "Start time: " << "CURRTIME" << std::endl;
+    // flush console?
   }
-  /*if (verbose) {
-   cat("Running ", method$name, " method with console output every ", console.interval, " time step\n", sep = "")
-   cat("Start wall time: ", format(time.start), "\n" , sep = "")
-   utils::flush.console()
-  }*/
-
-  // preallocate dtime and dstate
-  double dtime = 0.0;
-  NumericVector dstate(state.size());
 
   while (simtime < final_time && (walltime_curr - walltime_start) <= max_walltime)  {
     walltime_curr = time(NULL);
@@ -75,13 +91,17 @@ List simulate(
 
     // print if so desired
     if (verbose && walltime_nextconsole <= walltime_curr) {
-      Rcout << walltime_curr << " | time = " << simtime << " : " << "STATE" << std::endl;
+      Rcout << "walltime: " << (walltime_curr - walltime_start) << ", simtime: " << simtime << std::endl;
       walltime_nextconsole += console_interval;
     }
 
     // make a transition step
-    // TODO: pass time and state directly to step, instead of dtime and dstate?
-    ssa_alg_->step(state, transition_rates, nu, &dtime, dstate);
+    if (nu_single) {
+      ssa_alg_->step_single(state, transition_rates, nu_row, nu_effect, &dtime, dstate);
+    } else {
+      ssa_alg_->step(state, transition_rates, nu, &dtime, dstate);
+    }
+
     state += dstate;
     simtime += dtime;
 
@@ -115,11 +135,7 @@ List simulate(
     }
   }
 
-  // Display the last time step on the console
-  if (verbose) {
-    Rcout << "time = " << simtime << " : " << "STATE" << std::endl;
-  }
-
+  // construct output
   int walltime_end = time(NULL);
   int walltime_elapsed = walltime_end - walltime_start;
 
@@ -135,7 +151,8 @@ List simulate(
     _["walltime_elapsed"] = walltime_elapsed
   );
   // if (verbose) {
-  //   //print(stats)
+  //   Rcout << "Stats:" << std::endl;
+  //   Rcout << stats << std::endl;
   // }
 
   return List::create(
