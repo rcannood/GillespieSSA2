@@ -52,10 +52,12 @@ public:
     int M = transition_rates.size();
     int N = state.size();
 
+    // perform each reaction 'transition_rate' times
     for (int i = 0; i < N; i++) {
       dstate[i] = sqrt(abs(state[i])) * noise_strength * R::rnorm(0, tau);
     }
 
+    // add noise
     for (int j = 0; j < M; j++) {
       dstate[nu_row[j]] += nu_effect[j] * transition_rates[j] * tau;
     }

@@ -29,10 +29,12 @@ public:
     int M = nu.ncol();
     int N = nu.nrow();
 
+    // determine reaction firings
     for (int j = 0; j < M; j++) {
       k[j] = R::rpois(transition_rates[j] * tau);
     }
 
+    // determine firing effects
     for (int i = 0; i < N; i++) {
       double sum = 0.0;
       for (int j = 0; j < M; j++) {
@@ -41,6 +43,7 @@ public:
       dstate[i] = sum;
     }
 
+    // tau leap
     *dtime = tau;
   }
 
@@ -57,10 +60,14 @@ public:
     int k;
 
     for (int j = 0; j < M; j++) {
+      // determine reaction firing
       k = R::rpois(transition_rates[j] * tau);
+
+      // determine firing effect
       dstate[nu_row[j]] = nu_effect[j] * k;
     }
 
+    // tau leap
     *dtime = tau;
   }
 } ;

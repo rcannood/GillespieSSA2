@@ -36,12 +36,13 @@ public:
 
     bool coercing = false;
 
-    // Loop over all reaction channels having propensity fun>0
+    // determine reaction firing
+    // if propensity is zero, the reaction can't fire
+    // if the effect is positive, use standard ETL
+    // else use binomial distribution to determine firings
     double limiting, limiting_test, prob;
     for (int j = 0; j < M; j++) {
 
-      // If a transition has non-zero propensity a negative effect,
-      // find out whether it has a limit due to the current state
       if (transition_rates[j] > 0) {
         limiting = -1;
         for (int i = 0; i < N; i++) {
@@ -67,6 +68,7 @@ public:
       }
     }
 
+    // determine firing effect
     double sum;
     for (int i = 0; i < N; i++) {
       sum = 0.0;
@@ -103,8 +105,10 @@ public:
 
     for (int j = 0; j < M; j++) {
       int i = nu_row[j];
-      // If a transition has non-zero propensity a negative effect,
-      // find out whether it has a limit due to the current state
+      // determine reaction firing
+      // if propensity is zero, the reaction can't fire
+      // if the effect is positive, use standard ETL
+      // else use binomial distribution to determine firings
       if (transition_rates[j] <= 0) {
         k = 0;
       } else if (nu_effect[j] >= 0) {
@@ -119,6 +123,7 @@ public:
         k = R::rbinom(limiting, prob);
       }
 
+      // determine firing effect
       dstate[i] = k * nu_effect[j];
     }
 
