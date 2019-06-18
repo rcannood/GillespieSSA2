@@ -11,7 +11,7 @@ ssa_method <- function(name, params, factory) {
 
 #' Euler-Maruyama method (EM)
 #'
-#' Euler-Maruyama method implementation
+#' Euler-Maruyama method implementatio of the \acronym{SDE} as described by Euler and Maruyama (?).
 #'
 #' @param tau tau parameter
 #' @param noise_strength noise_strength parameter

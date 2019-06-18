@@ -12,5 +12,5 @@ ssa_em(tau = 0.01, noise_strength = 2)
 \item{noise_strength}{noise_strength parameter}
 }
 \description{
-Euler-Maruyama method implementation
+Euler-Maruyama method implementatio of the \acronym{SDE} as described by Euler and Maruyama (?).
 }
