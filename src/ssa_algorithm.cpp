@@ -10,7 +10,7 @@
 
 using namespace Rcpp;
 
-typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const double, NumericVector&);
+typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const double, NumericVector&, NumericVector&);
 
 // [[Rcpp::export]]
 List simulate(
@@ -21,6 +21,8 @@ List simulate(
     const IntegerMatrix& nu,
     const double final_time,
     const double census_interval,
+    const bool store_buffer,
+    const int buffer_size,
     const double max_walltime,
     const bool stop_on_neg_state,
     const bool verbose,
@@ -42,6 +44,7 @@ List simulate(
   ssa_alg_->allocate(nu.ncol(), nu.nrow());
   double dtime = 0.0;
   NumericVector dstate(state.size());
+  NumericVector buffer(buffer_size);
 
   // check whether nu is filled with single values
   IntegerVector nu_row(nu.ncol()), nu_effect(nu.ncol());
@@ -60,13 +63,23 @@ List simulate(
   }
 
   // calculate initial transition rates
-  transition_fun_(state, params, simtime, transition_rates);
+  transition_fun_(state, params, simtime, transition_rates, buffer);
 
-  output(0) = List::create(
-    _["time"] = simtime,
-    _["state"] = clone(state),
-    _["transition_rates"] = clone(transition_rates)
-  );
+  // there must be a better way to do this
+  if (store_buffer) {
+    output(0) = List::create(
+      _["time"] = simtime,
+      _["state"] = clone(state),
+      _["transition_rates"] = clone(transition_rates),
+      _["buffer"] = clone(buffer)
+    );
+  } else {
+    output(0) = List::create(
+      _["time"] = simtime,
+      _["state"] = clone(state),
+      _["transition_rates"] = clone(transition_rates)
+    );
+  }
   int output_nexti = 1;
 
   // track walltime
@@ -117,7 +130,7 @@ List simulate(
     }
 
     // recalculate transition rates
-    transition_fun_(state, params, simtime, transition_rates);
+    transition_fun_(state, params, simtime, transition_rates, buffer);
 
     // perform census if so desired
     if (simtime_nextcensus <= simtime) {
@@ -126,11 +139,21 @@ List simulate(
         output = resize(output, output.size() * 2);
       }
 
-      output(output_nexti) = List::create(
-        _["time"] = simtime,
-        _["state"] = clone(state),
-        _["transition_rates"] = clone(transition_rates)
-      );
+      // there must be a better way to do this
+      if (store_buffer) {
+        output(output_nexti) = List::create(
+          _["time"] = simtime,
+          _["state"] = clone(state),
+          _["transition_rates"] = clone(transition_rates),
+          _["buffer"] = clone(buffer)
+        );
+      } else {
+        output(output_nexti) = List::create(
+          _["time"] = simtime,
+          _["state"] = clone(state),
+          _["transition_rates"] = clone(transition_rates)
+        );
+      }
       output_nexti++;
     }
   }

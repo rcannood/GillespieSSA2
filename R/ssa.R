@@ -162,14 +162,16 @@ ssa <- function(
   census_interval = 0,
   stop_on_neg_state = TRUE,
   max_walltime = Inf,
+  store_buffer = FALSE,
+  hardcode_params = FALSE,
   verbose = FALSE,
   console_interval = 1
 ) {
   # check parameters
+  # TODO: check all params
   assert_that(
     is.numeric(initial_state),
     !is.null(names(initial_state)),
-    is.character(propensity_funs) || is(propensity_funs, "XPtr"),
     is.matrix(nu) || dynutils::is_sparse(nu),
     is.numeric(final_time), final_time >= 0,
     is.numeric(console_interval), console_interval >= 0,
@@ -193,20 +195,29 @@ ssa <- function(
       propensity_funs = propensity_funs,
       state = state,
       params = params,
+      reuse_buffer = !store_buffer,
+      hardcode_params = hardcode_params,
       env = environment()
     )
   }
 
+  assert_that(
+    is(propensity_funs, "fastgssa::propensity_functions"),
+    !store_buffer || propensity_funs$reuse_buffer
+  )
+
   ssa_alg <- method$factory()
 
   output <- simulate(
-    transition_fun = propensity_funs,
+    transition_fun = propensity_funs$pointer,
     ssa_alg = ssa_alg,
     initial_state = initial_state,
     params = params,
     nu = as.matrix(nu),
     final_time = final_time,
     census_interval = census_interval,
+    store_buffer = store_buffer,
+    buffer_size = propensity_funs$buffer_size,
     max_walltime = max_walltime,
     stop_on_neg_state = stop_on_neg_state,
     verbose = verbose,
@@ -217,11 +228,15 @@ ssa <- function(
     output$output[map_int(output$output, length) > 0] %>%
     map_df(
       function(l) {
-        tibble(
+        tib <- tibble(
           time = l$time,
           state = list(l$state),
           transition_rates = list(l$transition_rates)
         )
+        if ("buffer" %in% names(l)) {
+          tib$buffer <- list(set_names(l$buffer, propensity_funs$buffer_names))
+        }
+        tib
       }
     )
 
