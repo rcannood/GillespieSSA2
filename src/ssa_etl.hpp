@@ -21,7 +21,7 @@ public:
 
   void step(
       const NumericVector& state,
-      const NumericVector& transition_rates,
+      const NumericVector& propensity,
       const IntegerMatrix& nu,
       double* dtime,
       NumericVector& dstate
@@ -31,7 +31,7 @@ public:
 
     // determine reaction firings
     for (int j = 0; j < M; j++) {
-      k[j] = R::rpois(transition_rates[j] * tau);
+      k[j] = R::rpois(propensity[j] * tau);
     }
 
     // determine firing effects
@@ -49,19 +49,19 @@ public:
 
   void step_single(
       const NumericVector& state,
-      const NumericVector& transition_rates,
+      const NumericVector& propensity,
       const IntegerVector& nu_row,
       const IntegerVector& nu_effect,
       double* dtime,
       NumericVector& dstate
   ) {
-    int M = transition_rates.size();
+    int M = propensity.size();
 
     int k;
 
     for (int j = 0; j < M; j++) {
       // determine reaction firing
-      k = R::rpois(transition_rates[j] * tau);
+      k = R::rpois(propensity[j] * tau);
 
       // determine firing effect
       dstate[nu_row[j]] = nu_effect[j] * k;

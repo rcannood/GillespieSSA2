@@ -13,17 +13,17 @@ public:
 
   void step(
       const NumericVector& state,
-      const NumericVector& transition_rates,
+      const NumericVector& propensity,
       const IntegerMatrix& nu,
       double* dtime,
       NumericVector& dstate
   ) {
     // perform weighted sampling
-    double sumtr = sum(transition_rates);
+    double sumtr = sum(propensity);
     double ran = R::runif(0, sumtr);
     int j = 0;
-    while (ran > transition_rates[j]) {
-      ran -= transition_rates[j];
+    while (ran > propensity[j]) {
+      ran -= propensity[j];
       j++;
     }
 
@@ -37,18 +37,18 @@ public:
 
   void step_single(
       const NumericVector& state,
-      const NumericVector& transition_rates,
+      const NumericVector& propensity,
       const IntegerVector& nu_row,
       const IntegerVector& nu_effect,
       double* dtime,
       NumericVector& dstate
   ) {
     // perform weighted sampling
-    double sumtr = sum(transition_rates);
+    double sumtr = sum(propensity);
     double ran = R::runif(0, sumtr);
     int j = 0;
-    while (ran > transition_rates[j]) {
-      ran -= transition_rates[j];
+    while (ran > propensity[j]) {
+      ran -= propensity[j];
       j++;
     }
 

@@ -37,7 +37,7 @@ List simulate(
   // initialise data structures
   double simtime = 0.0;
   NumericVector state = clone(initial_state);
-  NumericVector transition_rates(nu.ncol());
+  NumericVector propensity(nu.ncol());
   double simtime_nextcensus = simtime + census_interval;
 
   // preallocate data structures
@@ -63,21 +63,21 @@ List simulate(
   }
 
   // calculate initial transition rates
-  transition_fun_(state, params, simtime, transition_rates, buffer);
+  transition_fun_(state, params, simtime, propensity, buffer);
 
   // there must be a better way to do this
   if (store_buffer) {
     output(0) = List::create(
       _["time"] = simtime,
       _["state"] = clone(state),
-      _["transition_rates"] = clone(transition_rates),
+      _["propensity"] = clone(propensity),
       _["buffer"] = clone(buffer)
     );
   } else {
     output(0) = List::create(
       _["time"] = simtime,
       _["state"] = clone(state),
-      _["transition_rates"] = clone(transition_rates)
+      _["propensity"] = clone(propensity)
     );
   }
   int output_nexti = 1;
@@ -110,9 +110,9 @@ List simulate(
 
     // make a transition step
     if (nu_single) {
-      ssa_alg_->step_single(state, transition_rates, nu_row, nu_effect, &dtime, dstate);
+      ssa_alg_->step_single(state, propensity, nu_row, nu_effect, &dtime, dstate);
     } else {
-      ssa_alg_->step(state, transition_rates, nu, &dtime, dstate);
+      ssa_alg_->step(state, propensity, nu, &dtime, dstate);
     }
 
     state += dstate;
@@ -130,7 +130,7 @@ List simulate(
     }
 
     // recalculate transition rates
-    transition_fun_(state, params, simtime, transition_rates, buffer);
+    transition_fun_(state, params, simtime, propensity, buffer);
 
     // perform census if so desired
     if (simtime_nextcensus <= simtime) {
@@ -144,14 +144,14 @@ List simulate(
         output(output_nexti) = List::create(
           _["time"] = simtime,
           _["state"] = clone(state),
-          _["transition_rates"] = clone(transition_rates),
+          _["propensity"] = clone(propensity),
           _["buffer"] = clone(buffer)
         );
       } else {
         output(output_nexti) = List::create(
           _["time"] = simtime,
           _["state"] = clone(state),
-          _["transition_rates"] = clone(transition_rates)
+          _["propensity"] = clone(propensity)
         );
       }
       output_nexti++;
@@ -167,7 +167,7 @@ List simulate(
     _["final_time_reached"] = simtime >= final_time,
     // _["extinction"] = all(state == 0),
     // _["negative_state"] = any(state < 0),
-    // _["zero_prop"] = all(transition_rates == 0),
+    // _["zero_prop"] = all(propensity == 0),
     _["max_walltime"] = walltime_elapsed >= max_walltime,
     _["walltime_start"] = walltime_start,
     _["walltime_end"] = walltime_end,

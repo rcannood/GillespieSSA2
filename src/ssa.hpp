@@ -17,7 +17,7 @@ public:
 
   virtual void step(
       const NumericVector& state,
-      const NumericVector& transition_rates,
+      const NumericVector& propensity,
       const IntegerMatrix& nu,
       double* dtime,
       NumericVector& dstate
@@ -27,7 +27,7 @@ public:
 
   virtual void step_single(
       const NumericVector& state,
-      const NumericVector& transition_rates,
+      const NumericVector& propensity,
       const IntegerVector& nu_row,
       const IntegerVector& nu_effect,
       double* dtime,

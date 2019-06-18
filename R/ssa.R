@@ -193,6 +193,7 @@ ssa <- function(
     assert_that(length(propensity_funs) == ncol(nu))
     propensity_funs <- compile_propensity_functions(
       propensity_funs = propensity_funs,
+      reaction_ids = colnames(nu),
       state = state,
       params = params,
       reuse_buffer = !store_buffer,
@@ -231,7 +232,7 @@ ssa <- function(
         tib <- tibble(
           time = l$time,
           state = list(l$state),
-          transition_rates = list(l$transition_rates)
+          propensity = list(l$propensity)
         )
         if ("buffer" %in% names(l)) {
           tib$buffer <- list(set_names(l$buffer, propensity_funs$buffer_names))

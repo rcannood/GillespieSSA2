@@ -15,7 +15,7 @@ public:
 
   void step(
       const NumericVector& state,
-      const NumericVector& transition_rates,
+      const NumericVector& propensity,
       const IntegerMatrix& nu,
       double* dtime,
       NumericVector& dstate
@@ -28,7 +28,7 @@ public:
 
       // perform each reaction 'transition_rate' times
       for (int j = 0; j < M; j++) {
-        out += nu(i, j) * transition_rates[j] * tau;
+        out += nu(i, j) * propensity[j] * tau;
       }
 
       // add noise
@@ -43,13 +43,13 @@ public:
 
   void step_single(
       const NumericVector& state,
-      const NumericVector& transition_rates,
+      const NumericVector& propensity,
       const IntegerVector& nu_row,
       const IntegerVector& nu_effect,
       double* dtime,
       NumericVector& dstate
   ) {
-    int M = transition_rates.size();
+    int M = propensity.size();
     int N = state.size();
 
     // perform each reaction 'transition_rate' times
@@ -59,7 +59,7 @@ public:
 
     // add noise
     for (int j = 0; j < M; j++) {
-      dstate[nu_row[j]] += nu_effect[j] * transition_rates[j] * tau;
+      dstate[nu_row[j]] += nu_effect[j] * propensity[j] * tau;
     }
 
     *dtime = tau;
