@@ -4,13 +4,16 @@
 #' @export
 compile_propensity_functions <- function(
   propensity_funs,
+  reaction_ids,
   state,
   params,
   reuse_buffer = TRUE,
   hardcode_params = FALSE,
+  buffer_ids = NULL,
   env = parent.frame()
 ) {
-  buffer_usages <- str_count(propensity_funs, "=")
+  variable_names <- propensity_funs %>% str_extract_all("[A-Za-z_0-9]* *=") %>% map(~ str_replace_all(., "[ =]", ""))
+  buffer_usages <- map_int(variable_names, length) - 1
   buffer_size <-
     if (reuse_buffer) {
       max(buffer_usages)
@@ -18,15 +21,16 @@ compile_propensity_functions <- function(
       sum(buffer_usages)
     }
 
-  buffer_offset <- 0
-  buffer_names <- c()
+  if (is.null(buffer_ids)) {
+    buffer_ids <- variable_names %>% unlist() %>% discard(~ . %in% reaction_ids)
+  }
 
   rcpp_prop_funs <- map_chr(
-    propensity_funs,
-    function(prop_fun) {
-      buff_nam <- prop_fun %>% str_extract_all("[A-Za-z_0-9]* *=") %>% first() %>% str_replace_all("[ =]", "")
-      buffer_names <<- c(buffer_names, buff_nam)
-      prop_split <- gsub("([A-Za-z][A-Za-z0-9_]*)", " \\1 ", prop_fun) %>% strsplit(" ") %>% first() %>% discard(~ .=="")
+    seq_along(propensity_funs),
+    function(i) {
+      prop_fun <- propensity_funs[[i]]
+
+      prop_split <- gsub("([A-Za-z][A-Za-z0-9_]*)", " \\1 ", prop_fun) %>% strsplit(" ") %>% first() %>% discard(~ .== "")
 
       state_match <- match(prop_split, names(state))
       state_ix <- which(!is.na(state_match))
@@ -36,35 +40,37 @@ compile_propensity_functions <- function(
       params_ix <- which(!is.na(params_match))
       if (hardcode_params) {
         prop_split[params_ix] <- paste0("CONST_", prop_split[params_ix])
-        # prop_split[params_ix] <- params[params_match[params_ix]]
       } else {
         prop_split[params_ix] <- paste0("params[", params_match[params_ix] - 1, "]")
       }
 
-      buffer_match <- match(prop_split, buff_nam)
+      buffer_match <- match(prop_split, buffer_ids)
       buffer_ix <- which(!is.na(buffer_match))
-      prop_split[buffer_ix] <- paste0("buffer[", buffer_match[buffer_ix] - 1 + buffer_offset, "]")
-
-      if (!reuse_buffer) {
-        buffer_offset <<- buffer_offset + length(buff_nam)
+      if (length(buffer_ix) > 0) {
+        buffer_to_ix <- buffer_match[buffer_ix] - 1
+        if (reuse_buffer) {
+          buffer_to_ix <- match(buffer_to_ix, unique(buffer_to_ix)) - 1
+        }
+        prop_split[buffer_ix] <- paste0("buffer[", buffer_to_ix, "]")
       }
 
-      paste(prop_split, collapse = "")
+      reaction_match <- match(prop_split, reaction_ids)
+      reaction_ix <- which(!is.na(reaction_match))
+      prop_split[reaction_ix] <- paste0("propensity[", reaction_match[reaction_ix] - 1, "]")
+
+      paste(c(prop_split, ";"), collapse = "")
     }
   )
 
-  buffers <- rcpp_prop_funs %>% str_replace(";[^=]*$", ";") %>% {ifelse(grepl("=", .), ., "")} %>% str_replace_all("([^;]*;)", "  \\1\n")
-  calculations <- rcpp_prop_funs %>% str_replace("^.*;", "") %>% {paste0("  transition_rates[", seq_along(.)-1, "] = ", ., ";\n")}
-
   rcpp_code <- paste0(
-    "void calculate_transition_rates(\n",
+    "void calculate_propensity(\n",
     "  const NumericVector& state,\n",
     "  const NumericVector& params,\n",
     "  const double time,\n",
-    "  NumericVector& transition_rates,\n",
+    "  NumericVector& propensity,\n",
     "  NumericVector& buffer\n",
     ") {\n",
-    paste(paste0(buffers, calculations), collapse = ""),
+    rcpp_prop_funs %>% str_replace_all("([^;]*;)", "  \\1\n") %>% paste(collapse = ""),
     "}\n"
   )
 
@@ -81,13 +87,13 @@ compile_propensity_functions <- function(
   tmpdir <- dynutils::safe_tempdir("fastgssa")
   on.exit(unlink(tmpdir, recursive = TRUE, force = TRUE))
 
-  pointer <- RcppXPtrUtils::cppXPtr(rcpp_code, cacheDir = tmpdir, includes = includes)
-
   # TODO: remove debug code:
   write_lines(paste0(includes, "\n", rcpp_code), "~/fastgssa.cpp")
 
+  pointer <- RcppXPtrUtils::cppXPtr(rcpp_code, cacheDir = tmpdir, includes = includes)
+
   l <- lst(
-    buffer_names,
+    buffer_ids,
     buffer_size,
     pointer,
     reuse_buffer,

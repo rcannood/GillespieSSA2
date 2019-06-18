@@ -235,7 +235,7 @@ ssa <- function(
           propensity = list(l$propensity)
         )
         if ("buffer" %in% names(l)) {
-          tib$buffer <- list(set_names(l$buffer, propensity_funs$buffer_names))
+          tib$buffer <- list(set_names(l$buffer, propensity_funs$buffer_ids))
         }
         tib
       }
