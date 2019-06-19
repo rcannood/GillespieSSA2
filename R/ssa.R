@@ -93,59 +93,131 @@
 #' ## Irreversible isomerization
 #' ## Large initial population size (X = 1000)
 #' \dontrun{
-#' parms <- c(c = 0.5)
-#' initial.state  <- c(X = 10000)
-#' a   <- c("c*X")
-#' nu  <- matrix(-1)
-#' # Direct method
-#' out <- ssa(initial.state,a,nu,parms,final.time = 10,simName = "Irreversible isomerization")
-#' plot(out$data[,1],out$data[,2]/10000,col = "red",cex = 0.5,pch = 19)
+#' params <- c(c = 0.5)
+#' initial_state <- c(X = 1000)
+#' propensity_funs <- c("A = c * X")
+#' nu <- matrix(-1, dimnames = list(names(initial_state), "A"))
+#' out <- ssa(
+#'   initial_state = initial_state,
+#'   propensity_funs = propensity_funs,
+#'   nu = nu,
+#'   params = params,
+#'   final_time = 10,
+#'   method = ssa_direct()
+#' )
+#' ssa_plot(out)
 #' }
 #'
 #' ## Smaller initial population size (X = 100)
 #' \dontrun{
-#' initial.state  <- c(X = 100)
-#' out <- ssa(initial.state,a,nu,parms,final.time = 10) # Direct method
-#' points(out$data[,1],out$data[,2]/100,col = "green",cex = 0.5,pch = 19)
+#' initial_state <- c(X = 100)
+#' out <- ssa(
+#'   initial_state = initial_state,
+#'   propensity_funs = propensity_funs,
+#'   nu = nu,
+#'   params = params,
+#'   final_time = 10,
+#'   method = ssa_direct()
+#' )
+#' ssa_plot(out)
 #' }
 #'
 #' ## Small initial population size (X = 10)
 #' \dontrun{
-#' initial.state  <- c(X = 10)
-#' out <- ssa(initial.state,a,nu,parms,final.time = 10) # Direct method
-#' points(out$data[,1],out$data[,2]/10,col = "blue",cex = 0.5,pch = 19)
+#' initial_state <- c(X = 10)
+#' out <- ssa(
+#'   initial_state = initial_state,
+#'   propensity_funs = propensity_funs,
+#'   nu = nu,
+#'   params = params,
+#'   final_time = 10,
+#'   method = ssa_direct()
+#' )
+#' ssa_plot(out)
 #' }
 #'
 #' ## Logistic growth
 #' \dontrun{
-#' parms <- c(b = 2, d = 1, K = 1000)
-#' initial.state  <- c(N = 500)
-#' a   <- c("b*N", "(d+(b-d)*N/K)*N")
-#' nu  <- matrix(c(+1,-1),ncol = 2)
-#' out <- ssa(initial.state,a,nu,parms,final.time = 10,method = "D",
-#'            max.duration = 5,simName = "Logistic growth")
-#' ssa.plot(out)
+#' params <- c(b = 2, d = 1, K = 1000)
+#' initial_state  <- c(N = 500)
+#' propensity_funs <- c(
+#'   "A = b * N",
+#'   "B = (d + (b - d) * N / K) * N"
+#' )
+#' nu  <- matrix(
+#'   c(+1, -1),
+#'   ncol = 2,
+#'   dimnames = list(names(initial_state), c("A", "B"))
+#' )
+#' out <- ssa(
+#'   initial_state = initial_state,
+#'   propensity_funs = propensity_funs,
+#'   nu = nu,
+#'   params = params,
+#'   final_time = 10,
+#'   max_walltime = 5,
+#'   method = ssa_direct()
+#' )
+#' ssa_plot(out)
 #' }
 #'
 #' ## Kermack-McKendrick SIR model
 #' \dontrun{
-#' parms <- c(beta = 0.001, gamma = 0.1)
-#' initial.state  <- c(S = 499,I = 1,R = 0)
-#' a   <- c("beta*S*I","gamma*I")
-#' nu  <- matrix(c(-1,0,+1,-1,0,+1),nrow = 3,byrow = TRUE)
-#' out <- ssa(initial.state,a,nu,parms,final.time = 100,simName = "SIR model")
-#' ssa.plot(out)
+#' params <- c(beta = 0.001, gamma = 0.1)
+#' initial_state  <- c(S = 500, I = 1, R = 0)
+#' propensity_funs <- c(
+#'   "A = beta * S * I",
+#'   "B = gamma * I"
+#' )
+#' nu <- matrix(
+#'   c(
+#'     -1, 0,
+#'     +1, -1,
+#'     0, +1
+#'   ),
+#'   nrow = 3,
+#'   byrow = TRUE,
+#'   dimnames = list(names(initial_state), c("A", "B"))
+#' )
+#' out <- ssa(
+#'   initial_state = initial_state,
+#'   propensity_funs = propensity_funs,
+#'   nu = nu,
+#'   params = params,
+#'   final_time = 100,
+#'   method = ssa_direct()
+#' )
+#' ssa_plot(out)
 #' }
 #'
 #' ## Lotka predator-prey model
 #' \dontrun{
-#' parms <- c(c1 = 10, c2 = .01, c3 = 10)
-#' initial.state  <- c(Y1 = 1000,Y2 = 1000)
-#' a   <- c("c1*Y1","c2*Y1*Y2","c3*Y2")
-#' nu  <- matrix(c(+1,-1,0,0,+1,-1),nrow = 2,byrow = TRUE)
-#' out <- ssa(initial.state,a,nu,parms,final.time = 100,method = "ETL",
-#'            simName = "Lotka predator-prey model")
-#' ssa.plot(out)
+#' params <- c(c1 = 10, c2 = .01, c3 = 10)
+#' initial_state <- c(Y1 = 1000, Y2 = 1000)
+#' propensity_funs <- c(
+#'   "A = c1 * Y1",
+#'   "B = c2 * Y1 * Y2",
+#'   "C = c3 * Y2"
+#' )
+#' nu <- matrix(
+#'   c(
+#'     +1, -1, 0,
+#'     0, +1, -1
+#'   ),
+#'   nrow = 2,
+#'   byrow = TRUE,
+#'   dimnames = list(names(initial_state), c("A", "B", "C"))
+#' )
+#' out <- ssa(
+#'   initial_state = initial_state,
+#'   propensity_funs = propensity_funs,
+#'   nu = nu,
+#'   params = params,
+#'   final_time = 100,
+#'   method = ssa_direct(),
+#'   verbose = TRUE
+#' )
+#' ssa_plot(out)
 #' }
 #'
 #' @export
@@ -190,28 +262,31 @@ ssa <- function(
   state <- initial_state
   time <- 0
 
-  if (is.character(propensity_funs)) {
-    assert_that(length(propensity_funs) == ncol(nu))
-    propensity_funs <- compile_propensity_functions(
-      propensity_funs = propensity_funs,
-      reaction_ids = colnames(nu),
-      state = state,
-      params = params,
-      reuse_buffer = !store_buffer,
-      hardcode_params = hardcode_params,
-      env = environment()
-    )
-  }
+  comp_funs <-
+    if (is.character(propensity_funs)) {
+      assert_that(length(propensity_funs) == ncol(nu))
+      compile_propensity_functions(
+        propensity_funs = propensity_funs,
+        reaction_ids = colnames(nu),
+        state = state,
+        params = params,
+        reuse_buffer = !store_buffer,
+        hardcode_params = hardcode_params,
+        env = environment()
+      )
+    } else {
+      propensity_funs
+    }
 
   assert_that(
-    is(propensity_funs, "fastgssa::propensity_functions"),
-    !store_buffer || !propensity_funs$reuse_buffer
+    is(comp_funs, "fastgssa::propensity_functions"),
+    !store_buffer || !comp_funs$reuse_buffer
   )
 
   ssa_alg <- method$factory()
 
   output <- simulate(
-    transition_fun = propensity_funs$pointer,
+    propensity_funs = comp_funs$pointer,
     ssa_alg = ssa_alg,
     initial_state = initial_state,
     params = params,
@@ -219,7 +294,7 @@ ssa <- function(
     final_time = final_time,
     census_interval = census_interval,
     store_buffer = store_buffer,
-    buffer_size = propensity_funs$buffer_size,
+    buffer_size = comp_funs$buffer_size,
     max_walltime = max_walltime,
     stop_on_neg_state = stop_on_neg_state,
     verbose = verbose,
@@ -227,6 +302,9 @@ ssa <- function(
     use_singular_optimisation = use_singular_optimisation
   )
 
+  cat("Postprocessing output\n")
+
+  output$output %>% map_df(as_tibble)
   output$output <-
     output$output[map_int(output$output, length) > 0] %>%
     map_df(

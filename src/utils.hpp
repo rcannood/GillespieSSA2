@@ -4,11 +4,30 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-List resize( const List& x, int n ){
+template <typename T>
+T resize(const T& x, int n){
   int oldsize = x.size();
-  List y(n);
+  if (n < oldsize) {
+    oldsize = n;
+  }
+  T y(n);
   for( int i = 0; i < oldsize; i++) {
     y[i] = x[i];
+  }
+  return y;
+}
+
+template <typename T>
+T resize_rows(const T& x, int n){
+  int oldsize = x.nrow();
+  if (n < oldsize) {
+    oldsize = n;
+  }
+  T y(n, x.ncol());
+  for( int i = 0; i < oldsize; i++) {
+    for (int j = 0; j < x.ncol(); j++) {
+      y(i, j) = x(i, j);
+    }
   }
   return y;
 }

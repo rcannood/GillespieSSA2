@@ -15,7 +15,7 @@ typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const double,
 
 // [[Rcpp::export]]
 List simulate(
-    SEXP transition_fun,
+    SEXP propensity_funs,
     SEXP ssa_alg,
     const NumericVector& initial_state,
     const NumericVector& params,
@@ -30,15 +30,18 @@ List simulate(
     const double console_interval,
     const bool use_singular_optimisation
 ) {
-  List output(10);
+  // fetch propensity functions from pointer
+  TR_FUN* propensity_funs_ = XPtr<TR_FUN>(propensity_funs);
 
   // fetch ssa algorithm from pointer
-  TR_FUN transition_fun_ = *XPtr<TR_FUN>(transition_fun);
   SSA *ssa_alg_ = XPtr<SSA>(ssa_alg);
 
   // initialise data structures
   double simtime = 0.0;
-  NumericVector state = clone(initial_state);
+  NumericVector state(initial_state.size());
+  for (int i = 0; i < initial_state.size(); i++) {
+    state[i] = initial_state[i];
+  }
   NumericVector propensity(nu.ncol());
   double simtime_nextcensus = simtime + census_interval;
 
@@ -53,25 +56,51 @@ List simulate(
   bool nu_single = use_singular_optimisation;
   fill_nu_vectors(nu, nu_row, nu_effect, &nu_single);
 
-  // calculate initial transition rates
-  transition_fun_(state, params, simtime, propensity, buffer);
+  // calculate initial propensity
+  for (int i = 0; i < propensity.size(); i++) {
+    propensity_funs_[i](state, params, simtime, propensity, buffer);
+  }
 
   // there must be a better way to do this
-  if (store_buffer) {
-    output(0) = List::create(
-      _["time"] = simtime,
-      _["state"] = clone(state),
-      _["propensity"] = clone(propensity),
-      _["buffer"] = clone(buffer)
-    );
-  } else {
-    output(0) = List::create(
-      _["time"] = simtime,
-      _["state"] = clone(state),
-      _["propensity"] = clone(propensity)
-    );
+  List output(10);
+
+  int output_nexti = 0;
+  NumericVector output_time(10);
+  NumericMatrix output_state(10, state.size());
+  NumericMatrix output_propensity(10, propensity.size());
+  // if (store_buffer) {
+    NumericMatrix output_buffer(10, buffer.size());
+  // }
+
+  output_time[output_nexti] = simtime;
+  for (int i = 0; i < state.size(); i++) {
+    output_state(output_nexti, i) = state[i];
   }
-  int output_nexti = 1;
+  for (int i = 0; i < propensity.size(); i++) {
+    output_propensity(output_nexti, i) = propensity[i];
+  }
+  // if (store_buffer) {
+    for (int i = 0; i < buffer.size(); i++) {
+      output_buffer(output_nexti, i) = buffer[i];
+    // }
+  }
+  output_nexti++;
+
+  // if (store_buffer) {
+  //   output(output_nexti) = List::create(
+  //     _["time"] = simtime,
+  //     _["state"] = List::create(clone(state)),
+  //     _["propensity"] = List::create(clone(propensity)),
+  //     _["buffer"] = List::create(clone(buffer))
+  //   );
+  // } else {
+  //   output(output_nexti) = List::create(
+  //     _["time"] = simtime,
+  //     _["state"] = List::create(clone(state)),
+  //     _["propensity"] = List::create(clone(propensity))
+  //   );
+  // }
+  // output_nexti++;
 
   // track walltime
   int walltime_start = time(NULL);
@@ -84,7 +113,15 @@ List simulate(
     // flush console?
   }
 
-  while (simtime < final_time && (walltime_curr - walltime_start) <= max_walltime)  {
+  bool negative_state = false;
+  bool zero_prop = false;
+
+  while (
+      simtime < final_time &&
+        (walltime_curr - walltime_start) < max_walltime &&
+        !zero_prop &&
+        (!negative_state || !stop_on_neg_state)
+    )  {
     walltime_curr = time(NULL);
 
     // check for interrupt
@@ -99,7 +136,7 @@ List simulate(
       walltime_nextconsole += console_interval;
     }
 
-    // make a transition step
+    // make a step
     if (nu_single) {
       ssa_alg_->step_single(state, propensity, nu_row, nu_effect, &dtime, dstate);
     } else {
@@ -112,40 +149,74 @@ List simulate(
     // Check that no states are negative (can occur in some tau-leaping methods)
     for (int i = 0; i < state.length(); i++) {
       if (state[i] < 0) {
-        if (stop_on_neg_state) {
-          stop("state vector contains negative value at position " + i);
-        } else {
+        negative_state = true;
+        if (!stop_on_neg_state) {
           state[i] = 0;
         }
       }
     }
 
-    // recalculate transition rates
-    transition_fun_(state, params, simtime, propensity, buffer);
+    // recalculate propensity
+    for (int i = 0; i < propensity.size(); i++) {
+      propensity_funs_[i](state, params, simtime, propensity, buffer);
+    }
+
+    // check whether all propensity functions are zero
+    zero_prop = true;
+    for (int i = 0; i < propensity.size() && zero_prop; i++) {
+      if (propensity[i] > 0) {
+        zero_prop = false;
+      }
+    }
 
     // perform census if so desired
     if (simtime_nextcensus <= simtime) {
       simtime_nextcensus += census_interval;
-      if (output_nexti == output.size()) {
-        output = resize(output, output.size() * 2);
+      if (output_nexti == output_time.size()) {
+        // output = resize(output, output.size() * 2);
+        output_time = resize(output_time, output_nexti * 2);
+        output_state = resize_rows(output_state, output_nexti * 2);
+        output_propensity = resize_rows(output_propensity, output_nexti * 2);
+        output_buffer = resize_rows(output_buffer, output_nexti * 2);
       }
 
-      // there must be a better way to do this
-      if (store_buffer) {
-        output(output_nexti) = List::create(
-          _["time"] = simtime,
-          _["state"] = clone(state),
-          _["propensity"] = clone(propensity),
-          _["buffer"] = clone(buffer)
-        );
-      } else {
-        output(output_nexti) = List::create(
-          _["time"] = simtime,
-          _["state"] = clone(state),
-          _["propensity"] = clone(propensity)
-        );
+      output_time[output_nexti] = simtime;
+      for (int i = 0; i < state.size(); i++) {
+        output_state(output_nexti, i) = state[i];
       }
+      for (int i = 0; i < propensity.size(); i++) {
+        output_propensity(output_nexti, i) = propensity[i];
+      }
+      // if (store_buffer) {
+        for (int i = 0; i < buffer.size(); i++) {
+          output_buffer(output_nexti, i) = buffer[i];
+        }
+      // }
       output_nexti++;
+      // // there must be a better way to do this
+      // if (store_buffer) {
+      //   output(output_nexti) = List::create(
+      //     _["time"] = simtime,
+      //     _["state"] = List::create(clone(state)),
+      //     _["propensity"] = List::create(clone(propensity)),
+      //     _["buffer"] = List::create(clone(buffer))
+      //   );
+      // } else {
+      //   output(output_nexti) = List::create(
+      //     _["time"] = simtime,
+      //     _["state"] = List::create(clone(state)),
+      //     _["propensity"] = List::create(clone(propensity))
+      //   );
+      // }
+      // output_nexti++;
+    }
+  }
+
+  // determine whether extinction has occurred
+  bool extinction = true;
+  for (int i = 0; i < state.size() && extinction; i++) {
+    if (state[i] > 0) {
+      extinction = false;
     }
   }
 
@@ -155,22 +226,29 @@ List simulate(
 
   DataFrame stats = DataFrame::create(
     _["method"] = ssa_alg_->name,
-    _["final_time_reached"] = simtime >= final_time,
-    // _["extinction"] = all(state == 0),
-    // _["negative_state"] = any(state < 0),
-    // _["zero_prop"] = all(propensity == 0),
+    _["final_time_reached"] = simtime > final_time,
+    _["extinction"] = extinction,
+    _["negative_state"] = negative_state,
+    _["zero_prop"] = zero_prop,
     _["max_walltime"] = walltime_elapsed >= max_walltime,
     _["walltime_start"] = walltime_start,
     _["walltime_end"] = walltime_end,
     _["walltime_elapsed"] = walltime_elapsed
   );
-  // if (verbose) {
-  //   Rcout << "Stats:" << std::endl;
-  //   Rcout << stats << std::endl;
-  // }
+
+  // remove empty output slots
+  output = resize(output, output_nexti);
+
+  if (verbose) {
+    Rcout << "SSA finished!" << std::endl;
+  }
 
   return List::create(
-    _["output"] = output,
+    // _["output"] = output,
+    _["output_time"] = output_time,
+    _["output_state"] = output_state,
+    _["output_propensity"] = output_propensity,
+    _["output_buffer"] = output_buffer,
     _["stats"] = stats
   );
 }

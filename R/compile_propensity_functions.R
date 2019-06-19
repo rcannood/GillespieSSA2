@@ -12,6 +12,8 @@ compile_propensity_functions <- function(
   buffer_ids = NULL,
   env = parent.frame()
 ) {
+
+  # preprocess propensity functions
   variable_names <- propensity_funs %>% str_extract_all("[A-Za-z_0-9]* *=") %>% map(~ str_replace_all(., "[ =]", ""))
   buffer_usages <- map_int(variable_names, length) - 1
   buffer_size <-
@@ -25,7 +27,8 @@ compile_propensity_functions <- function(
     buffer_ids <- variable_names %>% unlist() %>% discard(~ . %in% reaction_ids)
   }
 
-  rcpp_prop_funs <- map_chr(
+  # parse propensity functions
+  parse <- map_df(
     seq_along(propensity_funs),
     function(i) {
       prop_fun <- propensity_funs[[i]]
@@ -58,40 +61,61 @@ compile_propensity_functions <- function(
       reaction_ix <- which(!is.na(reaction_match))
       prop_split[reaction_ix] <- paste0("propensity[", reaction_match[reaction_ix] - 1, "]")
 
-      paste(c(prop_split, ";"), collapse = "")
+      tibble(
+        rcpp = paste(c(prop_split, ";"), collapse = ""),
+        states = list(unique(prop_split[state_ix])),
+        params = list(unique(prop_split[params_ix])),
+        buffers = list(unique(prop_split[buffer_ix])),
+        reaction = unique(prop_split[reaction_ix])
+      )
     }
   )
 
-  rcpp_code <- paste0(
-    "void calculate_propensity(\n",
+  # wrap into separate functions
+  rcpp_codes <- paste0(
+    "void calculate_propensity_", seq_along(parse$rcpp) - 1, "(\n",
     "  const NumericVector& state,\n",
     "  const NumericVector& params,\n",
     "  const double time,\n",
     "  NumericVector& propensity,\n",
     "  NumericVector& buffer\n",
     ") {\n",
-    rcpp_prop_funs %>% str_replace_all("([^;]*;)", "  \\1\n") %>% paste(collapse = ""),
+    parse$rcpp %>% str_replace_all("([^;]*;)", "  \\1\n"),
     "}\n"
   )
 
-  includes <-
-    if (hardcode_params) {
-      paste0(
-        "#define CONST_", names(params), " ", params,
-        collapse = "\n"
-      )
-    } else {
-      character()
-    }
+  # create code to be able to return TR functions
+  rcpp_code <- paste0(
+    "#include <Rcpp.h>\n",
+    "using namespace Rcpp;\n",
+    if (hardcode_params) paste0("#define CONST_", names(params), " ", params, "\n", collapse = "") else character(),
+    "typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const double, NumericVector&, NumericVector&);\n",
+    "\n",
+    paste(rcpp_codes, collapse = "\n"),
+    "\n",
+    "// [[Rcpp::export]]\n",
+    "SEXP return_functions() {\n",
+    "  TR_FUN *functions = new TR_FUN[", length(rcpp_codes), "];\n",
+    paste0("  functions[", seq_along(rcpp_codes) - 1, "] = &calculate_propensity_", seq_along(rcpp_codes) - 1, ";\n", collapse = ""),
+    "  XPtr<TR_FUN> ptr(functions);\n",
+    "  return ptr;\n",
+    "}\n"
+  )
 
+  # create temporary dir for compilation
   tmpdir <- dynutils::safe_tempdir("fastgssa")
   on.exit(unlink(tmpdir, recursive = TRUE, force = TRUE))
 
   # TODO: remove debug code:
-  readr::write_lines(paste0(includes, "\n", rcpp_code), "~/fastgssa.cpp")
+  readr::write_lines(rcpp_code, "~/fastgssa.cpp")
 
-  pointer <- RcppXPtrUtils::cppXPtr(rcpp_code, cacheDir = tmpdir, includes = includes)
+  # compile code
+  Rcpp::sourceCpp(code = rcpp_code, cacheDir = tmpdir, env = environment())
 
+  # return propensity functions as pointer
+  pointer <- return_functions()
+
+  # return output
   l <- lst(
     buffer_ids,
     buffer_size,

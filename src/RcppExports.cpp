@@ -6,12 +6,12 @@
 using namespace Rcpp;
 
 // simulate
-List simulate(SEXP transition_fun, SEXP ssa_alg, const NumericVector& initial_state, const NumericVector& params, const IntegerMatrix& nu, const double final_time, const double census_interval, const bool store_buffer, const int buffer_size, const double max_walltime, const bool stop_on_neg_state, const bool verbose, const double console_interval, const bool use_singular_optimisation);
-RcppExport SEXP _fastgssa_simulate(SEXP transition_funSEXP, SEXP ssa_algSEXP, SEXP initial_stateSEXP, SEXP paramsSEXP, SEXP nuSEXP, SEXP final_timeSEXP, SEXP census_intervalSEXP, SEXP store_bufferSEXP, SEXP buffer_sizeSEXP, SEXP max_walltimeSEXP, SEXP stop_on_neg_stateSEXP, SEXP verboseSEXP, SEXP console_intervalSEXP, SEXP use_singular_optimisationSEXP) {
+List simulate(SEXP propensity_funs, SEXP ssa_alg, const NumericVector& initial_state, const NumericVector& params, const IntegerMatrix& nu, const double final_time, const double census_interval, const bool store_buffer, const int buffer_size, const double max_walltime, const bool stop_on_neg_state, const bool verbose, const double console_interval, const bool use_singular_optimisation);
+RcppExport SEXP _fastgssa_simulate(SEXP propensity_funsSEXP, SEXP ssa_algSEXP, SEXP initial_stateSEXP, SEXP paramsSEXP, SEXP nuSEXP, SEXP final_timeSEXP, SEXP census_intervalSEXP, SEXP store_bufferSEXP, SEXP buffer_sizeSEXP, SEXP max_walltimeSEXP, SEXP stop_on_neg_stateSEXP, SEXP verboseSEXP, SEXP console_intervalSEXP, SEXP use_singular_optimisationSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type transition_fun(transition_funSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type propensity_funs(propensity_funsSEXP);
     Rcpp::traits::input_parameter< SEXP >::type ssa_alg(ssa_algSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type initial_state(initial_stateSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type params(paramsSEXP);
@@ -25,7 +25,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const bool >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< const double >::type console_interval(console_intervalSEXP);
     Rcpp::traits::input_parameter< const bool >::type use_singular_optimisation(use_singular_optimisationSEXP);
-    rcpp_result_gen = Rcpp::wrap(simulate(transition_fun, ssa_alg, initial_state, params, nu, final_time, census_interval, store_buffer, buffer_size, max_walltime, stop_on_neg_state, verbose, console_interval, use_singular_optimisation));
+    rcpp_result_gen = Rcpp::wrap(simulate(propensity_funs, ssa_alg, initial_state, params, nu, final_time, census_interval, store_buffer, buffer_size, max_walltime, stop_on_neg_state, verbose, console_interval, use_singular_optimisation));
     return rcpp_result_gen;
 END_RCPP
 }
