@@ -101,7 +101,6 @@ public:
 
     // Loop over all reaction channels having propensity fun>0
     double limiting, prob;
-    int k;
 
     for (int j = 0; j < M; j++) {
       int i = nu_row[j];
@@ -110,9 +109,9 @@ public:
       // if the effect is positive, use standard ETL
       // else use binomial distribution to determine firings
       if (propensity[j] <= 0) {
-        k = 0;
+        k[j] = 0;
       } else if (nu_effect[j] >= 0) {
-        k = R::rpois(propensity[j] * tau);
+        k[j] = R::rpois(propensity[j] * tau);
       } else {
         limiting = (state[i] + dstate[i]) / -nu_effect[j];
         prob = propensity[j] * tau / limiting;
@@ -120,11 +119,11 @@ public:
           coercing = true;
           prob = 1;
         }
-        k = R::rbinom(limiting, prob);
+        k[j] = R::rbinom(limiting, prob);
       }
 
       // determine firing effect
-      dstate[i] = k * nu_effect[j];
+      dstate[i] = k[j] * nu_effect[j];
     }
 
     if (coercing) warning("coerced p to unity - consider lowering f");

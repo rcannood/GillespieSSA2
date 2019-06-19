@@ -43,6 +43,11 @@ public:
       double* dtime,
       NumericVector& dstate
   ) {
+    // clear dstate
+    for (int i = 0; i < dstate.size(); i++) {
+      dstate[i] = 0;
+    }
+
     // perform weighted sampling
     double sumtr = sum(propensity);
     double ran = R::runif(0, sumtr);

@@ -56,15 +56,19 @@ public:
       NumericVector& dstate
   ) {
     int M = propensity.size();
+    int N = dstate.size();
 
-    int k;
+    // clear dstate
+    for (int i = 0; i < N; i++) {
+      dstate[i] = 0;
+    }
 
     for (int j = 0; j < M; j++) {
       // determine reaction firing
-      k = R::rpois(propensity[j] * tau);
+      k[j] = R::rpois(propensity[j] * tau);
 
       // determine firing effect
-      dstate[nu_row[j]] = nu_effect[j] * k;
+      dstate[nu_row[j]] = nu_effect[j] * k[j];
     }
 
     // tau leap
