@@ -7,6 +7,7 @@
 #include "ssa_direct.hpp"
 #include "ssa_etl.hpp"
 #include "ssa_btl.hpp"
+#include "utils.hpp"
 
 using namespace Rcpp;
 
@@ -26,7 +27,8 @@ List simulate(
     const double max_walltime,
     const bool stop_on_neg_state,
     const bool verbose,
-    const double console_interval
+    const double console_interval,
+    const bool use_singular_optimisation
 ) {
   List output(10);
 
@@ -48,19 +50,8 @@ List simulate(
 
   // check whether nu is filled with single values
   IntegerVector nu_row(nu.ncol()), nu_effect(nu.ncol());
-  bool nu_single = true;
-  for (int j = 0; j < nu.ncol() && nu_single; j++) {
-    for (int i = 0; i < nu.nrow(); i++) {
-      if (nu(i, j) != 0) {
-        if (nu_effect[j] == 0) {
-          nu_effect[j] = nu(i, j);
-          nu_row[j] = i;
-        } else {
-          nu_single = false;
-        }
-      }
-    }
-  }
+  bool nu_single = use_singular_optimisation;
+  fill_nu_vectors(nu, nu_row, nu_effect, &nu_single);
 
   // calculate initial transition rates
   transition_fun_(state, params, simtime, propensity, buffer);

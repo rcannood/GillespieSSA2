@@ -7,7 +7,8 @@
 ssa(initial_state, propensity_funs, nu, final_time, params = NULL,
   method = ssa_em(0.01, 2), census_interval = 0,
   stop_on_neg_state = TRUE, max_walltime = Inf, store_buffer = FALSE,
-  hardcode_params = FALSE, verbose = FALSE, console_interval = 1)
+  hardcode_params = FALSE, verbose = FALSE, console_interval = 1,
+  use_singular_optimisation = TRUE)
 }
 \arguments{
 \item{initial_state}{numerical vector of initial states where the component elements

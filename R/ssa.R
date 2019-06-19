@@ -165,7 +165,8 @@ ssa <- function(
   store_buffer = FALSE,
   hardcode_params = FALSE,
   verbose = FALSE,
-  console_interval = 1
+  console_interval = 1,
+  use_singular_optimisation = TRUE
 ) {
   # check parameters
   # TODO: check all params
@@ -204,7 +205,7 @@ ssa <- function(
 
   assert_that(
     is(propensity_funs, "fastgssa::propensity_functions"),
-    !store_buffer || propensity_funs$reuse_buffer
+    !store_buffer || !propensity_funs$reuse_buffer
   )
 
   ssa_alg <- method$factory()
@@ -222,7 +223,8 @@ ssa <- function(
     max_walltime = max_walltime,
     stop_on_neg_state = stop_on_neg_state,
     verbose = verbose,
-    console_interval = console_interval
+    console_interval = console_interval,
+    use_singular_optimisation = use_singular_optimisation
   )
 
   output$output <-
