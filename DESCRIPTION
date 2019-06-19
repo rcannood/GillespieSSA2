@@ -30,6 +30,7 @@ Imports:
     assertthat,
     dplyr,
     dynutils,
+    ggplot2,
     purrr,
     Rcpp (>= 0.12.3),
     RcppXPtrUtils,

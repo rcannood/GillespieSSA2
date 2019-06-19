@@ -1,4 +1,4 @@
-#' @importFrom ggplot geom_path facet_wrap aes
+#' @importFrom ggplot2 geom_path facet_wrap aes
 #' @importFrom tidyr gather
 #' @importFrom dplyr bind_rows
 #' @export
