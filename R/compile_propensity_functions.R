@@ -88,7 +88,7 @@ compile_propensity_functions <- function(
   on.exit(unlink(tmpdir, recursive = TRUE, force = TRUE))
 
   # TODO: remove debug code:
-  write_lines(paste0(includes, "\n", rcpp_code), "~/fastgssa.cpp")
+  readr::write_lines(paste0(includes, "\n", rcpp_code), "~/fastgssa.cpp")
 
   pointer <- RcppXPtrUtils::cppXPtr(rcpp_code, cacheDir = tmpdir, includes = includes)
 
