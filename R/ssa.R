@@ -224,6 +224,7 @@
 #'
 #' @export
 #'
+#' @importFrom methods is
 #' @importFrom dynutils is_sparse
 #' @importFrom tibble tibble
 ssa <- function(

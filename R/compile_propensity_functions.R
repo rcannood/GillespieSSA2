@@ -1,21 +1,38 @@
+#' Precompile the SSA propensity functions
+#'
+#' By precompiling the propensity functions, you can run multiple SSA simulations with the
+#' same propensity functions without having to recompile the functions every time.
+#'
+#' See [ssa()] for more information on the format of each of the parameters.
+#'
+#' @param propensity_funs \[character\] The propensity functions.
+#' @param state_ids \[character\] The names of the states in the correct order.
+#' @param params \[named numeric\] Constants that are used in the propensity functions.
+#' @param buffer_ids \[character, optional\] The order of any buffer calculations that are made as part of the propensity functions.
+#' @param hardcode_params \[logical\] Whether or not to hard code the parameters into the source code.
+#'
 #' @importFrom stringr str_count str_replace_all str_extract_all str_replace
-#' @importFrom RcppXPtrUtils cppXPtr
+#' @importFrom Rcpp sourceCpp
 #' @importFrom dynutils safe_tempdir
+#' @importFrom dplyr last
 #' @export
 compile_propensity_functions <- function(
   propensity_funs,
-  reaction_ids,
-  state,
+  state_ids,
   params,
-  hardcode_params = FALSE,
   buffer_ids = NULL,
-  env = parent.frame()
+  hardcode_params = FALSE
 ) {
+  assert_that(
+    is.character(propensity_funs)
+  )
   # should this be re-enabled?
   reuse_buffer <- FALSE
 
   # preprocess propensity functions
   variable_names <- propensity_funs %>% str_extract_all("[A-Za-z_0-9]* *=") %>% map(~ str_replace_all(., "[ =]", ""))
+  reaction_ids <- variable_names %>% map_chr(last)
+
   buffer_usages <- map_int(variable_names, length) - 1
   buffer_size <-
     if (reuse_buffer) {
@@ -36,7 +53,7 @@ compile_propensity_functions <- function(
 
       prop_split <- gsub("([A-Za-z][A-Za-z0-9_]*)", " \\1 ", prop_fun) %>% strsplit(" ") %>% first() %>% discard(~ .== "")
 
-      state_match <- match(prop_split, names(state))
+      state_match <- match(prop_split, state_ids)
       state_ix <- which(!is.na(state_match))
       prop_split[state_ix] <- paste0("state[", state_match[state_ix] - 1, "]")
 
@@ -107,10 +124,8 @@ compile_propensity_functions <- function(
   tmpdir <- dynutils::safe_tempdir("fastgssa")
   on.exit(unlink(tmpdir, recursive = TRUE, force = TRUE))
 
-  # TODO: remove debug code:
-  readr::write_lines(rcpp_code, "~/fastgssa.cpp")
-
   # compile code
+  return_functions <- NULL # sourceCpp will override this
   Rcpp::sourceCpp(code = rcpp_code, cacheDir = tmpdir, env = environment())
 
   # return propensity functions as pointer

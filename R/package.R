@@ -1,52 +1,51 @@
 
 
-#' Gillespie Stochastic Simulation Algorithm package
+#' Gillespie Stochastic Simulation Algorithm for impatient people.
 #'
 #' Package description and overview of basic SSA theory
 #'
-#' \pkg{fastgssa} is a versatile and extensible framework for stochastic
-#' simulation in and provides a simple interface to a number of Monte Carlo
-#' implementations of the stochastic simulation algorithm (\acronym{SSA}). The
-#' methods currently implemented are: the Direct method, Explicit
-#' tau-leaping (\acronym{ETL}), Binomial tau-leaping (\acronym{BTL}), and
-#' Optimized tau-leaping (\acronym{OTL}). The package also provides a library
-#' of ecological, epidemiological, and evolutionary continuous-time (demo)
-#' models that can easily be customized and extended. Currently the following
-#' models are included, Decaying-Dimerization Reaction Set, Linear Chain
-#' System, single-species logistic growth model, Lotka predator-prey model,
-#' Rosenzweig-MacArthur predator-prey model, Kermack-McKendrick \acronym{SIR}
-#' model, and a metapopulation \acronym{SIRS} model.
+#' \pkg{fastgssa} is a fast and versatile framework for various Monte Carlo
+#' implementations of the stochastic simulation algorithm (\acronym{SSA}).
+#' It is conceptually based on \pkg{GillespieSSA}, but rewritten entirely in
+#' Rcpp in order to make \pkg{fastgssa} blazingly fast.
+#' The SSA methods currently implemented are: the Direct, the Explicit
+#' tau-leaping (\acronym{ETL}), and the Binomial tau-leaping (\acronym{BTL}) method.
 #'
 #' @name fastgssa-package
-#' @aliases fastgssa-package fastgssa
+#' @aliases fastgssa-package fastgssa package
 #' @docType package
 #'
 #' @section The stochastic simulation algorithm:
-#' The stochastic simulation algorithm (\acronym{SSA}) is a procedure
-#' for constructing simulated trajectories of finite populations in continuous time.
+#' The stochastic simulation algorithm (\acronym{SSA}) is a procedure for constructing
+#' simulated trajectories of finite populations in continuous time.
 #' If \eqn{X_i(t)} is the number of individuals in population \eqn{i}
-#' (\eqn{i = 1,\ldots,N}{i = 1,...,N}) at time \eqn{t} the \acronym{SSA} estimates
-#' the state vector \eqn{ \mathbf{X}(t) \equiv (X_1(t),\ldots,X_N(t)) }{ X(t) =
-#' (X_1(t),...,X_N(t))}, given that the system initially (at time \eqn{t_0})
-#' was in state \eqn{\mathbf{X}(t_0) = \mathbf{x_0}}{X(t_0) = x_0}. Reactions,
-#' single instantaneous events changing at least one of the populations (e.g.
-#' birth, death, movement, collision, predation, infection, etc), cause the
-#' state of the system to change over time. The \acronym{SSA} procedure samples
-#' the time \eqn{\tau}{tau} to the next reaction \eqn{R_j}
-#' (\eqn{j = 1,\ldots,M}{j = 1,...,M}) and updates the system state
-#' \eqn{\mathbf{X}(t)}{X(t)} accordingly. Each reaction \eqn{R_j} is
-#' characterized mathematically by two quantities; its state-change vector
-#' \eqn{\bm{\nu}_j \equiv ( \nu_{1j},\ldots,\nu_{Nj} )}{nu_j =
-#' (nu_1j,...,nu_Nj)}, where \eqn{ \nu_{ij} }{nu_ij} is the change in the
-#' number of individuals in population \eqn{i} caused by one reaction of type
-#' \eqn{j} and its propensity function \eqn{a_j(\mathbf{x})}{a_j(x)}, where
+#' (\eqn{i = 1,\ldots,N}{i = 1,...,N}) at time \eqn{t},
+#' the \acronym{SSA} estimates the state vector
+#' \eqn{ \mathbf{X}(t) \equiv (X_1(t),\ldots,X_N(t)) }{ X(t) = (X_1(t),...,X_N(t))},
+#' given that the system initially (at time \eqn{t_0})
+#' was in state \eqn{\mathbf{X}(t_0) = \mathbf{x_0}}{X(t_0) = x_0}.
+#'
+#' Reactions are single instantaneous events changing at least one of the populations (e.g.
+#' birth, death, movement, collision, predation, infection, etc).
+#' These cause the state of the system to change over time.
+#'
+#' The \acronym{SSA} procedure samples the time \eqn{\tau}{tau}
+#' to the next reaction \eqn{R_j} (\eqn{j = 1,\ldots,M}{j = 1,...,M})
+#' and updates the system state \eqn{\mathbf{X}(t)}{X(t)} accordingly.
+#'
+#' Each reaction \eqn{R_j} is characterized mathematically by two quantities;
+#' its state-change vector \eqn{\bm{\nu_j}} and its propensity function \eqn{a_j(\mathbf{x})}.
+#' The state-change vector is defined as \eqn{\bm{\nu}_j \equiv ( \nu_{1j},\ldots,\nu_{Nj} )}{nu_j = (nu_1j,...,nu_Nj)},
+#' where \eqn{ \nu_{ij} }{nu_ij} is the change in the number of individuals in
+#' population \eqn{i} caused by one reaction of type \eqn{j}.
+#' The propensity function is defined as \eqn{a_j(\mathbf{x})}, where
 #' \eqn{a_j(\mathbf{x})dt}{a_j(x)dt} is the probability that a particular
 #' reaction \eqn{j} will occur in the next infinitesimal time interval
 #' \eqn{\left[t,t+dt\right]}{[t,t+dt]}.
 #'
 #' @author Robrecht Cannoodt
 #'
-#' @seealso \code{\link{ssa}}, \code{\link{ssa_direct}}
+#' @seealso \code{\link{ssa}} for more explanation on how to use \pkg{fastgssa}
 #'
 #' @references \itemize{
 #'   \item Brown D. and Rothery P. 1993. Models in biology: mathematics, statistics, and computing. John Wiley & Sons.
@@ -61,7 +60,6 @@
 #'   \item Pineda-Krch M. 2008. Implementing the stochastic simulation algorithm in R. Submitted to the Journal of Statistical Software 25(12): 1-18. \url{http://www.jstatsoft.org/v25/i12}
 #'   \item Pineda-Krch M., Blok H.J., Dieckmann U., and Doebeli M. 2007. A tale of two cycles --- distinguishing quasi-cycles and limit cycles in finite predator-prey populations. Oikos 116:53-64. \url{http://dx.doi.org/10.1111/j.2006.0030-1299.14940.x}
 #' }
-#' @keywords package distribution
 #'
 #' @useDynLib fastgssa
 #'

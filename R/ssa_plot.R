@@ -1,8 +1,9 @@
-#' @importFrom ggplot2 geom_path facet_wrap aes
+#' @importFrom ggplot2 ggplot geom_path facet_wrap aes
 #' @importFrom tidyr gather
 #' @importFrom dplyr bind_rows
 #' @export
 ssa_plot <- function(ssa_out) {
+  var <- value <- time <- type <- NULL # satisfying r check
   df <-
     bind_rows(
       data.frame(time = ssa_out$time, ssa_out$state, type = "state", stringsAsFactors = FALSE) %>%
@@ -17,6 +18,6 @@ ssa_plot <- function(ssa_out) {
       bind_rows(df)
   }
   ggplot(df) +
-    geom_path(aes(time, value, colour = var)) +
+    geom_path(aes_string("time", "value", colour = "var")) +
     facet_wrap(~type, ncol = 1, scales = "free_y")
 }
