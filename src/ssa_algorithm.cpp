@@ -172,6 +172,8 @@ List simulate(
     }
   }
 
+  // TODO: record end state if census_interval is set to inf
+
   // determine whether extinction has occurred
   bool extinction = true;
   for (int i = 0; i < state.size() && extinction; i++) {

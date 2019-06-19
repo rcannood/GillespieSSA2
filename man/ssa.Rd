@@ -8,46 +8,52 @@ ssa(initial_state, propensity_funs, nu, final_time, params = NULL,
   method = ssa_direct(), census_interval = 0,
   stop_on_neg_state = TRUE, max_walltime = Inf,
   hardcode_params = FALSE, verbose = FALSE, console_interval = 1,
-  use_singular_optimisation = TRUE)
+  use_singular_optimisation = FALSE)
 }
 \arguments{
-\item{initial_state}{numerical vector of initial states where the component elements
-must be named using the same notation as the corresponding state variable in
-the propensity vector, \code{a}.}
+\item{initial_state}{\code{[named numeric vector]} The initial state to start the simulation with.}
 
-\item{propensity_funs}{character vector of propensity functions where state variables
-correspond to the names of the elements in \code{initial.state}.}
+\item{propensity_funs}{\code{[character vector]} A character representation of the propensity functions, written in C++.
+Check the sections below for more information on how to define the propensity functions.}
 
-\item{nu}{numerical matrix of change if the number of individuals in each
-state (rows) caused by a single reaction of any given type (columns).}
+\item{nu}{\code{[numeric matrix]} The changes in number of individuals in a state (rows) caused
+by a single reaction (columns).}
 
-\item{final_time}{final time.}
+\item{final_time}{\code{[numeric]} The final simulation time.}
 
-\item{params}{named vector of model parameters.}
+\item{params}{\code{[named numeric vector]} Constant parameters to be used in the propensity functions.}
 
-\item{method}{which method to use. Must be one of: \code{\link[=ssa.direct]{ssa.direct()}},
-\code{\link[=ssa.btl]{ssa.btl()}}, \code{\link[=ssa.etl]{ssa.etl()}}, or \code{\link[=ssa.otl]{ssa.otl()}}}
+\item{method}{\link{SSA} Which SSA algorithm to use. Must be one of: \code{\link[=ssa_direct]{ssa_direct()}},
+\code{\link[=ssa_btl]{ssa_btl()}}, or \code{\link[=ssa_etl]{ssa_etl()}}.}
 
-\item{stop_on_neg_state}{boolean object indicating if negative state
-values should be ignored (this can occur in the \code{etl} method). If
-\code{stop.on.negstate = TRUE} the simulation finishes gracefully when
-encountering a negative population size (i.e. does not throw an error). If
-\code{stop.on.negstate = FALSE} the simulation stops with an error message
-when encountering a negative population size.}
+\item{census_interval}{\code{[numeric]} The approximate interval between recording the state of the system.
+Setting this parameter to \code{0} will cause each state to be recorded, and
+to \code{Inf} will cause only the end state to be recorded.}
 
-\item{max_walltime}{maximum wall time duration (in seconds) that the
-simulation is allowed to run for before terminated. This option is usefull,
-in particular, for systems that can end up growing uncontrolably.}
+\item{stop_on_neg_state}{\code{[logical]} Whether or not to stop the simulation when
+the a negative value in the state has occured. This can occur, for instance, in the \code{\link[=ssa_etl]{ssa_etl()}}
+method.}
 
-\item{verbose}{If \code{TRUE}, intermediary information pertaining to the simulation will be displayed at each step.
-If \code{verbose} is a numeric, it will only be displayed about every \code{verbose} seconds.
-\strong{Verbose runs drastically slows down simulations.}}
+\item{max_walltime}{\code{[numeric]} The maximum duration (in seconds) that the
+simulation is allowed to run for before terminated.}
+
+\item{hardcode_params}{\code{[logical]} Whether or not to hardcode the values of \code{params} in the compilation of the \code{propensity_funs}.
+Setting this to \code{TRUE} will result in a minor sacrifice in accuracy for a minor increase in performance.}
+
+\item{verbose}{\code{[logical]} If \code{TRUE}, intermediary information pertaining to the simulation will be displayed.}
+
+\item{console_interval}{\code{[numeric]} The approximate interval between intermediary information outputs.}
+
+\item{use_singular_optimisation}{\code{[logical]} An experimental optimisation. Do not use yet.}
 }
 \value{
-Returns a list object with the following elements,
-\item{timeseries}{a data frame of the simulation time series where the first column is the time vector and subsequent columns are the state frequencies.}
-\item{stats}{a data frame containing several simulation statistics statistics.}
-\item{args}{the original parameters passed to \code{\link[=ssa]{ssa()}}}
+Returns a list object with the following elements:
+\itemize{
+\item \code{time}: \code{[numeric]} Simulatiom time for each recorded timepoint.
+\item \code{state}: \code{[numeric matrix]} The state values for each of the timepoints.
+\item \code{propensity}: \code{[numeric matrix]} The propensity values for each of the timepoints.
+\item \code{buffer}: \code{[numeric matrix]} The temporary calculation buffer used as part of the propensity functions.
+}
 }
 \description{
 Main interface function to the implemented \acronym{SSA} methods. Runs a

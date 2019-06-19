@@ -16,8 +16,6 @@ ssa_method <- function(name, params, factory) {
 #' @param tau tau parameter
 #' @param noise_strength noise_strength parameter
 #'
-#' @importFrom stats rnorm
-#'
 #' @export
 ssa_em <- function(tau = 0.01, noise_strength = 2) {
   ssa_method(

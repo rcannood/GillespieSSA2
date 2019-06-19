@@ -11,34 +11,35 @@
 #' approximate methods, and occasionally one will have to hand tweak them in
 #' order for a stochastic model to run appropriately.
 #'
-#' @param initial_state numerical vector of initial states where the component elements
-#'   must be named using the same notation as the corresponding state variable in
-#'   the propensity vector, `a`.
-#' @param propensity_funs character vector of propensity functions where state variables
-#'   correspond to the names of the elements in `initial.state`.
-#' @param nu numerical matrix of change if the number of individuals in each
-#'   state (rows) caused by a single reaction of any given type (columns).
-#' @param final_time final time.
-#' @param params named vector of model parameters.
-#' @param method which method to use. Must be one of: [ssa.direct()],
-#'   [ssa.btl()], [ssa.etl()], or [ssa.otl()]
-#' @param stop_on_neg_state boolean object indicating if negative state
-#'   values should be ignored (this can occur in the `etl` method). If
-#'   `stop.on.negstate = TRUE` the simulation finishes gracefully when
-#'   encountering a negative population size (i.e. does not throw an error). If
-#'   `stop.on.negstate = FALSE` the simulation stops with an error message
-#'   when encountering a negative population size.
-#' @param verbose If `TRUE`, intermediary information pertaining to the simulation will be displayed at each step.
-#'   If `verbose` is a numeric, it will only be displayed about every `verbose` seconds.
-#'   **Verbose runs drastically slows down simulations.**
-#' @param max_walltime maximum wall time duration (in seconds) that the
-#'   simulation is allowed to run for before terminated. This option is usefull,
-#'   in particular, for systems that can end up growing uncontrolably.
+#' @param initial_state `[named numeric vector]` The initial state to start the simulation with.
+#' @param propensity_funs `[character vector]` A character representation of the propensity functions, written in C++.
+#'   Check the sections below for more information on how to define the propensity functions.
+#' @param nu `[numeric matrix]` The changes in number of individuals in a state (rows) caused
+#'   by a single reaction (columns).
+#' @param final_time `[numeric]` The final simulation time.
+#' @param params `[named numeric vector]` Constant parameters to be used in the propensity functions.
+#' @param method `[SSA]`] Which SSA algorithm to use. Must be one of: [ssa_direct()],
+#'   [ssa_btl()], or [ssa_etl()].
+#' @param census_interval `[numeric]` The approximate interval between recording the state of the system.
+#'   Setting this parameter to `0` will cause each state to be recorded, and
+#'   to `Inf` will cause only the end state to be recorded.
+#' @param stop_on_neg_state `[logical]` Whether or not to stop the simulation when
+#'   the a negative value in the state has occured. This can occur, for instance, in the [ssa_etl()]
+#'   method.
+#' @param max_walltime `[numeric]` The maximum duration (in seconds) that the
+#'   simulation is allowed to run for before terminated.
+#' @param hardcode_params `[logical]` Whether or not to hardcode the values of `params` in the compilation of the `propensity_funs`.
+#'   Setting this to `TRUE` will result in a minor sacrifice in accuracy for a minor increase in performance.
+#' @param verbose `[logical]` If `TRUE`, intermediary information pertaining to the simulation will be displayed.
+#' @param console_interval `[numeric]` The approximate interval between intermediary information outputs.
+#' @param use_singular_optimisation `[logical]` An experimental optimisation. Do not use yet.
 #'
-#' @return Returns a list object with the following elements,
-#'   \item{timeseries}{a data frame of the simulation time series where the first column is the time vector and subsequent columns are the state frequencies.}
-#'   \item{stats}{a data frame containing several simulation statistics statistics.}
-#'   \item{args}{the original parameters passed to [ssa()]}
+#' @return Returns a list object with the following elements:
+#'
+#' * `time`: `[numeric]` Simulatiom time for each recorded timepoint.
+#' * `state`: `[numeric matrix]` The state values for each of the timepoints.
+#' * `propensity`: `[numeric matrix]` The propensity values for each of the timepoints.
+#' * `buffer`: `[numeric matrix]` The temporary calculation buffer used as part of the propensity functions.
 #'
 #' @note Selecting the appropriate \acronym{SSA} method is a trade-off between
 #'   computational speed, accuracy of the results, and which \acronym{SSA}
@@ -81,12 +82,7 @@
 #'
 #' @seealso [package], [ssa_direct()], [ssa_etl()], [ssa_btl()]
 #'
-#' @importFrom stats sd setNames
-#' @importFrom utils flush.console
-#'
-#' @keywords misc datagen ts
 #' @examples
-#'
 #' ## Irreversible isomerization
 #' ## Large initial population size (X = 1000)
 #' \dontrun{
@@ -237,7 +233,7 @@ ssa <- function(
   hardcode_params = FALSE,
   verbose = FALSE,
   console_interval = 1,
-  use_singular_optimisation = TRUE
+  use_singular_optimisation = FALSE
 ) {
   # check parameters
   # TODO: check all params
