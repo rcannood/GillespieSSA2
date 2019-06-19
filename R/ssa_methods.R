@@ -60,7 +60,7 @@ ssa_direct <- function() {
 #' @references Gillespie (2001)
 #'
 #' @export
-ssa_etl <- function(tau) {
+ssa_etl <- function(tau = .3) {
   ssa_method(
     name = "ETL",
     params = lst(tau),
@@ -81,7 +81,7 @@ ssa_etl <- function(tau) {
 #' @references Chatterjee et al. (2005)
 #'
 #' @export
-ssa_btl <- function(f) {
+ssa_btl <- function(f = 10) {
   ssa_method(
     name = "BTL",
     params = lst(f),

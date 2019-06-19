@@ -4,7 +4,7 @@
 \alias{ssa_btl}
 \title{Binomial tau-leap method (BTL)}
 \usage{
-ssa_btl(f)
+ssa_btl(f = 10)
 }
 \arguments{
 \item{f}{coarse-graining factor (see page 4 in Chatterjee et al. 2005).}

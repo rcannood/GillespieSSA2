@@ -4,7 +4,7 @@
 \alias{ssa_etl}
 \title{Explicit tau-leap method (ETL)}
 \usage{
-ssa_etl(tau)
+ssa_etl(tau = 0.3)
 }
 \arguments{
 \item{tau}{the step-size (default 0.3).}

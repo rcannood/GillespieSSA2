@@ -26,7 +26,7 @@ public:
     for (int i = 0; i < N; i++) {
       double out = 0.0;
 
-      // perform each reaction 'transition_rate' times
+      // perform each reaction 'propensity' times
       for (int j = 0; j < M; j++) {
         out += nu(i, j) * propensity[j] * tau;
       }
@@ -52,7 +52,7 @@ public:
     int M = propensity.size();
     int N = state.size();
 
-    // perform each reaction 'transition_rate' times
+    // perform each reaction 'propensity' times
     for (int i = 0; i < N; i++) {
       dstate[i] = sqrt(abs(state[i])) * noise_strength * R::rnorm(0, tau);
     }
