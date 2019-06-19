@@ -22,7 +22,6 @@ List simulate(
     const IntegerMatrix& nu,
     const double final_time,
     const double census_interval,
-    const bool store_buffer,
     const int buffer_size,
     const double max_walltime,
     const bool stop_on_neg_state,
@@ -62,15 +61,12 @@ List simulate(
   }
 
   // there must be a better way to do this
-  List output(10);
 
   int output_nexti = 0;
   NumericVector output_time(10);
   NumericMatrix output_state(10, state.size());
   NumericMatrix output_propensity(10, propensity.size());
-  // if (store_buffer) {
-    NumericMatrix output_buffer(10, buffer.size());
-  // }
+  NumericMatrix output_buffer(10, buffer.size());
 
   output_time[output_nexti] = simtime;
   for (int i = 0; i < state.size(); i++) {
@@ -79,28 +75,10 @@ List simulate(
   for (int i = 0; i < propensity.size(); i++) {
     output_propensity(output_nexti, i) = propensity[i];
   }
-  // if (store_buffer) {
-    for (int i = 0; i < buffer.size(); i++) {
-      output_buffer(output_nexti, i) = buffer[i];
-    // }
+  for (int i = 0; i < buffer.size(); i++) {
+    output_buffer(output_nexti, i) = buffer[i];
   }
   output_nexti++;
-
-  // if (store_buffer) {
-  //   output(output_nexti) = List::create(
-  //     _["time"] = simtime,
-  //     _["state"] = List::create(clone(state)),
-  //     _["propensity"] = List::create(clone(propensity)),
-  //     _["buffer"] = List::create(clone(buffer))
-  //   );
-  // } else {
-  //   output(output_nexti) = List::create(
-  //     _["time"] = simtime,
-  //     _["state"] = List::create(clone(state)),
-  //     _["propensity"] = List::create(clone(propensity))
-  //   );
-  // }
-  // output_nexti++;
 
   // track walltime
   int walltime_start = time(NULL);
@@ -187,28 +165,10 @@ List simulate(
       for (int i = 0; i < propensity.size(); i++) {
         output_propensity(output_nexti, i) = propensity[i];
       }
-      // if (store_buffer) {
-        for (int i = 0; i < buffer.size(); i++) {
-          output_buffer(output_nexti, i) = buffer[i];
-        }
-      // }
+      for (int i = 0; i < buffer.size(); i++) {
+        output_buffer(output_nexti, i) = buffer[i];
+      }
       output_nexti++;
-      // // there must be a better way to do this
-      // if (store_buffer) {
-      //   output(output_nexti) = List::create(
-      //     _["time"] = simtime,
-      //     _["state"] = List::create(clone(state)),
-      //     _["propensity"] = List::create(clone(propensity)),
-      //     _["buffer"] = List::create(clone(buffer))
-      //   );
-      // } else {
-      //   output(output_nexti) = List::create(
-      //     _["time"] = simtime,
-      //     _["state"] = List::create(clone(state)),
-      //     _["propensity"] = List::create(clone(propensity))
-      //   );
-      // }
-      // output_nexti++;
     }
   }
 
@@ -237,18 +197,20 @@ List simulate(
   );
 
   // remove empty output slots
-  output = resize(output, output_nexti);
+  output_time = resize(output_time, output_nexti);
+  output_state = resize_rows(output_state, output_nexti);
+  output_propensity = resize_rows(output_propensity, output_nexti);
+  output_buffer = resize_rows(output_buffer, output_nexti);
 
   if (verbose) {
     Rcout << "SSA finished!" << std::endl;
   }
 
   return List::create(
-    // _["output"] = output,
-    _["output_time"] = output_time,
-    _["output_state"] = output_state,
-    _["output_propensity"] = output_propensity,
-    _["output_buffer"] = output_buffer,
+    _["time"] = output_time,
+    _["state"] = output_state,
+    _["propensity"] = output_propensity,
+    _["buffer"] = output_buffer,
     _["stats"] = stats
   );
 }

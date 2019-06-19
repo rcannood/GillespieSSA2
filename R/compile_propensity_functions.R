@@ -7,11 +7,12 @@ compile_propensity_functions <- function(
   reaction_ids,
   state,
   params,
-  reuse_buffer = TRUE,
   hardcode_params = FALSE,
   buffer_ids = NULL,
   env = parent.frame()
 ) {
+  # should this be re-enabled?
+  reuse_buffer <- FALSE
 
   # preprocess propensity functions
   variable_names <- propensity_funs %>% str_extract_all("[A-Za-z_0-9]* *=") %>% map(~ str_replace_all(., "[ =]", ""))

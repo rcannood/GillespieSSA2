@@ -82,7 +82,7 @@
 #'   propensity function where each state variable requires the corresponding
 #'   named element label in the initial state vector (\code{initial.state}).
 #'
-#' @seealso \link{fastgssa-package}, \code{\link{ssa.direct}}, \code{\link{ssa.etl}}, \code{\link{ssa.btl}}, \code{\link{ssa.otl}}
+#' @seealso \link{package}, \code{\link{ssa_direct}}, \code{\link{ssa_etl}}, \code{\link{ssa_btl}}
 #'
 #' @importFrom stats sd setNames
 #' @importFrom utils flush.console
@@ -185,7 +185,8 @@
 #'   nu = nu,
 #'   params = params,
 #'   final_time = 100,
-#'   method = ssa_direct()
+#'   method = ssa_direct(),
+#'   census_interval = 0.01
 #' )
 #' ssa_plot(out)
 #' }
@@ -215,6 +216,7 @@
 #'   params = params,
 #'   final_time = 100,
 #'   method = ssa_direct(),
+#'   census_interval = .01,
 #'   verbose = TRUE
 #' )
 #' ssa_plot(out)
@@ -234,7 +236,6 @@ ssa <- function(
   census_interval = 0,
   stop_on_neg_state = TRUE,
   max_walltime = Inf,
-  store_buffer = FALSE,
   hardcode_params = FALSE,
   verbose = FALSE,
   console_interval = 1,
@@ -259,18 +260,15 @@ ssa <- function(
     !any(duplicated(c(names(initial_state), names(params))))
   )
 
-  state <- initial_state
-  time <- 0
-
+  # compile propensity functions if this has not been done already
   comp_funs <-
     if (is.character(propensity_funs)) {
       assert_that(length(propensity_funs) == ncol(nu))
       compile_propensity_functions(
         propensity_funs = propensity_funs,
         reaction_ids = colnames(nu),
-        state = state,
+        state = initial_state,
         params = params,
-        reuse_buffer = !store_buffer,
         hardcode_params = hardcode_params,
         env = environment()
       )
@@ -278,13 +276,15 @@ ssa <- function(
       propensity_funs
     }
 
+  # check propensity functions
   assert_that(
-    is(comp_funs, "fastgssa::propensity_functions"),
-    !store_buffer || !comp_funs$reuse_buffer
+    is(comp_funs, "fastgssa::propensity_functions")
   )
 
+  # create ssa algorithm instance
   ssa_alg <- method$factory()
 
+  # run SSA
   output <- simulate(
     propensity_funs = comp_funs$pointer,
     ssa_alg = ssa_alg,
@@ -293,7 +293,6 @@ ssa <- function(
     nu = as.matrix(nu),
     final_time = final_time,
     census_interval = census_interval,
-    store_buffer = store_buffer,
     buffer_size = comp_funs$buffer_size,
     max_walltime = max_walltime,
     stop_on_neg_state = stop_on_neg_state,
@@ -302,24 +301,10 @@ ssa <- function(
     use_singular_optimisation = use_singular_optimisation
   )
 
-  cat("Postprocessing output\n")
-
-  output$output %>% map_df(as_tibble)
-  output$output <-
-    output$output[map_int(output$output, length) > 0] %>%
-    map_df(
-      function(l) {
-        tib <- tibble(
-          time = l$time,
-          state = list(l$state),
-          propensity = list(l$propensity)
-        )
-        if ("buffer" %in% names(l)) {
-          tib$buffer <- list(set_names(l$buffer, propensity_funs$buffer_ids))
-        }
-        tib
-      }
-    )
+  # set colnames of objects
+  colnames(output$state) <- rownames(nu)
+  colnames(output$propensity) <- colnames(nu)
+  colnames(output$buffer) <- comp_funs$buffer_ids
 
   output
 }

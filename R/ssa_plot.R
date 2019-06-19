@@ -1,10 +1,19 @@
 #' @export
 ssa_plot <- function(ssa_out) {
   df <-
-    ssa_out$output %>%
-    select(time, state) %>%
-    mutate(state_name = map(state, names)) %>%
-    unnest(state, state_name)
+    bind_rows(
+      data.frame(time = ssa_out$time, ssa_out$state, type = "state", stringsAsFactors = FALSE) %>%
+        gather(var, value, -time, -type),
+      data.frame(time = ssa_out$time, ssa_out$propensity, type = "propensity", stringsAsFactors = FALSE) %>%
+        gather(var, value, -time, -type),
+    )
+  if (ncol(ssa_out$buffer) > 0) {
+    df <-
+      data.frame(time = ssa_out$time, ssa_out$buffer, type = "buffer", stringsAsFactors = FALSE) %>%
+      gather(var, value, -time, -type) %>%
+      bind_rows(df)
+  }
   ggplot(df) +
-    geom_path(aes(time, state, colour = state_name))
+    geom_path(aes(time, value, colour = var)) +
+    facet_wrap(~type, ncol = 1, scales = "free_y")
 }

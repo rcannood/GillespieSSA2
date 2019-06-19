@@ -6,7 +6,7 @@
 \usage{
 ssa(initial_state, propensity_funs, nu, final_time, params = NULL,
   method = ssa_em(0.01, 2), census_interval = 0,
-  stop_on_neg_state = TRUE, max_walltime = Inf, store_buffer = FALSE,
+  stop_on_neg_state = TRUE, max_walltime = Inf,
   hardcode_params = FALSE, verbose = FALSE, console_interval = 1,
   use_singular_optimisation = TRUE)
 }
@@ -205,7 +205,8 @@ out <- ssa(
   nu = nu,
   params = params,
   final_time = 100,
-  method = ssa_direct()
+  method = ssa_direct(),
+  census_interval = 0.01
 )
 ssa_plot(out)
 }
@@ -235,6 +236,7 @@ out <- ssa(
   params = params,
   final_time = 100,
   method = ssa_direct(),
+  census_interval = .01,
   verbose = TRUE
 )
 ssa_plot(out)
@@ -242,7 +244,7 @@ ssa_plot(out)
 
 }
 \seealso{
-\link{fastgssa-package}, \code{\link{ssa.direct}}, \code{\link{ssa.etl}}, \code{\link{ssa.btl}}, \code{\link{ssa.otl}}
+\link{package}, \code{\link{ssa_direct}}, \code{\link{ssa_etl}}, \code{\link{ssa_btl}}
 }
 \keyword{datagen}
 \keyword{misc}
