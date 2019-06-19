@@ -23,7 +23,7 @@ by a single reaction (columns).}
 
 \item{params}{\code{[named numeric vector]} Constant parameters to be used in the propensity functions.}
 
-\item{method}{\link{SSA} Which SSA algorithm to use. Must be one of: \code{\link[=ssa_direct]{ssa_direct()}},
+\item{method}{\code{[SSA]}] Which SSA algorithm to use. Must be one of: \code{\link[=ssa_direct]{ssa_direct()}},
 \code{\link[=ssa_btl]{ssa_btl()}}, or \code{\link[=ssa_etl]{ssa_etl()}}.}
 
 \item{census_interval}{\code{[numeric]} The approximate interval between recording the state of the system.
@@ -111,7 +111,6 @@ named element label in the initial state vector (\code{initial.state}).
 }
 
 \examples{
-
 ## Irreversible isomerization
 ## Large initial population size (X = 1000)
 \dontrun{
@@ -248,6 +247,3 @@ ssa_plot(out)
 \seealso{
 \link{package}, \code{\link[=ssa_direct]{ssa_direct()}}, \code{\link[=ssa_etl]{ssa_etl()}}, \code{\link[=ssa_btl]{ssa_btl()}}
 }
-\keyword{datagen}
-\keyword{misc}
-\keyword{ts}
