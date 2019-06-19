@@ -1,3 +1,6 @@
+#' @importFrom ggplot geom_path facet_wrap aes
+#' @importFrom tidyr gather
+#' @importFrom dplyr bind_rows
 #' @export
 ssa_plot <- function(ssa_out) {
   df <-
