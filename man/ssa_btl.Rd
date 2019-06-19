@@ -10,7 +10,7 @@ ssa_btl(f = 10)
 \item{f}{coarse-graining factor (see page 4 in Chatterjee et al. 2005).}
 }
 \value{
-an object of to be used by \code{\link{ssa}}.
+an object of to be used by \code{\link[=ssa]{ssa()}}.
 }
 \description{
 Binomial tau-leap method implementation of the \acronym{SSA} as described by Chatterjee et al. (2005).

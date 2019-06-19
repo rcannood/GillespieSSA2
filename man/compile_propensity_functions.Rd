@@ -8,20 +8,20 @@ compile_propensity_functions(propensity_funs, state_ids, params,
   buffer_ids = NULL, hardcode_params = FALSE)
 }
 \arguments{
-\item{propensity_funs}{\[character\] The propensity functions.}
+\item{propensity_funs}{[character] The propensity functions.}
 
-\item{state_ids}{\[character\] The names of the states in the correct order.}
+\item{state_ids}{[character] The names of the states in the correct order.}
 
-\item{params}{\[named numeric\] Constants that are used in the propensity functions.}
+\item{params}{[named numeric] Constants that are used in the propensity functions.}
 
-\item{buffer_ids}{\[character, optional\] The order of any buffer calculations that are made as part of the propensity functions.}
+\item{buffer_ids}{[character, optional] The order of any buffer calculations that are made as part of the propensity functions.}
 
-\item{hardcode_params}{\[logical\] Whether or not to hard code the parameters into the source code.}
+\item{hardcode_params}{[logical] Whether or not to hard code the parameters into the source code.}
 }
 \description{
 By precompiling the propensity functions, you can run multiple SSA simulations with the
 same propensity functions without having to recompile the functions every time.
 }
 \details{
-See [ssa()] for more information on the format of each of the parameters.
+See \code{\link[=ssa]{ssa()}} for more information on the format of each of the parameters.
 }

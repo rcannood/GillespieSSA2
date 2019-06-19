@@ -7,7 +7,7 @@
 ssa_direct()
 }
 \value{
-an object of to be used by \code{\link{ssa}}.
+an object of to be used by \code{\link[=ssa]{ssa()}}.
 }
 \description{
 Direct method implementation of the \acronym{SSA} as described by Gillespie (1977).

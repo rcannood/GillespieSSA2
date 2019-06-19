@@ -10,7 +10,7 @@ ssa_etl(tau = 0.3)
 \item{tau}{the step-size (default 0.3).}
 }
 \value{
-an object of to be used by \code{\link{ssa}}.
+an object of to be used by \code{\link[=ssa]{ssa()}}.
 }
 \description{
 Explicit tau-leap method implementation of the \acronym{SSA} as described by Gillespie (2001).

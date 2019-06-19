@@ -34,7 +34,7 @@ ssa_em <- function(tau = 0.01, noise_strength = 2) {
 #'
 #' Direct method implementation of the \acronym{SSA} as described by Gillespie (1977).
 #'
-#' @return an object of to be used by \code{\link{ssa}}.
+#' @return an object of to be used by [ssa()].
 #'
 #' @references Gillespie (1977)
 #'
@@ -55,7 +55,7 @@ ssa_direct <- function() {
 #'
 #' @param tau the step-size (default 0.3).
 #'
-#' @return an object of to be used by \code{\link{ssa}}.
+#' @return an object of to be used by [ssa()].
 #'
 #' @references Gillespie (2001)
 #'
@@ -76,7 +76,7 @@ ssa_etl <- function(tau = .3) {
 #'
 #' @param f coarse-graining factor (see page 4 in Chatterjee et al. 2005).
 #'
-#' @return an object of to be used by \code{\link{ssa}}.
+#' @return an object of to be used by [ssa()].
 #'
 #' @references Chatterjee et al. (2005)
 #'
