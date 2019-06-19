@@ -260,7 +260,6 @@ ssa <- function(
       assert_that(length(propensity_funs) == ncol(nu))
       compile_propensity_functions(
         propensity_funs = propensity_funs,
-        reaction_ids = colnames(nu),
         state_ids = rownames(nu),
         params = params,
         hardcode_params = hardcode_params
