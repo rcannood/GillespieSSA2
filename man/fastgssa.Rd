@@ -4,7 +4,7 @@
 \name{fastgssa}
 \alias{fastgssa}
 \alias{fastgssa-package}
-\title{Gillespie Stochastic Simulation Algorithm for impatient people.}
+\title{Gillespie's Stochastic Simulation Algorithm for impatient people.}
 \description{
 Package description and overview of basic SSA theory
 }
@@ -44,6 +44,17 @@ The propensity function is defined as \eqn{a_j(\mathbf{x})}, where
 \eqn{a_j(\mathbf{x})dt}{a_j(x)dt} is the probability that a particular
 reaction \eqn{j} will occur in the next infinitesimal time interval
 \eqn{\left[t,t+dt\right]}{[t,t+dt]}.
+}
+
+\section{Contents of this package}{
+
+\itemize{
+\item \code{\link[=ssa]{ssa()}}: The main entry point for running an \acronym{SSA} simulation.
+\item \code{\link[=ssa_plot]{ssa_plot()}}: A standard visualisation for generating an overview plot fo the output.
+\item \code{\link[=ssa_direct]{ssa_direct()}}, \code{\link[=ssa_etl]{ssa_etl()}}, \code{\link[=ssa_btl]{ssa_btl()}}: Different \acronym{SSA} algorithms.
+\item \code{\link[=ssa_em]{ssa_em()}}: Not actually an \acronym{SSA} algorithm.
+\item \code{\link[=compile_propensity_functions]{compile_propensity_functions()}}: A function for precompiling the propensity functions.
+}
 }
 
 \seealso{

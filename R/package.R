@@ -1,6 +1,4 @@
-
-
-#' Gillespie Stochastic Simulation Algorithm for impatient people.
+#' Gillespie's Stochastic Simulation Algorithm for impatient people.
 #'
 #' Package description and overview of basic SSA theory
 #'
@@ -42,6 +40,14 @@
 #' \eqn{a_j(\mathbf{x})dt}{a_j(x)dt} is the probability that a particular
 #' reaction \eqn{j} will occur in the next infinitesimal time interval
 #' \eqn{\left[t,t+dt\right]}{[t,t+dt]}.
+#'
+#' @section Contents of this package:
+#'
+#' * [ssa()]: The main entry point for running an \acronym{SSA} simulation.
+#' * [ssa_plot()]: A standard visualisation for generating an overview plot fo the output.
+#' * [ssa_direct()], [ssa_etl()], [ssa_btl()]: Different \acronym{SSA} algorithms.
+#' * [ssa_em()]: Not actually an \acronym{SSA} algorithm.
+#' * [compile_propensity_functions()]: A function for precompiling the propensity functions.
 #'
 #' @seealso [ssa()] for more explanation on how to use \pkg{fastgssa}
 #'
