@@ -149,7 +149,8 @@ ssa <- function(
 
   # run SSA
   output <- simulate(
-    propensity_funs = comp_funs$pointer,
+    propensity_funs = comp_funs$functions_pointer,
+    num_functions = comp_funs$num_functions,
     ssa_alg = ssa_alg,
     initial_state = initial_state,
     params = params,

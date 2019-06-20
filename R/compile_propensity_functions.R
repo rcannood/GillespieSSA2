@@ -151,8 +151,9 @@ compile_propensity_functions <- function(
   Rcpp::sourceCpp(code = rcpp_code, cacheDir = tmpdir, env = environment())
 
   # return propensity functions as pointer
-  pointer <- return_functions()
+  functions_pointer <- return_functions()
   num_functions <- num_functions()
+
   # return output
   l <- lst(
     buffer_ids,

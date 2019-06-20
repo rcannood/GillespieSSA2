@@ -10,6 +10,7 @@ typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const double,
 // [[Rcpp::export]]
 List simulate(
     SEXP propensity_funs,
+    const int num_functions,
     SEXP ssa_alg,
     const NumericVector& initial_state,
     const NumericVector& params,
@@ -50,7 +51,7 @@ List simulate(
   fill_nu_vectors(nu, nu_row, nu_effect, &nu_vector);
 
   // calculate initial propensity
-  for (int i = 0; i < propensity.size(); i++) {
+  for (int i = 0; i < num_functions; i++) {
     propensity_funs_[i](state, params, simtime, propensity, buffer);
   }
 
@@ -127,7 +128,7 @@ List simulate(
     }
 
     // recalculate propensity
-    for (int i = 0; i < propensity.size(); i++) {
+    for (int i = 0; i < num_functions; i++) {
       propensity_funs_[i](state, params, simtime, propensity, buffer);
     }
 
