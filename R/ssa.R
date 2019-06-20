@@ -3,7 +3,7 @@
 #' Main interface function to the implemented \acronym{SSA} methods. Runs a
 #' single realization of a predefined system. For a detailed explanation
 #' on how to set up your first \acronym{SSA} system, check the vignette
-#' available at [github.com/rcannood/fastgssa/vignettes](https://github.com/rcannood/fastgssa)
+#' available on [GitHub](https://github.com/dynverse/fastgssa/tree/master/vignettes/preparing_a_run.md)
 #' or using `vignette("preparing_a_run", package = "fastgssa")`.
 #'
 #' Substantial improvements in speed and accuracy can be obtained by
@@ -34,7 +34,7 @@
 #'   Setting this to `TRUE` will result in a minor sacrifice in accuracy for a minor increase in performance.
 #' @param verbose `[logical]` If `TRUE`, intermediary information pertaining to the simulation will be displayed.
 #' @param console_interval `[numeric]` The approximate interval between intermediary information outputs.
-#' @param use_singular_optimisation `[logical]` An experimental optimisation. Do not use yet.
+#' @param use_vector_optimisation `[logical]` An experimental optimisation. Do not use yet.
 #'
 #' @return Returns a list object with the following elements:
 #'
@@ -47,13 +47,7 @@
 #' @seealso [fastgssa] for a high level explanation of the package
 #'
 #' @examples
-#' params <- c(c1 = 10, c2 = .01, c3 = 10)
-#' initial_state <- c(X1 = 1000, X2 = 1000)
-#' propensity_funs <- c(
-#'   "prey_grow = c1 * X1",
-#'   "predation = c2 * X1 * X2",
-#'   "predator_death = c3 * X2"
-#' )
+#' initial_state <- c(x_prey = 1000, x_predators = 1000)
 #' nu <- matrix(
 #'   c(
 #'     +1, -1, 0,
@@ -62,20 +56,28 @@
 #'   nrow = 2,
 #'   byrow = TRUE,
 #'   dimnames = list(
-#'     names(initial_state),
-#'     c("prey_grow", "predation", "predator_death")
+#'     c("x_prey", "x_predators"),
+#'     c("p_prey_up", "p_predation", "p_pred_down")
 #'   )
 #' )
-#' out <- ssa(
-#'   initial_state = initial_state,
-#'   propensity_funs = propensity_funs,
-#'   nu = nu,
-#'   params = params,
-#'   final_time = 100,
-#'   method = ssa_direct(),
-#'   census_interval = .01,
-#'   verbose = TRUE
+#' propensity_funs <- c(
+#'   "p_prey_up = c1 * x_prey",
+#'   "p_predation = c2 * x_prey * x_predators",
+#'   "p_pred_down = c3 * x_predators"
 #' )
+#' params <- c(c1 = 10, c2 = 0.01, c3 = 10)
+#'
+#' out <-
+#'   ssa(
+#'     initial_state = initial_state,
+#'     propensity_funs = propensity_funs,
+#'     nu = nu,
+#'     params = params,
+#'     method = ssa_direct(),
+#'     final_time = 5,
+#'     census_interval = .001,
+#'     verbose = TRUE
+#'   )
 #' ssa_plot(out)
 #'
 #' @export
@@ -96,7 +98,7 @@ ssa <- function(
   hardcode_params = FALSE,
   verbose = FALSE,
   console_interval = 1,
-  use_singular_optimisation = FALSE
+  use_vector_optimisation = FALSE
 ) {
   # implement these stats:
   # https://github.com/cran/GillespieSSA/blob/master/man/ssa.Rd#L71
@@ -159,7 +161,7 @@ ssa <- function(
     stop_on_neg_state = stop_on_neg_state,
     verbose = verbose,
     console_interval = console_interval,
-    use_singular_optimisation = use_singular_optimisation
+    use_vector_optimisation = use_vector_optimisation
   )
 
   # set colnames of objects

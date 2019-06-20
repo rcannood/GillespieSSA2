@@ -1,9 +1,5 @@
-#ifndef DYNGEN_SSA_BTL_H
-#define DYNGEN_SSA_BTL_H
-
 #include <Rcpp.h>
-#include "ssa.hpp"
-#include "utils.hpp"
+#include "ssa.h"
 
 using namespace Rcpp;
 
@@ -19,7 +15,7 @@ public:
     k = IntegerVector(M);
   }
 
-  void step(
+  void step_matrix(
       const NumericVector& state,
       const NumericVector& propensity,
       const IntegerMatrix& nu,
@@ -83,7 +79,7 @@ public:
     *dtime = tau;
   }
 
-  void step_single(
+  void step_vector(
       const NumericVector& state,
       const NumericVector& propensity,
       const IntegerVector& nu_row,
@@ -138,7 +134,3 @@ SEXP make_ssa_btl(double f) {
   XPtr<SSA_BTL> ptr(ssa);
   return ptr;
 }
-
-#endif
-
-

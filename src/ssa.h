@@ -2,7 +2,6 @@
 #define DYNGEN_SSA_H
 
 #include <Rcpp.h>
-#include "utils.hpp"
 
 using namespace Rcpp;
 
@@ -13,28 +12,24 @@ public:
 
   virtual ~SSA() {}
 
-  virtual void allocate(const int M, const int N) {}
+  virtual void allocate(const int M, const int N);
 
-  virtual void step(
+  virtual void step_matrix(
       const NumericVector& state,
       const NumericVector& propensity,
       const IntegerMatrix& nu,
       double* dtime,
       NumericVector& dstate
-  ) {
-    stop("step() should have been overridden but wasn't!");
-  }
+  );
 
-  virtual void step_single(
+  virtual void step_vector(
       const NumericVector& state,
       const NumericVector& propensity,
       const IntegerVector& nu_row,
       const IntegerVector& nu_effect,
       double* dtime,
       NumericVector& dstate
-  ) {
-    stop("step_single() should have been overridden but wasn't!");
-  }
+  );
 } ;
 
 

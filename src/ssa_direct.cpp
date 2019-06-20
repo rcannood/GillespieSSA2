@@ -1,9 +1,5 @@
-#ifndef DYNGEN_SSA_DIRECT_H
-#define DYNGEN_SSA_DIRECT_H
-
 #include <Rcpp.h>
-#include "ssa.hpp"
-#include "utils.hpp"
+#include "ssa.h"
 
 using namespace Rcpp;
 
@@ -11,7 +7,7 @@ class SSA_direct : public SSA {
 public:
   SSA_direct() : SSA("direct") {}
 
-  void step(
+  void step_matrix(
       const NumericVector& state,
       const NumericVector& propensity,
       const IntegerMatrix& nu,
@@ -35,7 +31,7 @@ public:
     *dtime = -log(R::runif(0, 1)) / sumtr;
   }
 
-  void step_single(
+  void step_vector(
       const NumericVector& state,
       const NumericVector& propensity,
       const IntegerVector& nu_row,
@@ -70,7 +66,3 @@ SEXP make_ssa_direct() {
   XPtr<SSA_direct> ptr(ssa);
   return ptr;
 }
-
-#endif
-
-

@@ -1,9 +1,5 @@
-#ifndef DYNGEN_SSA_ETL_H
-#define DYNGEN_SSA_ETL_H
-
 #include <Rcpp.h>
-#include "ssa.hpp"
-#include "utils.hpp"
+#include "ssa.h"
 
 using namespace Rcpp;
 
@@ -19,7 +15,7 @@ public:
     k = IntegerVector(M);
   }
 
-  void step(
+  void step_matrix(
       const NumericVector& state,
       const NumericVector& propensity,
       const IntegerMatrix& nu,
@@ -47,7 +43,7 @@ public:
     *dtime = tau;
   }
 
-  void step_single(
+  void step_vector(
       const NumericVector& state,
       const NumericVector& propensity,
       const IntegerVector& nu_row,
@@ -82,7 +78,3 @@ SEXP make_ssa_etl(double tau) {
   XPtr<SSA_etl> ptr(ssa);
   return ptr;
 }
-
-#endif
-
-

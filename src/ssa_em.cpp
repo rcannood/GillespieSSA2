@@ -1,8 +1,5 @@
-#ifndef DYNGEN_SSA_EM_H
-#define DYNGEN_SSA_EM_H
-
 #include <Rcpp.h>
-#include "ssa.hpp"
+#include "ssa.h"
 
 using namespace Rcpp;
 
@@ -13,7 +10,7 @@ public:
   double tau;
   double noise_strength;
 
-  void step(
+  void step_matrix(
       const NumericVector& state,
       const NumericVector& propensity,
       const IntegerMatrix& nu,
@@ -41,7 +38,7 @@ public:
     *dtime = tau;
   }
 
-  void step_single(
+  void step_vector(
       const NumericVector& state,
       const NumericVector& propensity,
       const IntegerVector& nu_row,
@@ -72,5 +69,3 @@ SEXP make_ssa_em(double tau, double noise_strength) {
   XPtr<SSA_EM> ptr(ssa);
   return ptr;
 }
-
-#endif

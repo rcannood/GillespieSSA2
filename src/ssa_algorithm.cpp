@@ -1,13 +1,7 @@
-#ifndef DYNGEN_SSA_ALGORITHM_H
-#define DYNGEN_SSA_ALGORITHM_H
-
 #include <Rcpp.h>
-#include "ssa.hpp"
-#include "ssa_em.hpp"
-#include "ssa_direct.hpp"
-#include "ssa_etl.hpp"
-#include "ssa_btl.hpp"
-#include "utils.hpp"
+
+#include "ssa.h"
+#include "utils.h"
 
 using namespace Rcpp;
 
@@ -27,7 +21,7 @@ List simulate(
     const bool stop_on_neg_state,
     const bool verbose,
     const double console_interval,
-    const bool use_singular_optimisation
+    const bool use_vector_optimisation
 ) {
   // fetch propensity functions from pointer
   TR_FUN* propensity_funs_ = XPtr<TR_FUN>(propensity_funs);
@@ -50,17 +44,15 @@ List simulate(
   NumericVector dstate(state.size());
   NumericVector buffer(buffer_size);
 
-  // check whether nu is filled with single values
+  // check whether nu is able to be transformed into a vector
   IntegerVector nu_row(nu.ncol()), nu_effect(nu.ncol());
-  bool nu_single = use_singular_optimisation;
-  fill_nu_vectors(nu, nu_row, nu_effect, &nu_single);
+  bool nu_vector = use_vector_optimisation;
+  fill_nu_vectors(nu, nu_row, nu_effect, &nu_vector);
 
   // calculate initial propensity
   for (int i = 0; i < propensity.size(); i++) {
     propensity_funs_[i](state, params, simtime, propensity, buffer);
   }
-
-  // there must be a better way to do this
 
   int output_nexti = 0;
   NumericVector output_time(10);
@@ -115,10 +107,10 @@ List simulate(
     }
 
     // make a step
-    if (nu_single) {
-      ssa_alg_->step_single(state, propensity, nu_row, nu_effect, &dtime, dstate);
+    if (nu_vector) {
+      ssa_alg_->step_vector(state, propensity, nu_row, nu_effect, &dtime, dstate);
     } else {
-      ssa_alg_->step(state, propensity, nu, &dtime, dstate);
+      ssa_alg_->step_matrix(state, propensity, nu, &dtime, dstate);
     }
 
     state += dstate;
@@ -216,5 +208,3 @@ List simulate(
     _["stats"] = stats
   );
 }
-
-#endif

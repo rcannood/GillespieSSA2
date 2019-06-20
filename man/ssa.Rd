@@ -8,7 +8,7 @@ ssa(initial_state, propensity_funs, nu, final_time, params = NULL,
   method = ssa_direct(), census_interval = 0,
   stop_on_neg_state = TRUE, max_walltime = Inf,
   hardcode_params = FALSE, verbose = FALSE, console_interval = 1,
-  use_singular_optimisation = FALSE)
+  use_vector_optimisation = FALSE)
 }
 \arguments{
 \item{initial_state}{\code{[named numeric vector]} The initial state to start the simulation with.}
@@ -43,7 +43,7 @@ Setting this to \code{TRUE} will result in a minor sacrifice in accuracy for a m
 
 \item{console_interval}{\code{[numeric]} The approximate interval between intermediary information outputs.}
 
-\item{use_singular_optimisation}{\code{[logical]} An experimental optimisation. Do not use yet.}
+\item{use_vector_optimisation}{\code{[logical]} An experimental optimisation. Do not use yet.}
 }
 \value{
 Returns a list object with the following elements:
@@ -58,7 +58,7 @@ Returns a list object with the following elements:
 Main interface function to the implemented \acronym{SSA} methods. Runs a
 single realization of a predefined system. For a detailed explanation
 on how to set up your first \acronym{SSA} system, check the vignette
-available at \href{https://github.com/rcannood/fastgssa}{github.com/rcannood/fastgssa/vignettes}
+available on \href{https://github.com/dynverse/fastgssa/tree/master/vignettes/preparing_a_run.md}{GitHub}
 or using \code{vignette("preparing_a_run", package = "fastgssa")}.
 }
 \details{
@@ -71,13 +71,7 @@ Approximate methods (\code{\link[=ssa_etl]{ssa_etl()}} and \code{\link[=ssa_btl]
 Some tweaking might be required for a stochastic model to run appropriately.
 }
 \examples{
-params <- c(c1 = 10, c2 = .01, c3 = 10)
-initial_state <- c(X1 = 1000, X2 = 1000)
-propensity_funs <- c(
-  "prey_grow = c1 * X1",
-  "predation = c2 * X1 * X2",
-  "predator_death = c3 * X2"
-)
+initial_state <- c(x_prey = 1000, x_predators = 1000)
 nu <- matrix(
   c(
     +1, -1, 0,
@@ -86,20 +80,28 @@ nu <- matrix(
   nrow = 2,
   byrow = TRUE,
   dimnames = list(
-    names(initial_state),
-    c("prey_grow", "predation", "predator_death")
+    c("x_prey", "x_predators"),
+    c("p_prey_up", "p_predation", "p_pred_down")
   )
 )
-out <- ssa(
-  initial_state = initial_state,
-  propensity_funs = propensity_funs,
-  nu = nu,
-  params = params,
-  final_time = 100,
-  method = ssa_direct(),
-  census_interval = .01,
-  verbose = TRUE
+propensity_funs <- c(
+  "p_prey_up = c1 * x_prey",
+  "p_predation = c2 * x_prey * x_predators",
+  "p_pred_down = c3 * x_predators"
 )
+params <- c(c1 = 10, c2 = 0.01, c3 = 10)
+
+out <-
+  ssa(
+    initial_state = initial_state,
+    propensity_funs = propensity_funs,
+    nu = nu,
+    params = params,
+    method = ssa_direct(),
+    final_time = 5,
+    census_interval = .001,
+    verbose = TRUE
+  )
 ssa_plot(out)
 
 }
