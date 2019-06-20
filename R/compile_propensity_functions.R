@@ -14,7 +14,7 @@
 #'   to this file location before compilation.
 #' @param fun_by `[integer]` Combine this number of propensity functions into one function.
 #'
-#' @importFrom stringr str_count str_replace_all str_extract_all str_replace
+#' @importFrom stringr str_count str_replace_all str_extract_all str_replace str_split
 #' @importFrom Rcpp sourceCpp
 #' @importFrom dynutils safe_tempdir
 #' @importFrom dplyr last
