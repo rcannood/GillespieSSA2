@@ -12,6 +12,12 @@ vignette: >
 rmarkdown::render("vignettes/preparing_a_run.Rmd", output_format = "github_document")
 -->
 
+
+```{r, setseed, echo=FALSE}
+set.seed(1)
+```
+
+
 In order to invoke `ssa()`, the stochastic model needs at least four components:
 
 * the initial state vector (`initial_state`),
