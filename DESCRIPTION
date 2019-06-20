@@ -11,19 +11,11 @@ Authors@R: c(
       comment = c(ORCID = "0000-0003-3641-729X")
     )
   )
-Description: fastgssa provides a simple to use, intuitive, and
-    extensible interface to several stochastic simulation
-    algorithms for generating simulated trajectories of finite
-    population continuous-time model. Currently it implements
-    Gillespie's exact stochastic simulation algorithm (Direct
-    method) and several approximate methods (Explicit tau-leap,
-    Binomial tau-leap, and Optimized tau-leap). The package also
-    contains a library of template models that can be run as demo
-    models and can easily be customized and extended. Currently the
-    following models are included, decaying-dimerization reaction
-    set, linear chain system, logistic growth model, Lotka
-    predator-prey model, Rosenzweig-MacArthur predator-prey model,
-    Kermack-McKendrick SIR model, and a metapopulation SIRS model.
+Description: A fast and versatile framework for various Monte Carlo implementations
+  of the stochastic simulation algorithm ('SSA'). It is conceptually based on 
+  'GillespieSSA', but rewritten entirely in 'Rcpp' in order to make 'fastgssa' 
+  blazingly fast. The 'SSA' methods currently implemented are: Direct, Explicit
+  tau-leaping ('ETL'), and the Binomial tau-leaping ('BTL') method.
 License: GPL (>= 3)
 LazyData: TRUE
 Imports:
@@ -34,11 +26,12 @@ Imports:
     methods,
     purrr,
     Rcpp (>= 0.12.3),
-    RcppXPtrUtils,
+    readr,
     stringr,
     tibble,
     tidyr
 Suggests: 
+    knitr,
     testthat
 LinkingTo: Rcpp
 VignetteBuilder: knitr

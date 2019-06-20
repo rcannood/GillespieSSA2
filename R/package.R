@@ -1,7 +1,5 @@
 #' Gillespie's Stochastic Simulation Algorithm for impatient people.
 #'
-#' Package description and overview of basic SSA theory
-#'
 #' \pkg{fastgssa} is a fast and versatile framework for various Monte Carlo
 #' implementations of the stochastic simulation algorithm (\acronym{SSA}).
 #' It is conceptually based on \pkg{GillespieSSA}, but rewritten entirely in

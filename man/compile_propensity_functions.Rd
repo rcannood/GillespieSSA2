@@ -5,23 +5,29 @@
 \title{Precompile the SSA propensity functions}
 \usage{
 compile_propensity_functions(propensity_funs, state_ids, params,
-  buffer_ids = NULL, hardcode_params = FALSE)
+  buffer_ids = NULL, hardcode_params = FALSE, write_rcpp = NULL,
+  fun_by = 100)
 }
 \arguments{
-\item{propensity_funs}{[character] The propensity functions.}
+\item{propensity_funs}{\code{[character]} The propensity functions.}
 
-\item{state_ids}{[character] The names of the states in the correct order.}
+\item{state_ids}{\code{[character]} The names of the states in the correct order.}
 
-\item{params}{[named numeric] Constants that are used in the propensity functions.}
+\item{params}{\code{[named numeric]} Constants that are used in the propensity functions.}
 
-\item{buffer_ids}{[character, optional] The order of any buffer calculations that are made as part of the propensity functions.}
+\item{buffer_ids}{\code{[character]} The order of any buffer calculations that are made as part of the propensity functions.}
 
-\item{hardcode_params}{[logical] Whether or not to hard code the parameters into the source code.}
+\item{hardcode_params}{\code{[logical]} Whether or not to hard code the parameters into the source code.}
+
+\item{write_rcpp}{\code{[character]} If not \code{NULL}, then the source code of the propensity functions will be written
+to this file location before compilation.}
+
+\item{fun_by}{\code{[integer]} Combine this number of propensity functions into one function.}
 }
 \description{
 By precompiling the propensity functions, you can run multiple SSA simulations with the
 same propensity functions without having to recompile the functions every time.
 }
 \details{
-See \code{\link[=ssa]{ssa()}} for more information on the format of each of the parameters.
+See \code{\link[=ssa]{ssa()}} for more information on the format of the propensity functions.
 }
