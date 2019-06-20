@@ -16,7 +16,7 @@
 #'
 #' @param initial_state `[named numeric vector]` The initial state to start the simulation with.
 #' @param propensity_funs `[character vector]` A character representation of the propensity functions, written in C++.
-#' @param nu `[numeric matrix]` The changes in number of individuals in a state (rows) caused
+#' @param nu `[(sparse) integer matrix]` The changes in number of individuals in a state (rows) caused
 #'   by a single reaction (columns).
 #' @param final_time `[numeric]` The final simulation time.
 #' @param params `[named numeric vector]` Constant parameters to be used in the propensity functions.
@@ -34,7 +34,6 @@
 #'   Setting this to `TRUE` will result in a minor sacrifice in accuracy for a minor increase in performance.
 #' @param verbose `[logical]` If `TRUE`, intermediary information pertaining to the simulation will be displayed.
 #' @param console_interval `[numeric]` The approximate interval between intermediary information outputs.
-#' @param use_vector_optimisation `[logical]` An experimental optimisation. Do not use yet.
 #'
 #' @return Returns a list object with the following elements:
 #'
@@ -42,7 +41,6 @@
 #' * `state`: `[numeric matrix]` The state values for each of the timepoints.
 #' * `propensity`: `[numeric matrix]` The propensity values for each of the timepoints.
 #' * `buffer`: `[numeric matrix]` The temporary calculation buffer used as part of the propensity functions.
-#'
 #'
 #' @seealso [fastgssa] for a high level explanation of the package
 #'
@@ -97,11 +95,14 @@ ssa <- function(
   max_walltime = Inf,
   hardcode_params = FALSE,
   verbose = FALSE,
-  console_interval = 1,
-  use_vector_optimisation = FALSE
+  console_interval = 1
 ) {
   # implement these stats:
   # https://github.com/cran/GillespieSSA/blob/master/man/ssa.Rd#L71
+
+  if (is.matrix(nu)) {
+    nu <- Matrix::Matrix(nu, sparse = TRUE)
+  }
 
   # check parameters
   # TODO: check all params
@@ -110,7 +111,7 @@ ssa <- function(
     is.numeric(initial_state), !is.null(names(initial_state)),
 
     # nu
-    is.matrix(nu) || dynutils::is_sparse(nu),
+    dynutils::is_sparse(nu),
 
     is.numeric(final_time), final_time >= 0,
     is.numeric(console_interval), console_interval >= 0,
@@ -154,15 +155,16 @@ ssa <- function(
     ssa_alg = ssa_alg,
     initial_state = initial_state,
     params = params,
-    nu = as.matrix(nu),
+    nu_i = nu@i,
+    nu_p = nu@p,
+    nu_x = nu@x,
     final_time = final_time,
     census_interval = census_interval,
     buffer_size = comp_funs$buffer_size,
     max_walltime = max_walltime,
     stop_on_neg_state = stop_on_neg_state,
     verbose = verbose,
-    console_interval = console_interval,
-    use_vector_optimisation = use_vector_optimisation
+    console_interval = console_interval
   )
 
   # set colnames of objects

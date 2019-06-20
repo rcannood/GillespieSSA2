@@ -14,15 +14,16 @@ List simulate(
     SEXP ssa_alg,
     const NumericVector& initial_state,
     const NumericVector& params,
-    const IntegerMatrix& nu,
+    const IntegerVector& nu_i,
+    const IntegerVector& nu_p,
+    const IntegerVector& nu_x,
     const double final_time,
     const double census_interval,
     const int buffer_size,
     const double max_walltime,
     const bool stop_on_neg_state,
     const bool verbose,
-    const double console_interval,
-    const bool use_vector_optimisation
+    const double console_interval
 ) {
   // fetch propensity functions from pointer
   TR_FUN* propensity_funs_ = XPtr<TR_FUN>(propensity_funs);
@@ -36,19 +37,14 @@ List simulate(
   for (int i = 0; i < initial_state.size(); i++) {
     state[i] = initial_state[i];
   }
-  NumericVector propensity(nu.ncol());
+  NumericVector propensity(nu_p.size() - 1);
   double simtime_nextcensus = simtime + census_interval;
 
   // preallocate data structures
-  ssa_alg_->allocate(nu.ncol(), nu.nrow());
+  ssa_alg_->allocate(propensity.size(), state.size());
   double dtime = 0.0;
   NumericVector dstate(state.size());
   NumericVector buffer(buffer_size);
-
-  // check whether nu is able to be transformed into a vector
-  IntegerVector nu_row(nu.ncol()), nu_effect(nu.ncol());
-  bool nu_vector = use_vector_optimisation;
-  fill_nu_vectors(nu, nu_row, nu_effect, &nu_vector);
 
   // calculate initial propensity
   for (int i = 0; i < num_functions; i++) {
@@ -81,7 +77,6 @@ List simulate(
   if (verbose) {
     Rcout << "Running SSA " << ssa_alg_->name << " with console output every " << console_interval << " seconds" << std::endl;
     Rcout << "Start time: " << "CURRTIME" << std::endl;
-    // flush console?
   }
 
   bool negative_state = false;
@@ -107,12 +102,14 @@ List simulate(
       walltime_nextconsole += console_interval;
     }
 
-    // make a step
-    if (nu_vector) {
-      ssa_alg_->step_vector(state, propensity, nu_row, nu_effect, &dtime, dstate);
-    } else {
-      ssa_alg_->step_matrix(state, propensity, nu, &dtime, dstate);
+    // clear dstate and dtime
+    for (int i = 0; i < dstate.size(); i++) {
+      dstate[i] = 0;
     }
+    dtime = 0;
+
+    // make a step
+    ssa_alg_->step(state, propensity, nu_i, nu_p, nu_x, &dtime, dstate);
 
     state += dstate;
     simtime += dtime;

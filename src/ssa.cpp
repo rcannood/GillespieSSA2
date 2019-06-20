@@ -7,23 +7,14 @@ void SSA::allocate(const int M, const int N) {
 
 }
 
-void SSA::step_matrix(
+void SSA::step(
     const NumericVector& state,
     const NumericVector& propensity,
-    const IntegerMatrix& nu,
+    const IntegerVector& nu_i,
+    const IntegerVector& nu_p,
+    const IntegerVector& nu_x,
     double* dtime,
     NumericVector& dstate
 ) {
-  stop("step_matrix() should have been overridden but wasn't!");
-}
-
-void SSA::step_vector(
-    const NumericVector& state,
-    const NumericVector& propensity,
-    const IntegerVector& nu_row,
-    const IntegerVector& nu_effect,
-    double* dtime,
-    NumericVector& dstate
-) {
-  stop("step_vector() should have been overridden but wasn't!");
+  stop("step() should have been overridden but wasn't!");
 }

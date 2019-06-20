@@ -14,19 +14,12 @@ public:
 
   virtual void allocate(const int M, const int N);
 
-  virtual void step_matrix(
+  virtual void step(
       const NumericVector& state,
       const NumericVector& propensity,
-      const IntegerMatrix& nu,
-      double* dtime,
-      NumericVector& dstate
-  );
-
-  virtual void step_vector(
-      const NumericVector& state,
-      const NumericVector& propensity,
-      const IntegerVector& nu_row,
-      const IntegerVector& nu_effect,
+      const IntegerVector& nu_i,
+      const IntegerVector& nu_p,
+      const IntegerVector& nu_x,
       double* dtime,
       NumericVector& dstate
   );

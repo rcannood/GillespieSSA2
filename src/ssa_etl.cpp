@@ -9,62 +9,25 @@ public:
 
   double tau;
 
-  // preallocated data structures
-  IntegerVector k;
-  void allocate(const int M, const int N) {
-    k = IntegerVector(M);
-  }
-
-  void step_matrix(
+  void step(
       const NumericVector& state,
       const NumericVector& propensity,
-      const IntegerMatrix& nu,
+      const IntegerVector& nu_i,
+      const IntegerVector& nu_p,
+      const IntegerVector& nu_x,
       double* dtime,
       NumericVector& dstate
   ) {
-    int M = nu.ncol();
-    int N = nu.nrow();
+    int k;
 
-    // determine reaction firings
-    for (int j = 0; j < M; j++) {
-      k[j] = R::rpois(propensity[j] * tau);
-    }
-
-    // determine firing effects
-    for (int i = 0; i < N; i++) {
-      double sum = 0.0;
-      for (int j = 0; j < M; j++) {
-        sum += nu(i, j) * k[j];
-      }
-      dstate[i] = sum;
-    }
-
-    // tau leap
-    *dtime = tau;
-  }
-
-  void step_vector(
-      const NumericVector& state,
-      const NumericVector& propensity,
-      const IntegerVector& nu_row,
-      const IntegerVector& nu_effect,
-      double* dtime,
-      NumericVector& dstate
-  ) {
-    int M = propensity.size();
-    int N = dstate.size();
-
-    // clear dstate
-    for (int i = 0; i < N; i++) {
-      dstate[i] = 0;
-    }
-
-    for (int j = 0; j < M; j++) {
+    for (int j = 0; j < propensity.size(); j++) {
       // determine reaction firing
-      k[j] = R::rpois(propensity[j] * tau);
+      k = R::rpois(propensity[j] * tau);
 
       // determine firing effect
-      dstate[nu_row[j]] = nu_effect[j] * k[j];
+      for (int i = nu_p[j]; i < nu_p[j+1]; i++) {
+        dstate[nu_i[i]] += nu_x[i] * k;
+      }
     }
 
     // tau leap

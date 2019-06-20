@@ -7,15 +7,14 @@
 ssa(initial_state, propensity_funs, nu, final_time, params = NULL,
   method = ssa_direct(), census_interval = 0,
   stop_on_neg_state = TRUE, max_walltime = Inf,
-  hardcode_params = FALSE, verbose = FALSE, console_interval = 1,
-  use_vector_optimisation = FALSE)
+  hardcode_params = FALSE, verbose = FALSE, console_interval = 1)
 }
 \arguments{
 \item{initial_state}{\code{[named numeric vector]} The initial state to start the simulation with.}
 
 \item{propensity_funs}{\code{[character vector]} A character representation of the propensity functions, written in C++.}
 
-\item{nu}{\code{[numeric matrix]} The changes in number of individuals in a state (rows) caused
+\item{nu}{\code{[(sparse) integer matrix]} The changes in number of individuals in a state (rows) caused
 by a single reaction (columns).}
 
 \item{final_time}{\code{[numeric]} The final simulation time.}
@@ -42,8 +41,6 @@ Setting this to \code{TRUE} will result in a minor sacrifice in accuracy for a m
 \item{verbose}{\code{[logical]} If \code{TRUE}, intermediary information pertaining to the simulation will be displayed.}
 
 \item{console_interval}{\code{[numeric]} The approximate interval between intermediary information outputs.}
-
-\item{use_vector_optimisation}{\code{[logical]} An experimental optimisation. Do not use yet.}
 }
 \value{
 Returns a list object with the following elements:
