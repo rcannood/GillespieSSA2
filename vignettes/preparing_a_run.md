@@ -1,6 +1,6 @@
 Preparing an SSA run with fastgssa.
 ================
-2019-06-20
+2019-06-21
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/preparing_a_run.Rmd", output_format = "github_document")
@@ -80,10 +80,21 @@ out <-
     ## SSA finished!
 
 ``` r
+print(out$stats)
+```
+
+    ##   method stop_simtime stop_extinction stop_negative_state stop_zero_prop
+    ## 1 direct         TRUE           FALSE               FALSE          FALSE
+    ##   stop_walltime walltime_start walltime_end walltime_elapsed num_steps
+    ## 1         FALSE     1561102966   1561102966                0    151518
+    ##     dtime_mean     dtime_sd
+    ## 1 3.299954e-05 1.538995e-07
+
+``` r
 ssa_plot(out)
 ```
 
-![](preparing_a_run_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](preparing_a_run_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 The propensity functions should be valid `C++` code. If desired, a
 buffer can be used to speed up the calculation of the propensity values,

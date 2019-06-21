@@ -98,9 +98,6 @@ ssa <- function(
   verbose = FALSE,
   console_interval = 1
 ) {
-  # implement these stats:
-  # https://github.com/cran/GillespieSSA/blob/master/man/ssa.Rd#L71
-
   if (is.matrix(nu)) {
     nu <- Matrix::Matrix(nu, sparse = TRUE)
   }

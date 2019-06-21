@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <math.h>
 
 #include "ssa.h"
 #include "utils.h"
@@ -39,6 +40,11 @@ List simulate(
   }
   NumericVector propensity(nu_p.size() - 1);
   double simtime_nextcensus = simtime + census_interval;
+
+  // fields for storing statistics
+  double dtime_mean = 0;
+  double dtime_sd = 0;
+  int dtime_steps = 0;
 
   // preallocate data structures
   ssa_alg_->allocate(propensity.size(), state.size());
@@ -137,11 +143,19 @@ List simulate(
       }
     }
 
+    // update statistics
+    dtime_steps++;
+    if (dtime_steps == 1) {
+      dtime_sd = 0;
+    } else {
+      dtime_sd = sqrt((dtime_steps - 2) / (dtime_steps - 1) * pow(dtime_sd, 2) + pow(dtime - dtime_mean, 2) / dtime_steps);
+    }
+    dtime_mean = (dtime_mean * (dtime_steps - 1) + dtime) / dtime_steps;
+
     // perform census if so desired
     if (simtime_nextcensus <= simtime) {
       simtime_nextcensus += census_interval;
       if (output_nexti == output_time.size()) {
-        // output = resize(output, output.size() * 2);
         output_time = resize(output_time, output_nexti * 2);
         output_state = resize_rows(output_state, output_nexti * 2);
         output_propensity = resize_rows(output_propensity, output_nexti * 2);
@@ -162,7 +176,20 @@ List simulate(
     }
   }
 
-  // TODO: record end state if census_interval is set to inf
+  // end state if census_interval is set to inf
+  if (isinf(census_interval)) {
+    output_time[output_nexti] = simtime;
+    for (int i = 0; i < state.size(); i++) {
+      output_state(output_nexti, i) = state[i];
+    }
+    for (int i = 0; i < propensity.size(); i++) {
+      output_propensity(output_nexti, i) = propensity[i];
+    }
+    for (int i = 0; i < buffer.size(); i++) {
+      output_buffer(output_nexti, i) = buffer[i];
+    }
+    output_nexti++;
+  }
 
   // determine whether extinction has occurred
   bool extinction = true;
@@ -178,14 +205,17 @@ List simulate(
 
   DataFrame stats = DataFrame::create(
     _["method"] = ssa_alg_->name,
-    _["final_time_reached"] = simtime > final_time,
-    _["extinction"] = extinction,
-    _["negative_state"] = negative_state,
-    _["zero_prop"] = zero_prop,
-    _["max_walltime"] = walltime_elapsed >= max_walltime,
+    _["stop_simtime"] = simtime > final_time,
+    _["stop_extinction"] = extinction,
+    _["stop_negative_state"] = negative_state,
+    _["stop_zero_prop"] = zero_prop,
+    _["stop_walltime"] = walltime_elapsed >= max_walltime,
     _["walltime_start"] = walltime_start,
     _["walltime_end"] = walltime_end,
-    _["walltime_elapsed"] = walltime_elapsed
+    _["walltime_elapsed"] = walltime_elapsed,
+    _["num_steps"] = dtime_steps,
+    _["dtime_mean"] = dtime_mean,
+    _["dtime_sd"] = dtime_sd
   );
 
   // remove empty output slots
