@@ -38,7 +38,7 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
-### Recent changes in fastgssa 0.2.0 (unreleased)
+### Recent changes in fastgssa 0.2.0 (21-06-2019)
 
 Complete rewrite of the package:
 
