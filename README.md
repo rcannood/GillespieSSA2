@@ -19,9 +19,9 @@ Explicit tau-leaping (ETL), and the Binomial tau-leaping (BTL).
 
 You can install the development version of fastgssa from GitHub with
 
-    ```R
-    devtools::install_github("dynverse/fastgssa", build_vignettes = TRUE)
-    ```
+``` r
+devtools::install_github("dynverse/fastgssa", build_vignettes = TRUE)
+```
 
 ## Examples
 
