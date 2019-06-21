@@ -138,7 +138,7 @@ ssa <- function(
       assert_that(length(propensity_funs) == ncol(nu))
       compile_propensity_functions(
         propensity_funs = propensity_funs,
-        state_ids = rownames(nu),
+        state_ids = names(initial_state),
         params = params,
         hardcode_params = hardcode_params
       )

@@ -30,12 +30,16 @@ public:
     double limiting, limiting_test, prob;
     int k;
 
+    int nu_pos;
+    double nu_val;
     for (int j = 0; j < M; j++) {
       if (propensity[j] > 0) {
         limiting = -1;
         for (int i = nu_p[j]; i < nu_p[j+1]; i++) {
-          if (nu_x[i] < 0) {
-            limiting_test = (state[nu_i[i]] + dstate[nu_i[i]]) / -nu_x[i];
+          nu_val = nu_x[i]
+          if (nu_val < 0) {
+            nu_pos = nu_i[i]
+            limiting_test = (state[nu_pos] + dstate[nu_pos]) / -nu_val;
             if (limiting == -1 || limiting_test < limiting) {
               limiting = limiting_test;
             }
