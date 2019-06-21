@@ -83,6 +83,7 @@
 #' @importFrom methods is
 #' @importFrom dynutils is_sparse
 #' @importFrom tibble tibble
+#' @importFrom Matrix Matrix
 ssa <- function(
   initial_state,
   propensity_funs,
@@ -105,25 +106,33 @@ ssa <- function(
   }
 
   # check parameters
-  # TODO: check all params
   assert_that(
     # initial state
-    is.numeric(initial_state), !is.null(names(initial_state)),
+    is.numeric(initial_state),
+    !is.null(names(initial_state)),
+    !any(c("state", "time", "params") %in% names(initial_state)),
 
     # nu
     dynutils::is_sparse(nu),
-
-    is.numeric(final_time), final_time >= 0,
-    is.numeric(console_interval), console_interval >= 0,
-    is.numeric(census_interval), census_interval >= 0,
-    is.logical(verbose),
-    is(method, "fastgssa::ssa_method"),
     length(initial_state) == nrow(nu),
+
+    # params
     is.numeric(params),
     length(params) == 0 || !is.null(names(params)),
     !any(c("state", "time", "params") %in% names(params)),
-    !any(c("state", "time", "params") %in% names(initial_state)),
-    !any(duplicated(c(names(initial_state), names(params))))
+    !any(duplicated(c(names(initial_state), names(params)))),
+
+    # method
+    is(method, "fastgssa::ssa_method"),
+
+    # vector arguments
+    is.numeric(final_time), length(final_time) == 1, final_time >= 0,
+    is.numeric(census_interval), length(census_interval) == 1, census_interval >= 0,
+    is.logical(stop_on_neg_state), length(stop_on_neg_state) == 1,
+    is.numeric(max_walltime), length(max_walltime) == 1, max_walltime >= 0,
+    is.logical(hardcode_params), length(hardcode_params) == 1,
+    is.numeric(console_interval), length(console_interval) == 1, console_interval >= 0,
+    is.logical(verbose), length(verbose) == 1
   )
 
   # compile propensity functions if this has not been done already
@@ -142,17 +151,15 @@ ssa <- function(
 
   # check propensity functions
   assert_that(
-    is(comp_funs, "fastgssa::propensity_functions")
+    is(comp_funs, "fastgssa::propensity_functions"),
+    length(comp_funs$reaction_ids) == ncol(nu)
   )
-
-  # create ssa algorithm instance
-  ssa_alg <- method$factory()
 
   # run SSA
   output <- simulate(
     propensity_funs = comp_funs$functions_pointer,
     num_functions = comp_funs$num_functions,
-    ssa_alg = ssa_alg,
+    ssa_alg = method$factory(),
     initial_state = initial_state,
     params = params,
     nu_i = nu@i,
@@ -168,8 +175,8 @@ ssa <- function(
   )
 
   # set colnames of objects
-  colnames(output$state) <- rownames(nu)
-  colnames(output$propensity) <- colnames(nu)
+  colnames(output$state) <- names(initial_state)
+  colnames(output$propensity) <- comp_funs$reaction_ids
   colnames(output$buffer) <- comp_funs$buffer_ids
 
   output

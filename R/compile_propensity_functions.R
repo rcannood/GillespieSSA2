@@ -156,6 +156,7 @@ compile_propensity_functions <- function(
 
   # return output
   l <- lst(
+    reaction_ids,
     buffer_ids,
     buffer_size,
     functions_pointer,
