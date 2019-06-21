@@ -2,6 +2,7 @@
 # fastgssa 0.2.0 (unreleased)
 
 Complete rewrite of the package:
+
 * The main SSA function and all SSA methods have been implemented in Rcpp.
 * User-defined propensity functions get compiled to Rcpp at runtime.
 * All SSA methods now assume the state-change matrix `nu` to be sparse.
