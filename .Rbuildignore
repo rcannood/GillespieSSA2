@@ -2,3 +2,7 @@
 ^\.Rproj\.user$
 ^\.travis\.yml$
 ^\.git$
+^README\.Rmd$
+^vignettes/.*\.html$
+^vignettes/.*\.md$
+^vignettes/.*/.*\.png$
