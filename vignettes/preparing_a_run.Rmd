@@ -1,9 +1,9 @@
 ---
-title: "Preparing an SSA run with fastgssa."
+title: "Preparing an SSA run with fastgssa"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Preparing an SSA run with fastgssa}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

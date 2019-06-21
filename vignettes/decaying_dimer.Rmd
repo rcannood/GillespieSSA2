@@ -1,9 +1,9 @@
 ---
-title: "Preparing an SSA run with fastgssa."
+title: "Decaying-Dimerisation"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Decaying-Dimerisation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,7 +22,7 @@ library(fastgssa)
 library(ggplot2)
 ```
 
-The Decaying-Dimerization Reaction Set consists of three species and four reaction channels,
+The Decaying-Dimerisation Reaction Set consists of three species and four reaction channels,
 
 $$
 \begin{aligned}

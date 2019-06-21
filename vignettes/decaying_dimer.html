@@ -600,7 +600,7 @@ body {
 
 <body>
 
-<h1 id="preparing-an-ssa-run-with-fastgssa">Preparing an SSA run with fastgssa.</h1>
+<h1 id="decaying-dimerisation">Decaying-Dimerisation</h1>
 <p>2019-06-21</p>
 <!-- github markdown built using 
 rmarkdown::render("vignettes/decaying_dimer.Rmd", output_format = "github_document")
@@ -608,7 +608,7 @@ rmarkdown::render("vignettes/decaying_dimer.Rmd", output_format = "github_docume
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(fastgssa)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(ggplot2)</a></code></pre></div>
-<p>The Decaying-Dimerization Reaction Set consists of three species and four reaction channels,</p>
+<p>The Decaying-Dimerisation Reaction Set consists of three species and four reaction channels,</p>
 <p>[ \begin{aligned} s_1 &amp; \overset{c_1}{\rightarrow} 0 \ s_1 + s_2 &amp; \overset{c_2}{\rightarrow} s_2 \ s_2 &amp; \overset{c_3}{\rightarrow} s_1 + s_2 \ s_2 &amp; \overset{c_4}{\rightarrow} s_3 \end{aligned} ]</p>
 <p>Define parameters</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">params &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">c1 =</span> <span class="fl">1.0</span>, <span class="dt">c2 =</span> <span class="fl">0.002</span>, <span class="dt">c3 =</span> <span class="fl">0.5</span>, <span class="dt">c4 =</span> <span class="fl">0.04</span>)</a></code></pre></div>
@@ -652,7 +652,7 @@ rmarkdown::render("vignettes/decaying_dimer.Rmd", output_format = "github_docume
 <pre><code>##   method stop_simtime stop_extinction stop_negative_state stop_zero_prop
 ## 1 direct         TRUE           FALSE               FALSE          FALSE
 ##   stop_walltime walltime_start walltime_end walltime_elapsed num_steps
-## 1         FALSE     1561112693   1561112693                0     30548
+## 1         FALSE     1561117919   1561117919                0     30548
 ##     dtime_mean     dtime_sd
 ## 1 0.0003273901 1.098942e-05
 </code></pre>
@@ -693,7 +693,7 @@ rmarkdown::render("vignettes/decaying_dimer.Rmd", output_format = "github_docume
 <pre><code>##   method stop_simtime stop_extinction stop_negative_state stop_zero_prop
 ## 1    BTL        FALSE            TRUE                TRUE           TRUE
 ##   stop_walltime walltime_start walltime_end walltime_elapsed num_steps
-## 1         FALSE     1561112700   1561112700                0    100385
+## 1         FALSE     1561117926   1561117926                0    100385
 ##     dtime_mean   dtime_sd
 ## 1 5.194919e-05 0.00031483
 </code></pre>

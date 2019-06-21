@@ -1,4 +1,4 @@
-Preparing an SSA run with fastgssa.
+Decaying-Dimerisation
 ================
 2019-06-21
 
@@ -11,7 +11,7 @@ library(fastgssa)
 library(ggplot2)
 ```
 
-The Decaying-Dimerization Reaction Set consists of three species and
+The Decaying-Dimerisation Reaction Set consists of three species and
 four reaction channels,
 
 \[
@@ -88,7 +88,7 @@ print(out$stats)
     ##   method stop_simtime stop_extinction stop_negative_state stop_zero_prop
     ## 1 direct         TRUE           FALSE               FALSE          FALSE
     ##   stop_walltime walltime_start walltime_end walltime_elapsed num_steps
-    ## 1         FALSE     1561112693   1561112693                0     30548
+    ## 1         FALSE     1561117919   1561117919                0     30548
     ##     dtime_mean     dtime_sd
     ## 1 0.0003273901 1.098942e-05
 
@@ -145,7 +145,7 @@ out$stats
     ##   method stop_simtime stop_extinction stop_negative_state stop_zero_prop
     ## 1    BTL        FALSE            TRUE                TRUE           TRUE
     ##   stop_walltime walltime_start walltime_end walltime_elapsed num_steps
-    ## 1         FALSE     1561112700   1561112700                0    100385
+    ## 1         FALSE     1561117926   1561117926                0    100385
     ##     dtime_mean   dtime_sd
     ## 1 5.194919e-05 0.00031483
 

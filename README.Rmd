@@ -42,7 +42,7 @@ devtools::install_github("dynverse/fastgssa", build_vignettes = TRUE)
 To get started, have a look at one of the vignettes:
 
 * [Preparing a run](vignettes/preparing_a_run.md): `vignette("preparing_a_run", package = "fastgssa")`,
-* [Decaying dimer](vignettes/decaying_dimer.md): `vignette("decaying_dimer", package = "fastgssa")`.
+* [Decaying dimerisation](vignettes/decaying_dimer.md): `vignette("decaying_dimer", package = "fastgssa")`.
 
 ## Latest changes
 
