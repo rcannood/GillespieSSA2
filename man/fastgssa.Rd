@@ -4,14 +4,13 @@
 \name{fastgssa}
 \alias{fastgssa}
 \alias{fastgssa-package}
-\title{Gillespie's Stochastic Simulation Algorithm for impatient people.}
+\title{\pkg{fastgssa}: Gillespie's Stochastic Simulation Algorithm for impatient people.}
 \description{
-\pkg{fastgssa} is a fast and versatile framework for various Monte Carlo
-implementations of the stochastic simulation algorithm (\acronym{SSA}).
-It is conceptually based on \pkg{GillespieSSA}, but rewritten entirely in
-Rcpp in order to make \pkg{fastgssa} blazingly fast.
-The SSA methods currently implemented are: the Direct, the Explicit
-tau-leaping (\acronym{ETL}), and the Binomial tau-leaping (\acronym{BTL}) method.
+A fast, scalable, and versatile framework for simulating large systems with
+Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). It is conceptually based on
+\pkg{GillespieSSA}, but rewritten entirely in Rcpp with large scale systems in mind to make
+it blazingly fast. The \acronym{SSA} methods currently implemented are: Direct, Explicit
+tau-leaping (\acronym{ETL}), and the Binomial tau-leaping (\acronym{BTL})
 }
 \section{The stochastic simulation algorithm}{
 

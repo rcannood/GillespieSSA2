@@ -1,7 +1,7 @@
 Package: fastgssa
 Type: Package
-Title: Gillespie's Stochastic Simulation Algorithm (GSSA) implemented in Rcpp
-Version: 0.0.1
+Title: Gillespie's Stochastic Simulation Algorithm (GSSA) for impatient people
+Version: 0.2.0
 Authors@R: c(
     person(
       "Robrecht", 
@@ -11,11 +11,11 @@ Authors@R: c(
       comment = c(ORCID = "0000-0003-3641-729X")
     )
   )
-Description: A fast and versatile framework for various Monte Carlo implementations
-  of the stochastic simulation algorithm ('SSA'). It is conceptually based on 
-  'GillespieSSA', but rewritten entirely in 'Rcpp' in order to make 'fastgssa' 
-  blazingly fast. The 'SSA' methods currently implemented are: Direct, Explicit
-  tau-leaping ('ETL'), and the Binomial tau-leaping ('BTL') method.
+Description: A fast, scalable, and versatile framework for simulating large systems with 
+  Gillespie's Stochastic Simulation Algorithm ('SSA'). It is conceptually based on 
+  'GillespieSSA', but rewritten entirely in 'Rcpp' with large scale systems in mind to make
+  it blazingly fast. The 'SSA' methods currently implemented are: Direct, Explicit
+  tau-leaping ('ETL'), and the Binomial tau-leaping ('BTL').
 License: GPL (>= 3)
 LazyData: TRUE
 Imports:
