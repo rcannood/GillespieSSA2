@@ -1,31 +1,42 @@
 Package: fastgssa
 Type: Package
-Title: Gillespie's Stochastic Simulation Algorithm (GSSA) implemented in Rcpp
-Version: 0.6-0
-Date: 2016-04-04
-Author: Mario Pineda-Krch <mpineda@math.ualbeta.ca>
-Maintainer: Robrecht Cannoodt <rcannood@gmail.com>
-Description: fastgssa provides a simple to use, intuitive, and
-    extensible interface to several stochastic simulation
-    algorithms for generating simulated trajectories of finite
-    population continuous-time model. Currently it implements
-    Gillespie's exact stochastic simulation algorithm (Direct
-    method) and several approximate methods (Explicit tau-leap,
-    Binomial tau-leap, and Optimized tau-leap). The package also
-    contains a library of template models that can be run as demo
-    models and can easily be customized and extended. Currently the
-    following models are included, decaying-dimerization reaction
-    set, linear chain system, logistic growth model, Lotka
-    predator-prey model, Rosenzweig-MacArthur predator-prey model,
-    Kermack-McKendrick SIR model, and a metapopulation SIRS model.
+Title: Gillespie's Stochastic Simulation Algorithm (GSSA) for impatient people
+Version: 0.2.0
+Authors@R: c(
+    person(
+      "Robrecht", 
+      "Cannoodt", 
+      email = "rcannood@gmail.com", 
+      role = c("aut", "cre"),
+      comment = c(ORCID = "0000-0003-3641-729X")
+    )
+  )
+Description: A fast, scalable, and versatile framework for simulating large systems with 
+  Gillespie's Stochastic Simulation Algorithm ('SSA'). It is conceptually based on 
+  'GillespieSSA', but rewritten entirely in 'Rcpp' with large scale systems in mind to make
+  it blazingly fast. The 'SSA' methods currently implemented are: Direct, Explicit
+  tau-leaping ('ETL'), and the Binomial tau-leaping ('BTL').
 License: GPL (>= 3)
 LazyData: TRUE
 Imports:
-    Rcpp (>= 0.12.3),
-    RcppArmadillo
-Suggests: 
-    testthat,
+    assertthat,
     dplyr,
-    GillespieSSA
-LinkingTo: Rcpp, RcppArmadillo
-RoxygenNote: 6.0.1
+    dynutils,
+    ggplot2,
+    Matrix,
+    methods,
+    purrr,
+    Rcpp (>= 0.12.3),
+    readr,
+    stringr,
+    tibble,
+    tidyr
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat
+LinkingTo: Rcpp
+VignetteBuilder: knitr
+RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE)
+Encoding: UTF-8
