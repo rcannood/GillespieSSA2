@@ -1,3 +1,7 @@
+# fastgssa 0.2.1 (04-07-2019)
+
+* BUG FIX: Fix isinf scope issue for Windows users.
+
 # fastgssa 0.2.0 (21-06-2019)
 
 Complete rewrite of the package:
