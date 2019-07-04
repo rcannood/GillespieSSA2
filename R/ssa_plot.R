@@ -4,7 +4,6 @@
 #'
 #' @param ssa_out Data object returned by [ssa()].
 #'
-#' @importFrom ggplot2 ggplot geom_path facet_wrap aes_string
 #' @importFrom tidyr gather
 #' @importFrom dplyr bind_rows
 #' @export
@@ -23,7 +22,7 @@ ssa_plot <- function(ssa_out) {
       gather(var, value, -time, -type) %>%
       bind_rows(df)
   }
-  ggplot(df) +
-    geom_path(aes_string("time", "value", colour = "var")) +
-    facet_wrap(~type, ncol = 1, scales = "free_y")
+  ggplot2::ggplot(df) +
+    ggplot2::geom_path(ggplot2::aes_string("time", "value", colour = "var")) +
+    ggplot2::facet_wrap(~type, ncol = 1, scales = "free_y")
 }

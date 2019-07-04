@@ -29,7 +29,7 @@ To get started, have a look at one of the vignettes:
 
   - [Preparing a run](vignettes/preparing_a_run.md):
     `vignette("preparing_a_run", package = "fastgssa")`,
-  - [Decaying dimer](vignettes/decaying_dimer.md):
+  - [Decaying dimerisation](vignettes/decaying_dimer.md):
     `vignette("decaying_dimer", package = "fastgssa")`.
 
 ## Latest changes
@@ -40,6 +40,11 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Recent changes in fastgssa 0.2.1 (04-07-2019)
+
+  - BUG FIX: Fix isinf scope issue for Windows users.
+  - MINOR CHANGE: Move ggplot2 to Suggests
+
 ### Recent changes in fastgssa 0.2.0 (21-06-2019)
 
 Complete rewrite of the package:
@@ -49,9 +54,3 @@ Complete rewrite of the package:
   - User-defined propensity functions get compiled to Rcpp at runtime.
   - All SSA methods now assume the state-change matrix `nu` to be
     sparse.
-
-### Recent changes in fastgssa 0.1.1 (05-01-2018)
-
-  - MINOR CHANGE: Added automated testing by travis.
-  - MINOR CHANGE: Fixes to documentation.
-  - MINOR CHANGE: Also output propensities.
