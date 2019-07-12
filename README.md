@@ -40,17 +40,11 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Recent changes in fastgssa 0.2.2 (12-07-2019)
+
+  - MINOR CHANGE: Renamed `ssa_em()` to `ode_em()`.
+
 ### Recent changes in fastgssa 0.2.1 (04-07-2019)
 
   - BUG FIX: Fix isinf scope issue for Windows users.
-  - MINOR CHANGE: Move ggplot2 to Suggests
-
-### Recent changes in fastgssa 0.2.0 (21-06-2019)
-
-Complete rewrite of the package:
-
-  - The main SSA function and all SSA methods have been implemented in
-    Rcpp.
-  - User-defined propensity functions get compiled to Rcpp at runtime.
-  - All SSA methods now assume the state-change matrix `nu` to be
-    sparse.
+  - MINOR CHANGE: Move ggplot2 to Suggests.

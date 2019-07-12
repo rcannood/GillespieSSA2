@@ -1,7 +1,7 @@
 Package: fastgssa
 Type: Package
 Title: Gillespie's Stochastic Simulation Algorithm (GSSA) for impatient people
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(
     person(
       "Robrecht", 
