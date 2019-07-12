@@ -8,6 +8,8 @@
 #' @importFrom dplyr bind_rows
 #' @export
 ssa_plot <- function(ssa_out) {
+  requireNamespace("ggplot2")
+
   var <- value <- time <- type <- NULL # satisfying r check
   df <-
     bind_rows(
