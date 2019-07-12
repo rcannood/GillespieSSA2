@@ -24,4 +24,4 @@ Initial beta release of fastgssa:
 * Major restructuring of GillespieSSA code.
 * Optimise main algorithm code (e.g. do not save state variables directly to the global environment...).
 * Implement SSA methods in Rcpp.
-* Added `ssa_em()`, an Euler-Marumaya SDE method.
+* Added `ode_em()`, an Euler-Marumaya ODE method.

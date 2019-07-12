@@ -164,7 +164,7 @@ out <-
     propensity_funs = propensity_funs,
     nu = nu,
     params = params,
-    method = ssa_em(),
+    method = ode_em(),
     final_time = 10,
     census_interval = .01,
     verbose = FALSE
