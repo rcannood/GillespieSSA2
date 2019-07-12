@@ -16,5 +16,5 @@ an object of to be used by \code{\link[=ssa]{ssa()}}.
 Explicit tau-leap method implementation of the \acronym{SSA} as described by Gillespie (2001).
 }
 \references{
-Gillespie (2001)
+Gillespie D.T. 2001. Approximate accelerated stochastic simulation of chemically reacting systems. J. Chem. Phys. 115:1716-1733. \url{http://dx.doi.org/10.1063/1.1378322 }
 }

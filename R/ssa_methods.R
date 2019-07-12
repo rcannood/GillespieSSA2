@@ -34,7 +34,7 @@ ode_em <- function(tau = 0.01, noise_strength = 2) {
 #'
 #' @return an object of to be used by [ssa()].
 #'
-#' @references Gillespie (1977)
+#' @references Gillespie D.T. 1977. Exact stochastic simulation of coupled chemical reactions. J. Phys. Chem. 81:2340. \url{http://dx.doi.org/10.1021/j100540a008}
 #'
 #' @export
 ssa_direct <- function() {
@@ -55,7 +55,7 @@ ssa_direct <- function() {
 #'
 #' @return an object of to be used by [ssa()].
 #'
-#' @references Gillespie (2001)
+#' @references Gillespie D.T. 2001. Approximate accelerated stochastic simulation of chemically reacting systems. J. Chem. Phys. 115:1716-1733. \url{http://dx.doi.org/10.1063/1.1378322 }
 #'
 #' @export
 ssa_etl <- function(tau = .3) {
@@ -76,7 +76,7 @@ ssa_etl <- function(tau = .3) {
 #'
 #' @return an object of to be used by [ssa()].
 #'
-#' @references Chatterjee et al. (2005)
+#' @references Chatterjee A., Vlachos D.G., and Katsoulakis M.A. 2005. Binomial distribution based tau-leap accelerated stochastic simulation. J. Chem. Phys. 122:024112. \url{http://dx.doi.org/10.1063/1.1833357}
 #'
 #' @export
 ssa_btl <- function(f = 10) {
