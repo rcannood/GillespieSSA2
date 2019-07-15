@@ -33,65 +33,40 @@ $$
 \end{aligned}
 $$
 
-Define parameters
+Define system
 ```{r}
 params <- c(c1 = 1.0, c2 = 0.002, c3 = 0.5, c4 = 0.04)
-```
-
-Initial state vector
-```{r}
 initial_state <- c(s1 = 10000, s2 = 0, s3 = 0)
-```
 
-State-change matrix
-```{r}
-nu <- matrix(
-  c(
-    -1, -2, +2,  0,
-    0, +1, -1, -1,
-    0,  0,  0, +1
-  ),
-  nrow = 3,
-  byrow = TRUE
+#          ↓ propensity       ↓ effect(s)
+reactions <- list(
+  reaction(~ c1 * s1,         s1 = -1),
+  reaction(~ c2 * s1^2,       s1 = -2, s2 = +1),
+  reaction(~ c3 * s2,         s1 = +2, s2 = -1),
+  reaction(~ c4 * s2,         s2 = -1, s3 = +1)
 )
-```
 
-Propensity functions
-```{r}
-propensity_funs <- c(
-  "r1 = c1 * s1",
-  "r2 = c2 * s1 * s1",
-  "r3 = c3 * s2",
-  "r4 = c4 * s2"
-)
 ```
 
 Run simulation with direct method
-```{r}
+```{r direct, fig.width=7, fig.height=5}
 out <- 
   ssa(
     initial_state = initial_state,
-    propensity_funs = propensity_funs,
-    nu = nu,
+    reactions = reactions,
     params = params,
     method = ssa_direct(),
     final_time = 10,
     census_interval = .01,
     verbose = TRUE
   )
-```
-
-```{r}
 print(out$stats)
-```
-
-```{r fig.width=7, fig.height=5}
 ssa_plot(out) + labs(title = "Direct")
 ```
 
 
 Run simulation with ETL method
-```{r}
+```{r etl, fig.width=7, fig.height=5}
 out <- 
   ssa(
     initial_state = initial_state,
@@ -103,11 +78,12 @@ out <-
     census_interval = .01,
     verbose = FALSE
   )
+out$stats
 ssa_plot(out) + labs(title = "ETL")
 ```
 
 Run simulation with BTL method
-```{r}
+```{r btl, fig.width=7, fig.height=5}
 out <- 
   ssa(
     initial_state = initial_state,
@@ -124,9 +100,8 @@ out$stats
 ssa_plot(out) + labs(title = "BTL")
 ```
 
-
 Run simulation with EM method
-```{r}
+```{r em, fig.width=7, fig.height=5}
 out <- 
   ssa(
     initial_state = initial_state,
@@ -138,5 +113,6 @@ out <-
     census_interval = .01,
     verbose = FALSE
   )
+out$stats
 ssa_plot(out) + labs(title = "EM")
 ```
