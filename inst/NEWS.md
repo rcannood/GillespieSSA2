@@ -1,3 +1,7 @@
+# fastgssa 0.2.3 (unreleased)
+
+* MINOR CHANGE: Apply small allocation optimisations to `ssa_btl`, `ssa_etl` and `ode_em`.
+
 # fastgssa 0.2.2 (12-07-2019)
 
 * MINOR CHANGE: Renamed `ssa_em()` to `ode_em()`.

@@ -32,10 +32,11 @@ public:
 
     int nu_pos;
     double nu_val;
-    for (int j = 0; j < M; j++) {
+    int i, j;
+    for (j = 0; j < M; j++) {
       if (propensity[j] > 0) {
         limiting = -1;
-        for (int i = nu_p[j]; i < nu_p[j+1]; i++) {
+        for (i = nu_p[j]; i < nu_p[j+1]; i++) {
           nu_val = nu_x[i];
           if (nu_val < 0) {
             nu_pos = nu_i[i];
@@ -57,7 +58,7 @@ public:
         }
 
         // determine firing effect
-        for (int i = nu_p[j]; i < nu_p[j+1]; i++) {
+        for (i = nu_p[j]; i < nu_p[j+1]; i++) {
           dstate[nu_i[i]] += nu_x[i] * k;
         }
       }
