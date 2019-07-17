@@ -1,0 +1,113 @@
+---
+title: "Decaying-Dimerisation"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Decaying-Dimerisation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!-- github markdown built using 
+rmarkdown::render("vignettes/decaying_dimer.Rmd", output_format = "github_document")
+-->
+
+
+```{r, setseed, echo=FALSE}
+set.seed(1)
+```
+
+```{r, message = FALSE}
+library(gillespie)
+library(ggplot2)
+```
+
+The Decaying-Dimerisation Reaction Set consists of three species and four reaction channels,
+
+ ```
+      S1 --c1--> 0
+ S1 + S1 --c2--> S2
+      S2 --c3--> S1 + S1
+      S2 --c4--> S3
+```
+
+Define system
+```{r}
+params <- c(c1 = 1.0, c2 = 0.002, c3 = 0.5, c4 = 0.04)
+initial_state <- c(s1 = 10000, s2 = 0, s3 = 0)
+
+#          ↓ propensity       ↓ effect(s)
+reactions <- list(
+  reaction(~ c1 * s1,         c(s1 = -1)),
+  reaction(~ c2 * s1 * s1,    c(s1 = -2, s2 = +1)),
+  reaction(~ c3 * s2,         c(s1 = +2, s2 = -1)),
+  reaction(~ c4 * s2,         c(s2 = -1, s3 = +1))
+)
+
+```
+
+Run simulation with direct method
+```{r direct, fig.width=7, fig.height=5}
+out <- 
+  ssa(
+    initial_state = initial_state,
+    reactions = reactions,
+    params = params,
+    method = ssa_direct(),
+    final_time = 10,
+    census_interval = .01,
+    verbose = TRUE
+  )
+print(out$stats)
+ssa_plot(out) + labs(title = "Direct")
+```
+
+
+Run simulation with ETL method
+```{r etl, fig.width=7, fig.height=5}
+out <- 
+  ssa(
+    initial_state = initial_state,
+    reactions = reactions,
+    params = params,
+    method = ssa_etl(.01),
+    final_time = 10,
+    census_interval = .01,
+    verbose = FALSE
+  )
+out$stats
+ssa_plot(out) + labs(title = "ETL")
+```
+
+Run simulation with BTL method
+```{r btl, fig.width=7, fig.height=5}
+out <- 
+  ssa(
+    initial_state = initial_state,
+    reactions = reactions,
+    params = params,
+    method = ssa_btl(f = .1),
+    final_time = 10,
+    census_interval = .01,
+    verbose = FALSE,
+    stop_on_neg_state = FALSE
+  )
+out$stats
+ssa_plot(out) + labs(title = "BTL")
+```
+
+Run simulation with EM method
+```{r em, fig.width=7, fig.height=5}
+out <- 
+  ssa(
+    initial_state = initial_state,
+    reactions = reactions,
+    params = params,
+    method = ode_em(),
+    final_time = 10,
+    census_interval = .01,
+    verbose = FALSE
+  )
+out$stats
+ssa_plot(out) + labs(title = "EM")
+```

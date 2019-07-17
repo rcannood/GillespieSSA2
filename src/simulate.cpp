@@ -177,7 +177,7 @@ List simulate(
   }
 
   // end state if census_interval is set to inf
-  if (isinf(census_interval)) {
+  if (std::isinf(census_interval)) {
     output_time[output_nexti] = simtime;
     for (int i = 0; i < state.size(); i++) {
       output_state(output_nexti, i) = state[i];

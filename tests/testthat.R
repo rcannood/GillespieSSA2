@@ -1,3 +1,3 @@
 library(testthat)
 
-test_check("fastgssa")
+test_check("gillespie")

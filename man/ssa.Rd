@@ -4,7 +4,7 @@
 \alias{ssa}
 \title{Invoking the stochastic simulation algorithm}
 \usage{
-ssa(initial_state, propensity_funs, nu, final_time, params = NULL,
+ssa(initial_state, reactions, final_time, params = NULL,
   method = ssa_direct(), census_interval = 0,
   stop_on_neg_state = TRUE, max_walltime = Inf,
   hardcode_params = FALSE, verbose = FALSE, console_interval = 1)
@@ -12,10 +12,7 @@ ssa(initial_state, propensity_funs, nu, final_time, params = NULL,
 \arguments{
 \item{initial_state}{\code{[named numeric vector]} The initial state to start the simulation with.}
 
-\item{propensity_funs}{\code{[character vector]} A character representation of the propensity functions, written in C++.}
-
-\item{nu}{\code{[(sparse) integer matrix]} The changes in number of individuals in a state (rows) caused
-by a single reaction (columns).}
+\item{reactions}{A list of reactions, see \code{\link[=reaction]{reaction()}}.}
 
 \item{final_time}{\code{[numeric]} The final simulation time.}
 
@@ -55,8 +52,8 @@ Returns a list object with the following elements:
 Main interface function to the implemented \acronym{SSA} methods. Runs a
 single realization of a predefined system. For a detailed explanation
 on how to set up your first \acronym{SSA} system, check the vignette
-available on \href{https://github.com/dynverse/fastgssa/tree/master/vignettes/preparing_a_run.md}{GitHub}
-or using \code{vignette("preparing_a_run", package = "fastgssa")}.
+available on \href{https://github.com/dynverse/gillespie/tree/master/vignettes/preparing_a_run.md}{GitHub}
+or using \code{vignette("preparing_a_run", package = "gillespie")}.
 }
 \details{
 Substantial improvements in speed and accuracy can be obtained by
@@ -68,31 +65,19 @@ Approximate methods (\code{\link[=ssa_etl]{ssa_etl()}} and \code{\link[=ssa_btl]
 Some tweaking might be required for a stochastic model to run appropriately.
 }
 \examples{
-initial_state <- c(x_prey = 1000, x_predators = 1000)
-nu <- matrix(
-  c(
-    +1, -1, 0,
-    0, +1, -1
-  ),
-  nrow = 2,
-  byrow = TRUE,
-  dimnames = list(
-    c("x_prey", "x_predators"),
-    c("p_prey_up", "p_predation", "p_pred_down")
-  )
-)
-propensity_funs <- c(
-  "p_prey_up = c1 * x_prey",
-  "p_predation = c2 * x_prey * x_predators",
-  "p_pred_down = c3 * x_predators"
-)
+initial_state <- c(prey = 1000, predators = 1000)
 params <- c(c1 = 10, c2 = 0.01, c3 = 10)
+reactions <- list(
+  #        ↓ propensity function      ↓ effects                        ↓ name for reaction
+  reaction(~c1 * prey,                c(prey = +1),                    name = "prey_up"),
+  reaction(~c2 * prey * predators,    c(prey = -1, predators = +1),    name = "predation"),
+  reaction(~c3 * predators,           c(predators = -1),               name = "pred_down")
+)
 
 out <-
   ssa(
     initial_state = initial_state,
-    propensity_funs = propensity_funs,
-    nu = nu,
+    reactions = reactions,
     params = params,
     method = ssa_direct(),
     final_time = 5,
@@ -103,5 +88,5 @@ ssa_plot(out)
 
 }
 \seealso{
-\link{fastgssa} for a high level explanation of the package
+\link{gillespie} for a high level explanation of the package
 }

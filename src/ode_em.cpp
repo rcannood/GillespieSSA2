@@ -3,9 +3,9 @@
 
 using namespace Rcpp;
 
-class SSA_EM : public SSA {
+class ODE_EM : public SSA {
 public:
-   SSA_EM(double tau_ = .01, double noise_strength_ = 2.0) : SSA("EM"), tau(tau_), noise_strength(noise_strength_) {}
+  ODE_EM(double tau_ = .01, double noise_strength_ = 2.0) : SSA("EM"), tau(tau_), noise_strength(noise_strength_) {}
 
   double tau;
   double noise_strength;
@@ -19,15 +19,17 @@ public:
       double* dtime,
       NumericVector& dstate
   ) {
+    int i, j;
+
     // update state
-    for (int j = 0; j < propensity.size(); j++) {
-      for (int i = nu_p[j]; i < nu_p[j+1]; i++) {
+    for (j = 0; j < propensity.size(); j++) {
+      for (i = nu_p[j]; i < nu_p[j+1]; i++) {
         dstate[nu_i[i]] += nu_x[i] * propensity[j] * tau;
       }
     }
 
     // add noise
-    for (int i = 0; i < state.size(); i++) {
+    for (i = 0; i < state.size(); i++) {
       dstate[i] += sqrt(abs(state[i])) * noise_strength * R::rnorm(0.0, tau);
     }
 
@@ -36,8 +38,8 @@ public:
 } ;
 
 // [[Rcpp::export]]
-SEXP make_ssa_em(double tau, double noise_strength) {
-  SSA_EM *ssa = new SSA_EM(tau, noise_strength);
-  XPtr<SSA_EM> ptr(ssa);
+SEXP make_ode_em(double tau, double noise_strength) {
+  ODE_EM *ssa = new ODE_EM(tau, noise_strength);
+  XPtr<ODE_EM> ptr(ssa);
   return ptr;
 }

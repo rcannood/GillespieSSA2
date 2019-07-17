@@ -3,8 +3,8 @@
 #' Main interface function to the implemented \acronym{SSA} methods. Runs a
 #' single realization of a predefined system. For a detailed explanation
 #' on how to set up your first \acronym{SSA} system, check the vignette
-#' available on [GitHub](https://github.com/dynverse/fastgssa/tree/master/vignettes/preparing_a_run.md)
-#' or using `vignette("preparing_a_run", package = "fastgssa")`.
+#' available on [GitHub](https://github.com/dynverse/gillespie/tree/master/vignettes/preparing_a_run.md)
+#' or using `vignette("preparing_a_run", package = "gillespie")`.
 #'
 #' Substantial improvements in speed and accuracy can be obtained by
 #' adjusting the additional (and optional) `ssa` arguments. By default
@@ -15,9 +15,7 @@
 #' Some tweaking might be required for a stochastic model to run appropriately.
 #'
 #' @param initial_state `[named numeric vector]` The initial state to start the simulation with.
-#' @param propensity_funs `[character vector]` A character representation of the propensity functions, written in C++.
-#' @param nu `[(sparse) integer matrix]` The changes in number of individuals in a state (rows) caused
-#'   by a single reaction (columns).
+#' @param reactions A list of reactions, see [reaction()].
 #' @param final_time `[numeric]` The final simulation time.
 #' @param params `[named numeric vector]` Constant parameters to be used in the propensity functions.
 #' @param method `[SSA]`] Which SSA algorithm to use. Must be one of: [ssa_direct()],
@@ -42,34 +40,23 @@
 #' * `propensity`: `[numeric matrix]` The propensity values for each of the timepoints.
 #' * `buffer`: `[numeric matrix]` The temporary calculation buffer used as part of the propensity functions.
 #'
-#' @seealso [fastgssa] for a high level explanation of the package
+#' @seealso [gillespie] for a high level explanation of the package
 #'
 #' @examples
-#' initial_state <- c(x_prey = 1000, x_predators = 1000)
-#' nu <- matrix(
-#'   c(
-#'     +1, -1, 0,
-#'     0, +1, -1
-#'   ),
-#'   nrow = 2,
-#'   byrow = TRUE,
-#'   dimnames = list(
-#'     c("x_prey", "x_predators"),
-#'     c("p_prey_up", "p_predation", "p_pred_down")
-#'   )
-#' )
-#' propensity_funs <- c(
-#'   "p_prey_up = c1 * x_prey",
-#'   "p_predation = c2 * x_prey * x_predators",
-#'   "p_pred_down = c3 * x_predators"
-#' )
+#' initial_state <- c(prey = 1000, predators = 1000)
 #' params <- c(c1 = 10, c2 = 0.01, c3 = 10)
+#' reactions <- list(
+#'   #        ↓ propensity function      ↓ effects                        ↓ name for reaction
+#'   reaction(~c1 * prey,                c(prey = +1),                    name = "prey_up"),
+#'   reaction(~c2 * prey * predators,    c(prey = -1, predators = +1),    name = "predation"),
+#'   reaction(~c3 * predators,           c(predators = -1),               name = "pred_down")
+#' )
+
 #'
 #' out <-
 #'   ssa(
 #'     initial_state = initial_state,
-#'     propensity_funs = propensity_funs,
-#'     nu = nu,
+#'     reactions = reactions,
 #'     params = params,
 #'     method = ssa_direct(),
 #'     final_time = 5,
@@ -86,8 +73,7 @@
 #' @importFrom Matrix Matrix
 ssa <- function(
   initial_state,
-  propensity_funs,
-  nu,
+  reactions,
   final_time,
   params = NULL,
   method = ssa_direct(),
@@ -98,9 +84,6 @@ ssa <- function(
   verbose = FALSE,
   console_interval = 1
 ) {
-  if (is.matrix(nu)) {
-    nu <- Matrix::Matrix(nu, sparse = TRUE)
-  }
 
   # check parameters
   assert_that(
@@ -109,10 +92,6 @@ ssa <- function(
     !is.null(names(initial_state)),
     !any(c("state", "time", "params") %in% names(initial_state)),
 
-    # nu
-    dynutils::is_sparse(nu),
-    length(initial_state) == nrow(nu),
-
     # params
     is.numeric(params),
     length(params) == 0 || !is.null(names(params)),
@@ -120,7 +99,7 @@ ssa <- function(
     !any(duplicated(c(names(initial_state), names(params)))),
 
     # method
-    is(method, "fastgssa::ssa_method"),
+    is(method, "gillespie::ssa_method"),
 
     # vector arguments
     is.numeric(final_time), length(final_time) == 1, final_time >= 0,
@@ -133,38 +112,33 @@ ssa <- function(
   )
 
   # compile propensity functions if this has not been done already
-  comp_funs <-
-    if (is.character(propensity_funs)) {
-      assert_that(length(propensity_funs) == ncol(nu))
-      compile_propensity_functions(
-        propensity_funs = propensity_funs,
-        state_ids = rownames(nu),
+  compiled_reactions <-
+    if (is.list(reactions) && !is(reactions, "gillespie::reactions")) {
+      compile_reactions(
+        reactions = reactions,
+        state_ids = names(initial_state),
         params = params,
         hardcode_params = hardcode_params
       )
     } else {
-      propensity_funs
+      reactions
     }
 
-  # check propensity functions
-  assert_that(
-    is(comp_funs, "fastgssa::propensity_functions"),
-    length(comp_funs$reaction_ids) == ncol(nu)
-  )
+  assert_that(is(compiled_reactions, "gillespie::reactions"))
 
   # run SSA
   output <- simulate(
-    propensity_funs = comp_funs$functions_pointer,
-    num_functions = comp_funs$num_functions,
+    propensity_funs = compiled_reactions$functions_pointer,
+    num_functions = compiled_reactions$num_functions,
     ssa_alg = method$factory(),
     initial_state = initial_state,
     params = params,
-    nu_i = nu@i,
-    nu_p = nu@p,
-    nu_x = nu@x,
+    nu_i = compiled_reactions$state_change@i,
+    nu_p = compiled_reactions$state_change@p,
+    nu_x = compiled_reactions$state_change@x,
     final_time = final_time,
     census_interval = census_interval,
-    buffer_size = comp_funs$buffer_size,
+    buffer_size = compiled_reactions$buffer_size,
     max_walltime = max_walltime,
     stop_on_neg_state = stop_on_neg_state,
     verbose = verbose,
@@ -173,8 +147,8 @@ ssa <- function(
 
   # set colnames of objects
   colnames(output$state) <- names(initial_state)
-  colnames(output$propensity) <- comp_funs$reaction_ids
-  colnames(output$buffer) <- comp_funs$buffer_ids
+  colnames(output$propensity) <- compiled_reactions$reaction_ids
+  colnames(output$buffer) <- compiled_reactions$buffer_ids
 
   output
 }
