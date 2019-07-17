@@ -4,7 +4,7 @@
 \alias{ssa}
 \title{Invoking the stochastic simulation algorithm}
 \usage{
-ssa(initial_state, propensity_funs, nu, final_time, params = NULL,
+ssa(initial_state, reactions, final_time, params = NULL,
   method = ssa_direct(), census_interval = 0,
   stop_on_neg_state = TRUE, max_walltime = Inf,
   hardcode_params = FALSE, verbose = FALSE, console_interval = 1)
@@ -12,10 +12,7 @@ ssa(initial_state, propensity_funs, nu, final_time, params = NULL,
 \arguments{
 \item{initial_state}{\code{[named numeric vector]} The initial state to start the simulation with.}
 
-\item{propensity_funs}{\code{[character vector]} A character representation of the propensity functions, written in C++.}
-
-\item{nu}{\code{[(sparse) integer matrix]} The changes in number of individuals in a state (rows) caused
-by a single reaction (columns).}
+\item{reactions}{A list of reactions, see \code{\link[=reaction]{reaction()}}.}
 
 \item{final_time}{\code{[numeric]} The final simulation time.}
 

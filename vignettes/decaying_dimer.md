@@ -1,6 +1,6 @@
 Decaying-Dimerisation
 ================
-2019-06-21
+2019-07-17
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/decaying_dimer.Rmd", output_format = "github_document")
@@ -14,49 +14,25 @@ library(ggplot2)
 The Decaying-Dimerisation Reaction Set consists of three species and
 four reaction channels,
 
-\[
-\begin{aligned}
-  s_1 & \overset{c_1}{\rightarrow} 0 \\
-  s_1 + s_2 & \overset{c_2}{\rightarrow} s_2 \\
-  s_2 & \overset{c_3}{\rightarrow} s_1 + s_2 \\
-  s_2 & \overset{c_4}{\rightarrow} s_3 
-\end{aligned}
-\]
+``` 
+     S1 --c1--> 0
+S1 + S1 --c2--> S2
+     S2 --c3--> S1 + S1
+     S2 --c4--> S3
+```
 
-Define parameters
+Define system
 
 ``` r
 params <- c(c1 = 1.0, c2 = 0.002, c3 = 0.5, c4 = 0.04)
-```
-
-Initial state vector
-
-``` r
 initial_state <- c(s1 = 10000, s2 = 0, s3 = 0)
-```
 
-State-change matrix
-
-``` r
-nu <- matrix(
-  c(
-    -1, -2, +2,  0,
-    0, +1, -1, -1,
-    0,  0,  0, +1
-  ),
-  nrow = 3,
-  byrow = TRUE
-)
-```
-
-Propensity functions
-
-``` r
-propensity_funs <- c(
-  "r1 = c1 * s1",
-  "r2 = c2 * s1 * s1",
-  "r3 = c3 * s2",
-  "r4 = c4 * s2"
+#          ↓ propensity       ↓ effect(s)
+reactions <- list(
+  reaction(~ c1 * s1,         c(s1 = -1)),
+  reaction(~ c2 * s1 * s1,    c(s1 = -2, s2 = +1)),
+  reaction(~ c3 * s2,         c(s1 = +2, s2 = -1)),
+  reaction(~ c4 * s2,         c(s2 = -1, s3 = +1))
 )
 ```
 
@@ -66,8 +42,7 @@ Run simulation with direct method
 out <- 
   ssa(
     initial_state = initial_state,
-    propensity_funs = propensity_funs,
-    nu = nu,
+    reactions = reactions,
     params = params,
     method = ssa_direct(),
     final_time = 10,
@@ -88,7 +63,7 @@ print(out$stats)
     ##   method stop_simtime stop_extinction stop_negative_state stop_zero_prop
     ## 1 direct         TRUE           FALSE               FALSE          FALSE
     ##   stop_walltime walltime_start walltime_end walltime_elapsed num_steps
-    ## 1         FALSE     1561117919   1561117919                0     30548
+    ## 1         FALSE     1563352262   1563352262                0     30548
     ##     dtime_mean     dtime_sd
     ## 1 0.0003273901 1.098942e-05
 
@@ -96,7 +71,7 @@ print(out$stats)
 ssa_plot(out) + labs(title = "Direct")
 ```
 
-![](decaying_dimer_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](decaying_dimer_files/figure-gfm/direct-1.png)<!-- -->
 
 Run simulation with ETL method
 
@@ -104,18 +79,28 @@ Run simulation with ETL method
 out <- 
   ssa(
     initial_state = initial_state,
-    propensity_funs = propensity_funs,
-    nu = nu,
+    reactions = reactions,
     params = params,
     method = ssa_etl(.01),
     final_time = 10,
     census_interval = .01,
     verbose = FALSE
   )
+out$stats
+```
+
+    ##   method stop_simtime stop_extinction stop_negative_state stop_zero_prop
+    ## 1    ETL         TRUE           FALSE               FALSE          FALSE
+    ##   stop_walltime walltime_start walltime_end walltime_elapsed num_steps
+    ## 1         FALSE     1563352265   1563352265                0      1001
+    ##   dtime_mean     dtime_sd
+    ## 1       0.01 4.824984e-18
+
+``` r
 ssa_plot(out) + labs(title = "ETL")
 ```
 
-![](decaying_dimer_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](decaying_dimer_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulation with BTL method
 
@@ -123,8 +108,7 @@ Run simulation with BTL method
 out <- 
   ssa(
     initial_state = initial_state,
-    propensity_funs = propensity_funs,
-    nu = nu,
+    reactions = reactions,
     params = params,
     method = ssa_btl(f = .1),
     final_time = 10,
@@ -134,8 +118,8 @@ out <-
   )
 ```
 
-    ## Warning in simulate(propensity_funs = comp_funs$functions_pointer,
-    ## num_functions = comp_funs$num_functions, : coerced p to unity - consider
+    ## Warning in simulate(propensity_funs =
+    ## compiled_reactions$functions_pointer, : coerced p to unity - consider
     ## lowering f
 
 ``` r
@@ -145,7 +129,7 @@ out$stats
     ##   method stop_simtime stop_extinction stop_negative_state stop_zero_prop
     ## 1    BTL        FALSE            TRUE                TRUE           TRUE
     ##   stop_walltime walltime_start walltime_end walltime_elapsed num_steps
-    ## 1         FALSE     1561117926   1561117926                0    100385
+    ## 1         FALSE     1563352268   1563352268                0    100385
     ##     dtime_mean   dtime_sd
     ## 1 5.194919e-05 0.00031483
 
@@ -153,7 +137,7 @@ out$stats
 ssa_plot(out) + labs(title = "BTL")
 ```
 
-![](decaying_dimer_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](decaying_dimer_files/figure-gfm/btl-1.png)<!-- -->
 
 Run simulation with EM method
 
@@ -161,15 +145,25 @@ Run simulation with EM method
 out <- 
   ssa(
     initial_state = initial_state,
-    propensity_funs = propensity_funs,
-    nu = nu,
+    reactions = reactions,
     params = params,
     method = ode_em(),
     final_time = 10,
     census_interval = .01,
     verbose = FALSE
   )
+out$stats
+```
+
+    ##   method stop_simtime stop_extinction stop_negative_state stop_zero_prop
+    ## 1     EM         TRUE           FALSE               FALSE          FALSE
+    ##   stop_walltime walltime_start walltime_end walltime_elapsed num_steps
+    ## 1         FALSE     1563352272   1563352272                0      1001
+    ##   dtime_mean     dtime_sd
+    ## 1       0.01 4.824984e-18
+
+``` r
 ssa_plot(out) + labs(title = "EM")
 ```
 
-![](decaying_dimer_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](decaying_dimer_files/figure-gfm/em-1.png)<!-- -->

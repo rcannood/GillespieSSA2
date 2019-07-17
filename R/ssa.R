@@ -15,9 +15,7 @@
 #' Some tweaking might be required for a stochastic model to run appropriately.
 #'
 #' @param initial_state `[named numeric vector]` The initial state to start the simulation with.
-#' @param propensity_funs `[character vector]` A character representation of the propensity functions, written in C++.
-#' @param nu `[(sparse) integer matrix]` The changes in number of individuals in a state (rows) caused
-#'   by a single reaction (columns).
+#' @param reactions A list of reactions, see [reaction()].
 #' @param final_time `[numeric]` The final simulation time.
 #' @param params `[named numeric vector]` Constant parameters to be used in the propensity functions.
 #' @param method `[SSA]`] Which SSA algorithm to use. Must be one of: [ssa_direct()],
@@ -86,8 +84,7 @@
 #' @importFrom Matrix Matrix
 ssa <- function(
   initial_state,
-  propensity_funs,
-  nu,
+  reactions,
   final_time,
   params = NULL,
   method = ssa_direct(),
@@ -98,9 +95,6 @@ ssa <- function(
   verbose = FALSE,
   console_interval = 1
 ) {
-  if (is.matrix(nu)) {
-    nu <- Matrix::Matrix(nu, sparse = TRUE)
-  }
 
   # check parameters
   assert_that(
@@ -108,10 +102,6 @@ ssa <- function(
     is.numeric(initial_state),
     !is.null(names(initial_state)),
     !any(c("state", "time", "params") %in% names(initial_state)),
-
-    # nu
-    dynutils::is_sparse(nu),
-    length(initial_state) == nrow(nu),
 
     # params
     is.numeric(params),
@@ -133,38 +123,33 @@ ssa <- function(
   )
 
   # compile propensity functions if this has not been done already
-  comp_funs <-
-    if (is.character(propensity_funs)) {
-      assert_that(length(propensity_funs) == ncol(nu))
-      compile_propensity_functions(
-        propensity_funs = propensity_funs,
+  compiled_reactions <-
+    if (is.list(reactions)) {
+      compile_reactions(
+        reactions = reactions,
         state_ids = names(initial_state),
         params = params,
         hardcode_params = hardcode_params
       )
     } else {
-      propensity_funs
+      reactions
     }
 
-  # check propensity functions
-  assert_that(
-    is(comp_funs, "fastgssa::propensity_functions"),
-    length(comp_funs$reaction_ids) == ncol(nu)
-  )
+  assert_that(is(compiled_reactions, "fastgssa::reactions"))
 
   # run SSA
   output <- simulate(
-    propensity_funs = comp_funs$functions_pointer,
-    num_functions = comp_funs$num_functions,
+    propensity_funs = compiled_reactions$functions_pointer,
+    num_functions = compiled_reactions$num_functions,
     ssa_alg = method$factory(),
     initial_state = initial_state,
     params = params,
-    nu_i = nu@i,
-    nu_p = nu@p,
-    nu_x = nu@x,
+    nu_i = compiled_reactions$state_change@i,
+    nu_p = compiled_reactions$state_change@p,
+    nu_x = compiled_reactions$state_change@x,
     final_time = final_time,
     census_interval = census_interval,
-    buffer_size = comp_funs$buffer_size,
+    buffer_size = compiled_reactions$buffer_size,
     max_walltime = max_walltime,
     stop_on_neg_state = stop_on_neg_state,
     verbose = verbose,
@@ -173,8 +158,8 @@ ssa <- function(
 
   # set colnames of objects
   colnames(output$state) <- names(initial_state)
-  colnames(output$propensity) <- comp_funs$reaction_ids
-  colnames(output$buffer) <- comp_funs$buffer_ids
+  colnames(output$propensity) <- compiled_reactions$reaction_ids
+  colnames(output$buffer) <- compiled_reactions$buffer_ids
 
   output
 }

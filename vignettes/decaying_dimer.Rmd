@@ -24,14 +24,12 @@ library(ggplot2)
 
 The Decaying-Dimerisation Reaction Set consists of three species and four reaction channels,
 
-$$
-\begin{aligned}
-  s_1 & \overset{c_1}{\rightarrow} 0 \\
-  s_1 + s_2 & \overset{c_2}{\rightarrow} s_2 \\
-  s_2 & \overset{c_3}{\rightarrow} s_1 + s_2 \\
-  s_2 & \overset{c_4}{\rightarrow} s_3 
-\end{aligned}
-$$
+ ```
+      S1 --c1--> 0
+ S1 + S1 --c2--> S2
+      S2 --c3--> S1 + S1
+      S2 --c4--> S3
+```
 
 Define system
 ```{r}
@@ -40,10 +38,10 @@ initial_state <- c(s1 = 10000, s2 = 0, s3 = 0)
 
 #          ↓ propensity       ↓ effect(s)
 reactions <- list(
-  reaction(~ c1 * s1,         s1 = -1),
-  reaction(~ c2 * s1^2,       s1 = -2, s2 = +1),
-  reaction(~ c3 * s2,         s1 = +2, s2 = -1),
-  reaction(~ c4 * s2,         s2 = -1, s3 = +1)
+  reaction(~ c1 * s1,         c(s1 = -1)),
+  reaction(~ c2 * s1 * s1,    c(s1 = -2, s2 = +1)),
+  reaction(~ c3 * s2,         c(s1 = +2, s2 = -1)),
+  reaction(~ c4 * s2,         c(s2 = -1, s3 = +1))
 )
 
 ```
@@ -70,8 +68,7 @@ Run simulation with ETL method
 out <- 
   ssa(
     initial_state = initial_state,
-    propensity_funs = propensity_funs,
-    nu = nu,
+    reactions = reactions,
     params = params,
     method = ssa_etl(.01),
     final_time = 10,
@@ -87,8 +84,7 @@ Run simulation with BTL method
 out <- 
   ssa(
     initial_state = initial_state,
-    propensity_funs = propensity_funs,
-    nu = nu,
+    reactions = reactions,
     params = params,
     method = ssa_btl(f = .1),
     final_time = 10,
@@ -105,8 +101,7 @@ Run simulation with EM method
 out <- 
   ssa(
     initial_state = initial_state,
-    propensity_funs = propensity_funs,
-    nu = nu,
+    reactions = reactions,
     params = params,
     method = ode_em(),
     final_time = 10,
