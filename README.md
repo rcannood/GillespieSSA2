@@ -40,7 +40,7 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
-### Recent changes in gillespie 0.2.3 (unreleased)
+### Recent changes in gillespie 0.2.3 (17-07-2019)
 
   - MAJOR CHANGE: Remove `nu` and `propensity_functions` from `ssa()`,
     instead expect a list of `reaction()` objects. This function
