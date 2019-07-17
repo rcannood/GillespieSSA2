@@ -35,9 +35,9 @@ matrix could then be defined as follows.
 ``` r
 params <- c(c1 = 10, c2 = 0.01, c3 = 10)
 reactions <- list(
-  #        ↓ propensity function        ↓ effects                          ↓ name for reaction
+  #        ↓ propensity function      ↓ effects                        ↓ name for reaction
   reaction(~c1 * prey,                c(prey = +1),                    name = "prey_up"),
-  reaction(~c2 * prey * predators,    c(prey = -1, predators = +1),  name = "predation"),
+  reaction(~c2 * prey * predators,    c(prey = -1, predators = +1),    name = "predation"),
   reaction(~c3 * predators,           c(predators = -1),               name = "pred_down")
 )
 ```
@@ -69,7 +69,7 @@ print(out$stats)
     ##   method stop_simtime stop_extinction stop_negative_state stop_zero_prop
     ## 1 direct         TRUE           FALSE               FALSE          FALSE
     ##   stop_walltime walltime_start walltime_end walltime_elapsed num_steps
-    ## 1         FALSE     1563352189   1563352189                0    151518
+    ## 1         FALSE     1563359460   1563359460                0    151518
     ##     dtime_mean     dtime_sd
     ## 1 3.299954e-05 1.538995e-07
 
@@ -77,4 +77,4 @@ print(out$stats)
 ssa_plot(out)
 ```
 
-![](preparing_a_run_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](preparing_a_run_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->

@@ -43,31 +43,20 @@
 #' @seealso [fastgssa] for a high level explanation of the package
 #'
 #' @examples
-#' initial_state <- c(x_prey = 1000, x_predators = 1000)
-#' nu <- matrix(
-#'   c(
-#'     +1, -1, 0,
-#'     0, +1, -1
-#'   ),
-#'   nrow = 2,
-#'   byrow = TRUE,
-#'   dimnames = list(
-#'     c("x_prey", "x_predators"),
-#'     c("p_prey_up", "p_predation", "p_pred_down")
-#'   )
-#' )
-#' propensity_funs <- c(
-#'   "p_prey_up = c1 * x_prey",
-#'   "p_predation = c2 * x_prey * x_predators",
-#'   "p_pred_down = c3 * x_predators"
-#' )
+#' initial_state <- c(prey = 1000, predators = 1000)
 #' params <- c(c1 = 10, c2 = 0.01, c3 = 10)
+#' reactions <- list(
+#'   #        ↓ propensity function      ↓ effects                        ↓ name for reaction
+#'   reaction(~c1 * prey,                c(prey = +1),                    name = "prey_up"),
+#'   reaction(~c2 * prey * predators,    c(prey = -1, predators = +1),    name = "predation"),
+#'   reaction(~c3 * predators,           c(predators = -1),               name = "pred_down")
+#' )
+
 #'
 #' out <-
 #'   ssa(
 #'     initial_state = initial_state,
-#'     propensity_funs = propensity_funs,
-#'     nu = nu,
+#'     reactions = reactions,
 #'     params = params,
 #'     method = ssa_direct(),
 #'     final_time = 5,
