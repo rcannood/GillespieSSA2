@@ -113,7 +113,7 @@ ssa <- function(
 
   # compile propensity functions if this has not been done already
   compiled_reactions <-
-    if (is.list(reactions)) {
+    if (is.list(reactions) && !is(reactions, "fastgssa::reactions")) {
       compile_reactions(
         reactions = reactions,
         state_ids = names(initial_state),
