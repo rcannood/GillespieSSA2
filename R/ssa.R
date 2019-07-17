@@ -3,8 +3,8 @@
 #' Main interface function to the implemented \acronym{SSA} methods. Runs a
 #' single realization of a predefined system. For a detailed explanation
 #' on how to set up your first \acronym{SSA} system, check the vignette
-#' available on [GitHub](https://github.com/dynverse/fastgssa/tree/master/vignettes/preparing_a_run.md)
-#' or using `vignette("preparing_a_run", package = "fastgssa")`.
+#' available on [GitHub](https://github.com/dynverse/gillespie/tree/master/vignettes/preparing_a_run.md)
+#' or using `vignette("preparing_a_run", package = "gillespie")`.
 #'
 #' Substantial improvements in speed and accuracy can be obtained by
 #' adjusting the additional (and optional) `ssa` arguments. By default
@@ -40,7 +40,7 @@
 #' * `propensity`: `[numeric matrix]` The propensity values for each of the timepoints.
 #' * `buffer`: `[numeric matrix]` The temporary calculation buffer used as part of the propensity functions.
 #'
-#' @seealso [fastgssa] for a high level explanation of the package
+#' @seealso [gillespie] for a high level explanation of the package
 #'
 #' @examples
 #' initial_state <- c(prey = 1000, predators = 1000)
@@ -99,7 +99,7 @@ ssa <- function(
     !any(duplicated(c(names(initial_state), names(params)))),
 
     # method
-    is(method, "fastgssa::ssa_method"),
+    is(method, "gillespie::ssa_method"),
 
     # vector arguments
     is.numeric(final_time), length(final_time) == 1, final_time >= 0,
@@ -113,7 +113,7 @@ ssa <- function(
 
   # compile propensity functions if this has not been done already
   compiled_reactions <-
-    if (is.list(reactions) && !is(reactions, "fastgssa::reactions")) {
+    if (is.list(reactions) && !is(reactions, "gillespie::reactions")) {
       compile_reactions(
         reactions = reactions,
         state_ids = names(initial_state),
@@ -124,7 +124,7 @@ ssa <- function(
       reactions
     }
 
-  assert_that(is(compiled_reactions, "fastgssa::reactions"))
+  assert_that(is(compiled_reactions, "gillespie::reactions"))
 
   # run SSA
   output <- simulate(

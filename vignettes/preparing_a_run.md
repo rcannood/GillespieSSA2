@@ -1,4 +1,4 @@
-Preparing an SSA run with fastgssa
+Preparing an SSA run with gillespie
 ================
 2019-07-17
 
@@ -19,7 +19,7 @@ at \(t = 0\). For example, for a system with two species `prey` and
 initial state vector is defined as follows.
 
 ``` r
-library(fastgssa)
+library(gillespie)
 initial_state <- c(prey = 1000, predators = 1000)
 ```
 

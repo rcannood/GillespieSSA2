@@ -5,7 +5,7 @@ ssa_method <- function(name, params, factory) {
     params,
     factory
   )
-  class(l) <- "fastgssa::ssa_method"
+  class(l) <- "gillespie::ssa_method"
   l
 }
 

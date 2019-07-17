@@ -1,9 +1,9 @@
 ---
-title: "Preparing an SSA run with fastgssa"
+title: "Preparing an SSA run with gillespie"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Preparing an SSA run with fastgssa}
+  %\VignetteIndexEntry{Preparing an SSA run with gillespie}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -29,7 +29,7 @@ at $t = 0$. For example, for a system with two species `prey` and `predators`
 where both have an initial population size of 1000, the initial state vector
 is defined as follows.
 ```{r}
-library(fastgssa)
+library(gillespie)
 initial_state <- c(prey = 1000, predators = 1000)
 ```
 

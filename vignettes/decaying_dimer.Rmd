@@ -18,7 +18,7 @@ set.seed(1)
 ```
 
 ```{r, message = FALSE}
-library(fastgssa)
+library(gillespie)
 library(ggplot2)
 ```
 

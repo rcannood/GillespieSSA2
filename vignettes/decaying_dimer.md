@@ -7,7 +7,7 @@ rmarkdown::render("vignettes/decaying_dimer.Rmd", output_format = "github_docume
 -->
 
 ``` r
-library(fastgssa)
+library(gillespie)
 library(ggplot2)
 ```
 

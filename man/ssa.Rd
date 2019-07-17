@@ -52,8 +52,8 @@ Returns a list object with the following elements:
 Main interface function to the implemented \acronym{SSA} methods. Runs a
 single realization of a predefined system. For a detailed explanation
 on how to set up your first \acronym{SSA} system, check the vignette
-available on \href{https://github.com/dynverse/fastgssa/tree/master/vignettes/preparing_a_run.md}{GitHub}
-or using \code{vignette("preparing_a_run", package = "fastgssa")}.
+available on \href{https://github.com/dynverse/gillespie/tree/master/vignettes/preparing_a_run.md}{GitHub}
+or using \code{vignette("preparing_a_run", package = "gillespie")}.
 }
 \details{
 Substantial improvements in speed and accuracy can be obtained by
@@ -88,5 +88,5 @@ ssa_plot(out)
 
 }
 \seealso{
-\link{fastgssa} for a high level explanation of the package
+\link{gillespie} for a high level explanation of the package
 }

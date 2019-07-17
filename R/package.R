@@ -1,4 +1,4 @@
-#' \pkg{fastgssa}: Gillespie's Stochastic Simulation Algorithm for impatient people.
+#' \pkg{gillespie}: Gillespie's Stochastic Simulation Algorithm for impatient people.
 #'
 #' A fast, scalable, and versatile framework for simulating large systems with
 #' Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). It is conceptually based on
@@ -6,8 +6,8 @@
 #' it blazingly fast. The \acronym{SSA} methods currently implemented are: Direct, Explicit
 #' tau-leaping (\acronym{ETL}), and the Binomial tau-leaping (\acronym{BTL})
 #'
-#' @name fastgssa
-#' @aliases fastgssa-package fastgssa
+#' @name gillespie
+#' @aliases gillespie-package gillespie
 #' @docType package
 #'
 #' @section The stochastic simulation algorithm:
@@ -46,9 +46,9 @@
 #' * [ode_em()]: An \acronym{ODE} algorithm.
 #' * [compile_reactions()]: A function for precompiling the reactions.
 #'
-#' @seealso [ssa()] for more explanation on how to use \pkg{fastgssa}
+#' @seealso [ssa()] for more explanation on how to use \pkg{gillespie}
 #'
-#' @useDynLib fastgssa
+#' @useDynLib gillespie
 #'
 #' @importFrom dplyr first
 #' @importFrom tibble lst

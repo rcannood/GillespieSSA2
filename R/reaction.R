@@ -47,7 +47,7 @@ reaction <- function(
     effect = effect,
     name = name
   )
-  class(out) <- "fastgssa::reaction"
+  class(out) <- "gillespie::reaction"
   out
 }
 
@@ -91,7 +91,7 @@ compile_reactions <- function(
   # create nu sparse matrix
   state_change_df <- map_df(seq_along(reactions), function(j) {
     reac <- reactions[[j]]
-    assert_that(is(reactions[[j]], "fastgssa::reaction"))
+    assert_that(is(reactions[[j]], "gillespie::reaction"))
 
     tibble(
       i = match(names(reac$effect), state_ids),
@@ -217,7 +217,7 @@ compile_reactions <- function(
   )
 
   # create temporary dir for compilation
-  tmpdir <- dynutils::safe_tempdir("fastgssa")
+  tmpdir <- dynutils::safe_tempdir("gillespie")
   on.exit(unlink(tmpdir, recursive = TRUE, force = TRUE))
 
   # compile code
@@ -242,6 +242,6 @@ compile_reactions <- function(
     reuse_buffer,
     hardcode_params
   )
-  class(l) <- "fastgssa::reactions"
+  class(l) <- "gillespie::reactions"
   l
 }
