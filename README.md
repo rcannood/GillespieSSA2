@@ -8,10 +8,9 @@ Status](https://ci.appveyor.com/api/projects/status/github/dynverse/gillespie?br
 # `gillespie`: Gillespie’s Stochastic Simulation Algorithm for impatient people.
 
 **gillespie** is a fast, scalable, and versatile framework for simulating
-large systems with Gillespie’s Stochastic Simulation Algorithm (SSA). It
-is conceptually based on
-[GillespieSSA](https://cran.r-project.org/web/packages/GillespieSSA/index.html),
-but rewritten entirely in Rcpp with large scale systems in mind to make
+large systems with Gillespie’s Stochastic Simulation Algorithm (SSA). 
+It is the spiritual successor of [GillespieSSA](https://cran.r-project.org/package=GillespieSSA),
+but written entirely in Rcpp with large scale systems in mind, to make
 it blazingly fast. The SSA methods currently implemented are: Direct,
 Explicit tau-leaping (ETL), and the Binomial tau-leaping (BTL).
 

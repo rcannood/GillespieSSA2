@@ -7,9 +7,9 @@
 \title{\pkg{gillespie}: Gillespie's Stochastic Simulation Algorithm for impatient people.}
 \description{
 A fast, scalable, and versatile framework for simulating large systems with
-Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). It is conceptually based on
-\pkg{GillespieSSA}, but rewritten entirely in Rcpp with large scale systems in mind to make
-it blazingly fast. The \acronym{SSA} methods currently implemented are: Direct, Explicit
+Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). It is the spiritual successor of
+\pkg{GillespieSSA}, but written entirely in Rcpp with large scale systems in mind, to make
+it blazingly fast. The SSA methods currently implemented are: Direct, Explicit
 tau-leaping (\acronym{ETL}), and the Binomial tau-leaping (\acronym{BTL})
 }
 \section{The stochastic simulation algorithm}{
