@@ -1,11 +1,66 @@
-#' Precompile the SSA propensity functions
+#' Define a reaction
 #'
-#' By precompiling the propensity functions, you can run multiple SSA simulations with the
-#' same propensity functions without having to recompile the functions every time.
+#' During an SSA simulation, at any infinitesimal time interval,
+#' a reaction will occur with a probability defined according to its
+#' propensity. If it does, then it will change the state vector according
+#' to its effects.
 #'
-#' See [ssa()] for more information on the format of the propensity functions.
+#' It is possible to use 'buffer' values in order to speed up the computation
+#' of the propensity functions. For instance, instead of `"(c3 * s1) / (1 + c3 * c1)"`,
+#' it is possible to write `"buf = c3 * s1; buf / (buf + 1)"` instead.
 #'
-#' @param propensity_funs `[character]` The propensity functions.
+#' @param propensity `[character/formula]` A character or formula representation of the propensity function, written in C++.
+#' @param effect `[named integer vector]` The change in state caused by this reaction.
+#' @param name `[character]` A name for this reaction (Optional). May only contain characters matching `[A-Za-z0-9_]`.
+#'
+#' @importFrom rlang is_formula
+#'
+#' @export
+#' @examples
+#' #        ↓ propensity                        ↓ effect
+#' reaction(~ c1 * s1,                          c(s1 = -1))
+#' reaction("c2 * s1 * s1",                     c(s1 = -2, s2 = +1))
+#' reaction("buf = c3 * s1; buf / (buf + 1)",   c(s1 = +2))
+reaction <- function(
+  propensity,
+  effect,
+  name = NA
+) {
+  # check propensity
+  assert_that(
+    is_formula(propensity) || is.character(propensity)
+  )
+  if (is_formula(propensity)) {
+    propensity <- as.character(propensity)[[2]]
+  }
+
+  # check effects
+  assert_that(
+    length(effect) > 0,
+    !is.null(names(effect)),
+    all(names(effect) != "")
+  )
+
+  # return output
+  out <- list(
+    propensity = propensity,
+    effect = effect,
+    name = name
+  )
+  class(out) <- "fastgssa::reaction"
+  out
+}
+
+# TODO:
+# Replace reaction propensity functions with rstan?
+# http://tobiasmadsen.com/2017/03/31/automatic_differentiation_in_r/
+
+#' Precompile the reactions
+#'
+#' By precompiling the reactions, you can run multiple SSA simulations repeatedly
+#' without having to recompile the reactions every time.
+#'
+#' @param reactions '[reaction]' A list of multiple [reaction()] objects.
 #' @param state_ids `[character]` The names of the states in the correct order.
 #' @param params `[named numeric]` Constants that are used in the propensity functions.
 #' @param buffer_ids `[character]` The order of any buffer calculations that are made as part of the propensity functions.
@@ -19,9 +74,10 @@
 #' @importFrom dynutils safe_tempdir
 #' @importFrom dplyr last
 #' @importFrom readr write_lines
+#'
 #' @export
-compile_propensity_functions <- function(
-  propensity_funs,
+compile_reactions <- function(
+  reactions,
   state_ids,
   params,
   buffer_ids = NULL,
@@ -29,11 +85,32 @@ compile_propensity_functions <- function(
   write_rcpp = NULL,
   fun_by = 100
 ) {
-  assert_that(
-    is.character(propensity_funs)
-  )
-  # should this be re-enabled?
+  # should this be a parameter? i think not...
   reuse_buffer <- FALSE
+
+  # create nu sparse matrix
+  state_change_df <- map_df(seq_along(reactions), function(j) {
+    reac <- reactions[[j]]
+    assert_that(is(reactions[[j]], "fastgssa::reaction"))
+
+    tibble(
+      i = match(names(reac$effect), state_ids),
+      j = j,
+      x = reac$effect
+    )
+  })
+  state_change <- Matrix::sparseMatrix(
+    i = state_change_df$i,
+    j = state_change_df$j,
+    x = state_change_df$x
+  )
+
+  # add reaction ids assignments to propensity functions
+  reaction_ids <- map_chr(reactions, function(reac) reac$name) %|% paste0("reaction", seq_along(reactions))
+  propensity_funs <- map_chr(reactions, "propensity")
+  for (i in seq_along(propensity_funs)) {
+    propensity_funs[[i]] <- gsub("(.*;)?([^;]*)", paste0("\\1", reaction_ids[[i]], " = \\2"), propensity_funs[[i]])
+  }
 
   # preprocess propensity functions
   variable_names <- propensity_funs %>% str_extract_all("[A-Za-z_0-9]* *=") %>% map(~ str_replace_all(., "[ =]", ""))
@@ -156,6 +233,7 @@ compile_propensity_functions <- function(
 
   # return output
   l <- lst(
+    state_change,
     reaction_ids,
     buffer_ids,
     buffer_size,
@@ -164,6 +242,6 @@ compile_propensity_functions <- function(
     reuse_buffer,
     hardcode_params
   )
-  class(l) <- "fastgssa::propensity_functions"
+  class(l) <- "fastgssa::reactions"
   l
 }

@@ -44,7 +44,7 @@
 #' * [ssa_plot()]: A standard visualisation for generating an overview plot fo the output.
 #' * [ssa_direct()], [ssa_etl()], [ssa_btl()]: Different \acronym{SSA} algorithms.
 #' * [ode_em()]: An \acronym{ODE} algorithm.
-#' * [compile_propensity_functions()]: A function for precompiling the propensity functions.
+#' * [compile_reactions()]: A function for precompiling the reactions.
 #'
 #' @seealso [ssa()] for more explanation on how to use \pkg{fastgssa}
 #'
@@ -54,6 +54,7 @@
 #' @importFrom tibble lst
 #' @importFrom assertthat assert_that
 #' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep discard invoke pmap map2 map2_df set_names imap
+#' @importFrom rlang %|%
 NULL
 
 

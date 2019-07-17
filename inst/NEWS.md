@@ -1,5 +1,9 @@
 # fastgssa 0.2.3 (unreleased)
 
+* MAJOR CHANGE: Remove `nu` and `propensity_functions` from `ssa()`, instead
+  expect a list of `reaction()` objects. This function provides a much more
+  natural interface to specifying the effect and propensity of a reaction.
+
 * MINOR CHANGE: Apply small allocation optimisations to `ssa_btl`, `ssa_etl` and `ode_em`.
 
 # fastgssa 0.2.2 (12-07-2019)

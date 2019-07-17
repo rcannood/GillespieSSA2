@@ -40,11 +40,16 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Recent changes in fastgssa 0.2.3 (unreleased)
+
+  - MAJOR CHANGE: Remove `nu` and `propensity_functions` from `ssa()`,
+    instead expect a list of `reaction()` objects. This function
+    provides a much more natural interface to specifying the effect and
+    propensity of a reaction.
+
+  - MINOR CHANGE: Apply small allocation optimisations to `ssa_btl`,
+    `ssa_etl` and `ode_em`.
+
 ### Recent changes in fastgssa 0.2.2 (12-07-2019)
 
   - MINOR CHANGE: Renamed `ssa_em()` to `ode_em()`.
-
-### Recent changes in fastgssa 0.2.1 (04-07-2019)
-
-  - BUG FIX: Fix isinf scope issue for Windows users.
-  - MINOR CHANGE: Move ggplot2 to Suggests.
