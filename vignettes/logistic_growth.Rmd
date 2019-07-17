@@ -1,8 +1,8 @@
 ---
-title: "Decaying-Dimerization Reaction Set (Gillespie, 2001)"
+title: "Pearl-Verhulst Logistic growth model (Kot, 2001)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Decaying-Dimerization Reaction Set (Gillespie, 2001)}
+  %\VignetteIndexEntry{Pearl-Verhulst Logistic growth model (Kot, 2001)}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -10,7 +10,7 @@ editor_options:
 ---
 
 <!-- github markdown built using 
-rmarkdown::render("vignettes/decaying_dimer.Rmd", output_format = "github_document")
+rmarkdown::render("vignettes/logistic_growth.Rmd", output_format = "github_document")
 -->
 
 ```{r, setseed, echo=FALSE}
@@ -18,14 +18,20 @@ set.seed(1)
 knitr::opts_chunk$set(fig.width = 8, fig.height = 6)
 ```
 
-The Decaying-Dimerization Reaction Set consists of three species and four reaction channels.
+The logistic growth model is given by `dN/dt = rN(1-N/K)` where
+`N` is the number (density) of indviduals at time `t`, 
+`K` is the carrying capacity of the population, 
+`r` is the intrinsic growth rate of the population. 
+We assume `r=b-d` where 
+`b` is the per capita p.c. birth rate and 
+`d` is the p.c. death rate. 
 
+This model consists of two reaction channels,
 ```
-      S1 --c1--> 0
- S1 + S1 --c2--> S2
-      S2 --c3--> S1 + S1
-      S2 --c4--> S3
+ N ---b--->  N + N
+ N ---d'---> 0
 ```
+where `d'=d+(b-d)N/K`. The propensity functions are `a_1=bN` and `a_2=d'N`.
 
 Load package
 ```{r}
@@ -34,18 +40,16 @@ library(gillespie)
 
 Define parameters
 ```{r}
+params <- c(b = 2, d = 1, K = 1000)
 final_time <- 10
-params <- c(c1 = 1.0, c2 = 0.002, c3 = 0.5, c4 = 0.04)
-initial_state <- c(s1 = 10000, s2 = 0, s3 = 0)
+initial_state <- c(N = 500)
 ```
 
 Define reactions
 ```{r}
 reactions <- list(
-  reaction("c1 * s1",        c(s1 = +1)),
-  reaction("c2 * s1 * s1",   c(s1 = -2, s2 = +1)),
-  reaction("c3 * s2",        c(s1 = +2, s2 = -1)),
-  reaction("c4 * s2",        c(s2 = -1, s3 = +1))
+  reaction("b * N", c(N = +1)),
+  reaction("(d + (b - d) * N / K) * N", c(N = -1))
 )
 ```
 
@@ -58,7 +62,7 @@ out <- ssa(
   params = params,
   final_time = final_time,
   method = ssa_direct()
-)
+) 
 ssa_plot(out)
 ```
 
@@ -70,7 +74,7 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_etl(tau = 0.003)
+  method = ssa_etl(tau = .03)
 ) 
 ssa_plot(out)
 ```
@@ -83,7 +87,7 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl()
+  method = ssa_btl(f = 5)
 ) 
 ssa_plot(out)
 ```

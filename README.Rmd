@@ -20,6 +20,8 @@ knitr::opts_chunk$set(
   dpi = 300
 )
 set.seed(1)
+submission_to_cran <- FALSE
+library(tidyverse)
 ```
 
 **gillespie** is a fast, scalable, and versatile framework for simulating large systems with 
@@ -39,14 +41,47 @@ devtools::install_github("dynverse/gillespie", build_vignettes = TRUE)
 
 ## Examples
 
-To get started, have a look at one of the vignettes:
+The following example models are available:
 
-* [Preparing a run](vignettes/preparing_a_run.md): `vignette("preparing_a_run", package = "gillespie")`,
-* [Decaying dimerisation](vignettes/decaying_dimer.md): `vignette("decaying_dimer", package = "gillespie")`.
+```{r vignettes, results='asis', echo=FALSE}
+walk(
+  list.files("vignettes", pattern = "*.Rmd"),
+  function(file) {
+    title <- 
+      read_lines(paste0("vignettes/", file)) %>% 
+      keep(~grepl("^title: ", .)) %>% 
+      gsub("title: \"(.*)\"", "\\1", .)
+    vignette_name <- gsub("\\.Rmd", "", file)
+    markdown_name <- gsub("\\.Rmd", ".md", file)
+    cat(
+      "* ",
+      ifelse(submission_to_cran, "", "["),
+      title, 
+      ifelse(submission_to_cran, "", paste0("](vignettes/", markdown_name, ")")),
+      ": ",
+      "`vignette(\"", vignette_name, "\", package=\"gillespie\")`\n",
+      sep = ""
+    )
+  }
+)
+```
+
+```{r rerun_vignettes, include = FALSE}
+rerun_vignettes <- FALSE
+if (rerun_vignettes) {
+  for (file in list.files("vignettes", pattern = "*.Rmd", full.names = TRUE)) {
+    cat("Running '", file, "'\n", sep = "")
+    rmarkdown::render(file, output_format = "github_document")
+  }
+}
+```
 
 ## Latest changes
 
-Check out `news(package = "gillespie")` or [NEWS.md](inst/NEWS.md) for a full list of changes.
+```{r include = FALSE}
+show_link <- ifelse(submission_to_cran, "", "or [NEWS.md](inst/NEWS.md) ")
+```
+Check out `news(package = "gillespie")` `r show_link` for a full list of changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 

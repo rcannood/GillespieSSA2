@@ -1,8 +1,8 @@
 ---
-title: "Decaying-Dimerization Reaction Set (Gillespie, 2001)"
+title: "Kermack-McKendrick SIR model (Brown & Rothery, 1993)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Decaying-Dimerization Reaction Set (Gillespie, 2001)}
+  %\VignetteIndexEntry{Kermack-McKendrick SIR model (Brown & Rothery, 1993)}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -10,7 +10,7 @@ editor_options:
 ---
 
 <!-- github markdown built using 
-rmarkdown::render("vignettes/decaying_dimer.Rmd", output_format = "github_document")
+rmarkdown::render("vignettes/sir.Rmd", output_format = "github_document")
 -->
 
 ```{r, setseed, echo=FALSE}
@@ -18,13 +18,17 @@ set.seed(1)
 knitr::opts_chunk$set(fig.width = 8, fig.height = 6)
 ```
 
-The Decaying-Dimerization Reaction Set consists of three species and four reaction channels.
-
+The Kermack-McKendrick SIR model is defined as
 ```
-      S1 --c1--> 0
- S1 + S1 --c2--> S2
-      S2 --c3--> S1 + S1
-      S2 --c4--> S3
+dS/dt = -beta*N*S
+dI/dt = beta*N*S - gamma*I
+dR/dt = gamma*I
+```
+
+This model consists of two reactions with the following per capita rates,
+```
+transmission: beta
+recovery:     gamma
 ```
 
 Load package
@@ -34,18 +38,16 @@ library(gillespie)
 
 Define parameters
 ```{r}
-final_time <- 10
-params <- c(c1 = 1.0, c2 = 0.002, c3 = 0.5, c4 = 0.04)
-initial_state <- c(s1 = 10000, s2 = 0, s3 = 0)
+params <- c(beta = .001, gamma = .1)
+final_time <- 100
+initial_state <- c(S = 500, I = 1, R = 0)
 ```
 
 Define reactions
 ```{r}
 reactions <- list(
-  reaction("c1 * s1",        c(s1 = +1)),
-  reaction("c2 * s1 * s1",   c(s1 = -2, s2 = +1)),
-  reaction("c3 * s2",        c(s1 = +2, s2 = -1)),
-  reaction("c4 * s2",        c(s2 = -1, s3 = +1))
+  reaction("beta * S * I", c(S = -1, I = +1)),
+  reaction("gamma * I", c(I = -1, R = +1))
 )
 ```
 
@@ -58,7 +60,7 @@ out <- ssa(
   params = params,
   final_time = final_time,
   method = ssa_direct()
-)
+) 
 ssa_plot(out)
 ```
 
@@ -70,7 +72,7 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_etl(tau = 0.003)
+  method = ssa_etl()
 ) 
 ssa_plot(out)
 ```

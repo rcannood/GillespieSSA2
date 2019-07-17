@@ -1,8 +1,8 @@
 ---
-title: "Decaying-Dimerization Reaction Set (Gillespie, 2001)"
+title: "Lotka predator-prey model (Gillespie, 1977; Kot, 2001)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Decaying-Dimerization Reaction Set (Gillespie, 2001)}
+  %\VignetteIndexEntry{Lotka predator-prey model (Gillespie, 1977; Kot, 2001)}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -10,7 +10,7 @@ editor_options:
 ---
 
 <!-- github markdown built using 
-rmarkdown::render("vignettes/decaying_dimer.Rmd", output_format = "github_document")
+rmarkdown::render("vignettes/lotka_predator_prey.Rmd", output_format = "github_document")
 -->
 
 ```{r, setseed, echo=FALSE}
@@ -18,13 +18,17 @@ set.seed(1)
 knitr::opts_chunk$set(fig.width = 8, fig.height = 6)
 ```
 
-The Decaying-Dimerization Reaction Set consists of three species and four reaction channels.
+This version of the Lotka predator-prey model is given by
 
 ```
-      S1 --c1--> 0
- S1 + S1 --c2--> S2
-      S2 --c3--> S1 + S1
-      S2 --c4--> S3
+dY1/dt = c1*Y1 - c2*Y1*Y2
+dY2/dt = c2*Y1*Y2 - c3*Y2
+```
+consisting of the three reaction channels,
+```
+      Y1 --c1--> Y1 + Y1 
+ Y1 + Y2 --c2--> Y2 + Y2 
+      Y1 --c3--> 0
 ```
 
 Load package
@@ -34,18 +38,17 @@ library(gillespie)
 
 Define parameters
 ```{r}
-final_time <- 10
-params <- c(c1 = 1.0, c2 = 0.002, c3 = 0.5, c4 = 0.04)
-initial_state <- c(s1 = 10000, s2 = 0, s3 = 0)
+params <- c(c1 = 10, c2 = .01, c3 = 10)
+final_time <- 2
+initial_state <- c(Y1 = 1000, Y2 = 1000)
 ```
 
 Define reactions
 ```{r}
 reactions <- list(
-  reaction("c1 * s1",        c(s1 = +1)),
-  reaction("c2 * s1 * s1",   c(s1 = -2, s2 = +1)),
-  reaction("c3 * s2",        c(s1 = +2, s2 = -1)),
-  reaction("c4 * s2",        c(s2 = -1, s3 = +1))
+  reaction("c1 * Y1", c(Y1 = +1)),
+  reaction("c2 * Y1 * Y2", c(Y1 = -1, Y2 = +1)),
+  reaction("c3 * Y2", c(Y2 = -1))
 )
 ```
 
@@ -58,7 +61,7 @@ out <- ssa(
   params = params,
   final_time = final_time,
   method = ssa_direct()
-)
+) 
 ssa_plot(out)
 ```
 
@@ -70,7 +73,7 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_etl(tau = 0.003)
+  method = ssa_etl(tau = .002)
 ) 
 ssa_plot(out)
 ```
@@ -83,7 +86,7 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl()
+  method = ssa_btl(f = 100)
 ) 
 ssa_plot(out)
 ```

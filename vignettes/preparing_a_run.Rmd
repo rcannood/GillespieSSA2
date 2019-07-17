@@ -1,9 +1,9 @@
 ---
-title: "Preparing an SSA run with gillespie"
+title: "Preparing your first SSA run with gillespie"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Preparing an SSA run with gillespie}
+  %\VignetteIndexEntry{Preparing your first SSA run with gillespie}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
