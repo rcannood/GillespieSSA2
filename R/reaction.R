@@ -94,7 +94,7 @@ compile_reactions <- function(
     assert_that(is(reactions[[j]], "fastgssa::reaction"))
 
     tibble(
-      i = match(names(reac$effect), names(initial_state)),
+      i = match(names(reac$effect), state_ids),
       j = j,
       x = reac$effect
     )
