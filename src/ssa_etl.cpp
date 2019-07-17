@@ -19,13 +19,14 @@ public:
       NumericVector& dstate
   ) {
     int k;
+    int i, j;
 
-    for (int j = 0; j < propensity.size(); j++) {
+    for (j = 0; j < propensity.size(); j++) {
       // determine reaction firing
       k = R::rpois(propensity[j] * tau);
 
       // determine firing effect
-      for (int i = nu_p[j]; i < nu_p[j+1]; i++) {
+      for (i = nu_p[j]; i < nu_p[j+1]; i++) {
         dstate[nu_i[i]] += nu_x[i] * k;
       }
     }

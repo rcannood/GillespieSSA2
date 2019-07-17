@@ -19,15 +19,17 @@ public:
       double* dtime,
       NumericVector& dstate
   ) {
+    int i, j;
+
     // update state
-    for (int j = 0; j < propensity.size(); j++) {
-      for (int i = nu_p[j]; i < nu_p[j+1]; i++) {
+    for (j = 0; j < propensity.size(); j++) {
+      for (i = nu_p[j]; i < nu_p[j+1]; i++) {
         dstate[nu_i[i]] += nu_x[i] * propensity[j] * tau;
       }
     }
 
     // add noise
-    for (int i = 0; i < state.size(); i++) {
+    for (i = 0; i < state.size(); i++) {
       dstate[i] += sqrt(abs(state[i])) * noise_strength * R::rnorm(0.0, tau);
     }
 
