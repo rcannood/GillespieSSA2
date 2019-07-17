@@ -36,6 +36,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat
+Remotes:
+    r-lib/rlang
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
