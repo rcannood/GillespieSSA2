@@ -87,17 +87,3 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-
-Run simulations with the Binomial tau-leap method
-```{r btl}
-set.seed(2)
-out_b <- ssa(
-  initial_state = initial_state,
-  reactions = reactions,
-  params = params,
-  final_time = final_time,
-  method = ssa_bdtl(),
-  sim_name = sim_name
-) 
-autoplot.ssa(out)
-```
