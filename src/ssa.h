@@ -1,5 +1,4 @@
-#ifndef GILLESPIE_SSA_H
-#define GILLESPIE_SSA_H
+#pragma once
 
 #include <Rcpp.h>
 
@@ -24,6 +23,3 @@ public:
       NumericVector& dstate
   );
 } ;
-
-
-#endif

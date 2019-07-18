@@ -157,10 +157,10 @@ List simulate(
     if (simtime_nextcensus <= simtime) {
       simtime_nextcensus += census_interval;
       if (output_nexti == output_time.size()) {
-        output_time = resize(output_time, output_nexti * 2);
-        output_state = resize_rows(output_state, output_nexti * 2);
-        output_propensity = resize_rows(output_propensity, output_nexti * 2);
-        output_buffer = resize_rows(output_buffer, output_nexti * 2);
+        output_time = gillespie::resize_vector(output_time, output_nexti * 2);
+        output_state = gillespie::resize_rows(output_state, output_nexti * 2);
+        output_propensity = gillespie::resize_rows(output_propensity, output_nexti * 2);
+        output_buffer = gillespie::resize_rows(output_buffer, output_nexti * 2);
       }
 
       output_time[output_nexti] = simtime;
@@ -221,10 +221,10 @@ List simulate(
   );
 
   // remove empty output slots
-  output_time = resize(output_time, output_nexti);
-  output_state = resize_rows(output_state, output_nexti);
-  output_propensity = resize_rows(output_propensity, output_nexti);
-  output_buffer = resize_rows(output_buffer, output_nexti);
+  output_time = gillespie::resize_vector(output_time, output_nexti);
+  output_state = gillespie::resize_rows(output_state, output_nexti);
+  output_propensity = gillespie::resize_rows(output_propensity, output_nexti);
+  output_buffer = gillespie::resize_rows(output_buffer, output_nexti);
 
   if (verbose) {
     Rcout << "SSA finished!" << std::endl;

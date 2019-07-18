@@ -1,11 +1,12 @@
-#ifndef GILLESPIE_UTILS_H
-#define GILLESPIE_UTILS_H
+#pragma once
 
 #include <Rcpp.h>
 using namespace Rcpp;
 
+namespace gillespie{
+
 template <typename T>
-T resize(const T& x, int n){
+T resize_vector(const T& x, int n){
   int oldsize = x.size();
   if (n < oldsize) {
     oldsize = n;
@@ -43,4 +44,6 @@ int weighted_sample(const NumericVector& weight) {
   return j;
 }
 
-#endif
+} // namespace gillespie
+
+// #endif
