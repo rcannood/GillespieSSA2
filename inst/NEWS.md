@@ -1,4 +1,4 @@
-# gillespie 0.2.3 (unreleased)
+# gillespie 0.2.3 (17-07-2019)
 
 * MAJOR CHANGE: Remove `nu` and `propensity_functions` from `ssa()`, instead
   expect a list of `reaction()` objects. This function provides a much more

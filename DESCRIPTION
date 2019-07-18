@@ -12,9 +12,9 @@ Authors@R: c(
     )
   )
 Description: A fast, scalable, and versatile framework for simulating large systems with 
-  Gillespie's Stochastic Simulation Algorithm ('SSA'). It is conceptually based on 
-  'GillespieSSA', but rewritten entirely in 'Rcpp' with large scale systems in mind to make
-  it blazingly fast. The 'SSA' methods currently implemented are: Direct, Explicit
+  Gillespie's Stochastic Simulation Algorithm ('SSA'). It is the spiritual successor of 
+  'GillespieSSA', but written entirely in Rcpp with large scale systems in mind, to make
+  it blazingly fast. The SSA methods currently implemented are: Direct, Explicit
   tau-leaping ('ETL'), and the Binomial tau-leaping ('BTL').
 License: GPL (>= 3)
 LazyData: TRUE
@@ -36,8 +36,6 @@ Suggests:
     knitr,
     rmarkdown,
     testthat
-Remotes:
-    r-lib/rlang
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1

@@ -1,9 +1,9 @@
 #' \pkg{gillespie}: Gillespie's Stochastic Simulation Algorithm for impatient people.
 #'
 #' A fast, scalable, and versatile framework for simulating large systems with
-#' Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). It is conceptually based on
-#' \pkg{GillespieSSA}, but rewritten entirely in Rcpp with large scale systems in mind to make
-#' it blazingly fast. The \acronym{SSA} methods currently implemented are: Direct, Explicit
+#' Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). It is the spiritual successor of
+#' \pkg{GillespieSSA}, but written entirely in Rcpp with large scale systems in mind, to make
+#' it blazingly fast. The SSA methods currently implemented are: Direct, Explicit
 #' tau-leaping (\acronym{ETL}), and the Binomial tau-leaping (\acronym{BTL})
 #'
 #' @name gillespie
@@ -54,7 +54,13 @@
 #' @importFrom tibble lst
 #' @importFrom assertthat assert_that
 #' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep discard invoke pmap map2 map2_df set_names imap
-#' @importFrom rlang %|%
+
 NULL
 
+# re-enable this on the next release of rlang
+# @importFrom rlang %|%
 
+# remove this on the next release of rlang
+`%|%` <- function(x, y) {
+  ifelse(is.na(x), y, x)
+}

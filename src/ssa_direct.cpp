@@ -17,20 +17,23 @@ public:
       NumericVector& dstate
   ) {
     // perform weighted sampling
-    double sumtr = sum(propensity);
-    double ran = R::runif(0, sumtr);
+    double max = sum(propensity);
+    double ran = R::runif(0, max);
     int j = 0;
     while (ran > propensity[j]) {
       ran -= propensity[j];
       j++;
     }
 
+    // this would allow for perfect reproducibility in comparison to GillespieSSA
+    // int j = sample(propensity.length(), 1, true, propensity)[0] - 1;
+
     // perform a single reaction
     for (int i = nu_p[j]; i < nu_p[j+1]; i++) {
       dstate[nu_i[i]] = nu_x[i];
     }
 
-    *dtime = -log(R::runif(0, 1)) / sumtr;
+    *dtime = -log(R::runif(0, 1)) / sum(propensity);
   }
 } ;
 

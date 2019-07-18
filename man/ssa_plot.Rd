@@ -4,7 +4,8 @@
 \alias{ssa_plot}
 \title{Simple plotting of ssa output}
 \usage{
-ssa_plot(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE)
+ssa_plot(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE,
+  geom = c("point", "step"))
 }
 \arguments{
 \item{ssa_out}{Data object returned by \code{\link[=ssa]{ssa()}}.}
@@ -14,6 +15,8 @@ ssa_plot(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE)
 \item{propensity}{Whether or not to plot the propensity values.}
 
 \item{buffer}{Whether or not to plot the buffer values.}
+
+\item{geom}{Which geom to use, must be one of \code{"point"}, \code{"step"}.}
 }
 \description{
 Provides basic functionally for simple and quick time series plot of simulation output from \code{\link[=ssa]{ssa()}}.

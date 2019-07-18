@@ -18,7 +18,7 @@
 #' @param reactions A list of reactions, see [reaction()].
 #' @param final_time `[numeric]` The final simulation time.
 #' @param params `[named numeric vector]` Constant parameters to be used in the propensity functions.
-#' @param method `[SSA]`] Which SSA algorithm to use. Must be one of: [ssa_direct()],
+#' @param method `[ssa_method]`] Which SSA algorithm to use. Must be one of: [ssa_direct()],
 #'   [ssa_btl()], or [ssa_etl()].
 #' @param census_interval `[numeric]` The approximate interval between recording the state of the system.
 #'   Setting this parameter to `0` will cause each state to be recorded, and
@@ -32,6 +32,7 @@
 #'   Setting this to `TRUE` will result in a minor sacrifice in accuracy for a minor increase in performance.
 #' @param verbose `[logical]` If `TRUE`, intermediary information pertaining to the simulation will be displayed.
 #' @param console_interval `[numeric]` The approximate interval between intermediary information outputs.
+#' @param sim_name `[character]` An optional name for the simulation.
 #'
 #' @return Returns a list object with the following elements:
 #'
@@ -82,7 +83,8 @@ ssa <- function(
   max_walltime = Inf,
   hardcode_params = FALSE,
   verbose = FALSE,
-  console_interval = 1
+  console_interval = 1,
+  sim_name = NA_character_
 ) {
 
   # check parameters
@@ -108,7 +110,8 @@ ssa <- function(
     is.numeric(max_walltime), length(max_walltime) == 1, max_walltime >= 0,
     is.logical(hardcode_params), length(hardcode_params) == 1,
     is.numeric(console_interval), length(console_interval) == 1, console_interval >= 0,
-    is.logical(verbose), length(verbose) == 1
+    is.logical(verbose), length(verbose) == 1,
+    is.character(sim_name)
   )
 
   # compile propensity functions if this has not been done already
@@ -142,7 +145,8 @@ ssa <- function(
     max_walltime = max_walltime,
     stop_on_neg_state = stop_on_neg_state,
     verbose = verbose,
-    console_interval = console_interval
+    console_interval = console_interval,
+    sim_name = sim_name
   )
 
   # set colnames of objects

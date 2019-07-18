@@ -24,7 +24,8 @@ List simulate(
     const double max_walltime,
     const bool stop_on_neg_state,
     const bool verbose,
-    const double console_interval
+    const double console_interval,
+    const CharacterVector& sim_name
 ) {
   // fetch propensity functions from pointer
   TR_FUN* propensity_funs_ = XPtr<TR_FUN>(propensity_funs);
@@ -156,10 +157,10 @@ List simulate(
     if (simtime_nextcensus <= simtime) {
       simtime_nextcensus += census_interval;
       if (output_nexti == output_time.size()) {
-        output_time = resize(output_time, output_nexti * 2);
-        output_state = resize_rows(output_state, output_nexti * 2);
-        output_propensity = resize_rows(output_propensity, output_nexti * 2);
-        output_buffer = resize_rows(output_buffer, output_nexti * 2);
+        output_time = gillespie::resize_vector(output_time, output_nexti * 2);
+        output_state = gillespie::resize_rows(output_state, output_nexti * 2);
+        output_propensity = gillespie::resize_rows(output_propensity, output_nexti * 2);
+        output_buffer = gillespie::resize_rows(output_buffer, output_nexti * 2);
       }
 
       output_time[output_nexti] = simtime;
@@ -205,6 +206,7 @@ List simulate(
 
   DataFrame stats = DataFrame::create(
     _["method"] = ssa_alg_->name,
+    _["sim_name"] = sim_name,
     _["stop_simtime"] = simtime > final_time,
     _["stop_extinction"] = extinction,
     _["stop_negative_state"] = negative_state,
@@ -219,10 +221,10 @@ List simulate(
   );
 
   // remove empty output slots
-  output_time = resize(output_time, output_nexti);
-  output_state = resize_rows(output_state, output_nexti);
-  output_propensity = resize_rows(output_propensity, output_nexti);
-  output_buffer = resize_rows(output_buffer, output_nexti);
+  output_time = gillespie::resize_vector(output_time, output_nexti);
+  output_state = gillespie::resize_rows(output_state, output_nexti);
+  output_propensity = gillespie::resize_rows(output_propensity, output_nexti);
+  output_buffer = gillespie::resize_rows(output_buffer, output_nexti);
 
   if (verbose) {
     Rcout << "SSA finished!" << std::endl;
@@ -233,6 +235,7 @@ List simulate(
     _["state"] = output_state,
     _["propensity"] = output_propensity,
     _["buffer"] = output_buffer,
-    _["stats"] = stats
+    _["stats"] = stats,
+    _["sim_name"] = sim_name
   );
 }
