@@ -1,4 +1,4 @@
-Pearl-Verhulst Logistic growth model (Kot, 2001)
+Pearl-Verhulst Logistic Growth model (Kot, 2001)
 ================
 
 <!-- github markdown built using 
@@ -21,15 +21,11 @@ This model consists of two reaction channels,
 where `d'=d+(b-d)N/K`. The propensity functions are `a_1=bN` and
 `a_2=d'N`.
 
-Load package
-
-``` r
-library(gillespie)
-```
-
 Define parameters
 
 ``` r
+library(gillespie)
+sim_name <- "Pearl-Verhulst Logistic Growth model"
 params <- c(b = 2, d = 1, K = 1000)
 final_time <- 10
 initial_state <- c(N = 500)
@@ -53,7 +49,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct()
+  method = ssa_direct(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -69,7 +66,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_etl(tau = .03)
+  method = ssa_etl(tau = .03),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -85,7 +83,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl(f = 5)
+  method = ssa_btl(f = 5),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```

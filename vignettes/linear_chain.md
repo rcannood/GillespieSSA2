@@ -15,15 +15,11 @@ as follows:
   S_M --cM--> S_(M+1)
 ```
 
-Load package
-
-``` r
-library(gillespie)
-```
-
 Define parameters
 
 ``` r
+library(gillespie)
+sim_name <- "Linear Chain System"
 M <- 50
 params <- c(c = 1)
 final_time <- 5
@@ -50,7 +46,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct()
+  method = ssa_direct(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -66,7 +63,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_etl(tau = .1)
+  method = ssa_etl(tau = .1),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -82,7 +80,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl(f = 50)
+  method = ssa_btl(f = 50),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```

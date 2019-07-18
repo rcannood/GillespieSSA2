@@ -8,15 +8,11 @@ rmarkdown::render("vignettes/epi_chain.Rmd", output_format = "github_document")
 The SIRS epidemiological metapopulation model is defined in Pineda-Krch
 (2008).
 
-Load package
-
-``` r
-library(gillespie)
-```
-
 Define parameters
 
 ``` r
+library(gillespie)
+sim_name <- "SIRS metapopulation model"
 patchPopSize <- 500                    # Patch size
 U <- 20                                # Number of patches
 final_time <- 50                       # Final time
@@ -95,6 +91,7 @@ out <- ssa(
   params = params,
   final_time = final_time,
   method = ssa_direct(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -111,6 +108,7 @@ out <- ssa(
   params = params,
   final_time = final_time,
   method = ssa_etl(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -127,6 +125,7 @@ out <- ssa(
   params = params,
   final_time = final_time,
   method = ssa_btl(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```

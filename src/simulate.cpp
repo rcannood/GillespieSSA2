@@ -24,7 +24,8 @@ List simulate(
     const double max_walltime,
     const bool stop_on_neg_state,
     const bool verbose,
-    const double console_interval
+    const double console_interval,
+    const CharacterVector& sim_name
 ) {
   // fetch propensity functions from pointer
   TR_FUN* propensity_funs_ = XPtr<TR_FUN>(propensity_funs);
@@ -205,6 +206,7 @@ List simulate(
 
   DataFrame stats = DataFrame::create(
     _["method"] = ssa_alg_->name,
+    _["sim_name"] = sim_name,
     _["stop_simtime"] = simtime > final_time,
     _["stop_extinction"] = extinction,
     _["stop_negative_state"] = negative_state,
@@ -233,6 +235,7 @@ List simulate(
     _["state"] = output_state,
     _["propensity"] = output_propensity,
     _["buffer"] = output_buffer,
-    _["stats"] = stats
+    _["stats"] = stats,
+    _["sim_name"] = sim_name
   );
 }

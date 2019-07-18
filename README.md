@@ -35,19 +35,19 @@ The following example models are available:
     package="gillespie")`
   - [Linear Chain System (Cao et al., 2004)](vignettes/linear_chain.md):
     `vignette("linear_chain", package="gillespie")`
-  - [Pearl-Verhulst Logistic growth model (Kot,
+  - [Pearl-Verhulst Logistic Growth model (Kot,
     2001)](vignettes/logistic_growth.md): `vignette("logistic_growth",
     package="gillespie")`
-  - [Lotka predator-prey model (Gillespie, 1977; Kot,
+  - [Lotka Predator-Prey model (Gillespie, 1977; Kot,
     2001)](vignettes/lotka_predator_prey.md):
     `vignette("lotka_predator_prey", package="gillespie")`
   - [Preparing your first SSA run with
     gillespie](vignettes/preparing_a_run.md):
     `vignette("preparing_a_run", package="gillespie")`
-  - [Radioactive decay model (Gillespie,
+  - [Radioactive Decay model (Gillespie,
     1977)](vignettes/radioactive_decay.md):
     `vignette("radioactive_decay", package="gillespie")`
-  - [Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al.,
+  - [Rosenzweig-MacArthur Predator-Prey model (Pineda-Krch et al.,
     2007)](vignettes/rm_predator_prey.md): `vignette("rm_predator_prey",
     package="gillespie")`
   - [Kermack-McKendrick SIR model (Brown & Rothery,

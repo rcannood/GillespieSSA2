@@ -17,15 +17,11 @@ rates,
     transmission: beta
     recovery:     gamma
 
-Load package
-
-``` r
-library(gillespie)
-```
-
 Define parameters
 
 ``` r
+library(gillespie)
+sim_name <- "Kermack-McKendrick SIR model"
 params <- c(beta = .001, gamma = .1)
 final_time <- 100
 initial_state <- c(S = 500, I = 1, R = 0)
@@ -49,7 +45,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct()
+  method = ssa_direct(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -65,7 +62,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_etl()
+  method = ssa_etl(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -81,7 +79,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl()
+  method = ssa_btl(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```

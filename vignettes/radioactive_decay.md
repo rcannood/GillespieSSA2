@@ -1,4 +1,4 @@
-Radioactive decay model (Gillespie, 1977)
+Radioactive Decay model (Gillespie, 1977)
 ================
 
 <!-- github markdown built using 
@@ -10,15 +10,11 @@ It consists of a single species and single reaction channels,
 
     X --c--> 0
 
-Load package
-
-``` r
-library(gillespie)
-```
-
 Define parameters
 
 ``` r
+library(gillespie)
+sim_name <- "Radioactive Decay model"
 params <- c(k = 0.5)
 final_time <- 20
 initial_state <- c(N = 1000)
@@ -41,7 +37,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct()
+  method = ssa_direct(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -57,7 +54,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_etl(tau = .003)
+  method = ssa_etl(tau = .003),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -73,7 +71,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl()
+  method = ssa_btl(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```

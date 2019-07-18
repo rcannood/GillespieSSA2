@@ -61,7 +61,8 @@ out <-
     method = ssa_direct(),
     final_time = 5,
     census_interval = .001,
-    verbose = TRUE
+    verbose = TRUE,
+    sim_name = "My first SSA run!"
   )
 ```
 

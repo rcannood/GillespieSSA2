@@ -1,4 +1,4 @@
-Lotka predator-prey model (Gillespie, 1977; Kot, 2001)
+Lotka Predator-Prey model (Gillespie, 1977; Kot, 2001)
 ================
 
 <!-- github markdown built using 
@@ -18,15 +18,11 @@ consisting of the three reaction channels,
       Y1 --c3--> 0
 ```
 
-Load package
-
-``` r
-library(gillespie)
-```
-
 Define parameters
 
 ``` r
+library(gillespie)
+sim_name <- "Lotka Predator-Prey model"
 params <- c(c1 = 10, c2 = .01, c3 = 10)
 final_time <- 2
 initial_state <- c(Y1 = 1000, Y2 = 1000)
@@ -51,7 +47,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct()
+  method = ssa_direct(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -67,7 +64,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_etl(tau = .002)
+  method = ssa_etl(tau = .002),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -83,7 +81,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl(f = 100)
+  method = ssa_btl(f = 100),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```

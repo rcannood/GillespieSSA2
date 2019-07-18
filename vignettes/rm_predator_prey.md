@@ -1,4 +1,4 @@
-Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al., 2007)
+Rosenzweig-MacArthur Predator-Prey model (Pineda-Krch et al., 2007)
 ================
 
 <!-- github markdown built using 
@@ -27,15 +27,11 @@ Propensity functions:
     a4 = c*alpha/(1+wN) * N * P
     a5 = g * P
 
-Load package
-
-``` r
-library(gillespie)
-```
-
 Define parameters
 
 ``` r
+library(gillespie)
+sim_name <- "Rosenzweig-MacArthur Predator-Prey model"
 params <- c(
   b = 2, 
   d = 1,
@@ -70,7 +66,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct()
+  method = ssa_direct(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -86,7 +83,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_etl(tau = .01)
+  method = ssa_etl(tau = .01),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
@@ -102,7 +100,8 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl()
+  method = ssa_btl(),
+  sim_name = sim_name
 ) 
 ssa_plot(out)
 ```
