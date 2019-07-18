@@ -83,7 +83,7 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl(f = 5),
+  method = ssa_btl(mean_firings = 5),
   sim_name = sim_name
 ) 
 autoplot.ssa(out)

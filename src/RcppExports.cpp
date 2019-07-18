@@ -45,14 +45,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// make_ssa_btl
-SEXP make_ssa_btl(double f);
-RcppExport SEXP _gillespie_make_ssa_btl(SEXP fSEXP) {
+// test_ssa_step
+List test_ssa_step(SEXP ssa_alg, const NumericVector& state, const NumericVector& propensity, const IntegerVector& nu_i, const IntegerVector& nu_p, const IntegerVector& nu_x);
+RcppExport SEXP _gillespie_test_ssa_step(SEXP ssa_algSEXP, SEXP stateSEXP, SEXP propensitySEXP, SEXP nu_iSEXP, SEXP nu_pSEXP, SEXP nu_xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type f(fSEXP);
-    rcpp_result_gen = Rcpp::wrap(make_ssa_btl(f));
+    Rcpp::traits::input_parameter< SEXP >::type ssa_alg(ssa_algSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type state(stateSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type propensity(propensitySEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type nu_i(nu_iSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type nu_p(nu_pSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type nu_x(nu_xSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_ssa_step(ssa_alg, state, propensity, nu_i, nu_p, nu_x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// make_ssa_btl
+SEXP make_ssa_btl(double mean_firings);
+RcppExport SEXP _gillespie_make_ssa_btl(SEXP mean_firingsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type mean_firings(mean_firingsSEXP);
+    rcpp_result_gen = Rcpp::wrap(make_ssa_btl(mean_firings));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -81,6 +97,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_gillespie_make_ode_em", (DL_FUNC) &_gillespie_make_ode_em, 2},
     {"_gillespie_simulate", (DL_FUNC) &_gillespie_simulate, 18},
+    {"_gillespie_test_ssa_step", (DL_FUNC) &_gillespie_test_ssa_step, 6},
     {"_gillespie_make_ssa_btl", (DL_FUNC) &_gillespie_make_ssa_btl, 1},
     {"_gillespie_make_ssa_direct", (DL_FUNC) &_gillespie_make_ssa_direct, 0},
     {"_gillespie_make_ssa_etl", (DL_FUNC) &_gillespie_make_ssa_etl, 1},

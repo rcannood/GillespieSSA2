@@ -11,11 +11,8 @@ The Kermack-McKendrick SIR model is defined as
     dI/dt = beta*N*S - gamma*I
     dR/dt = gamma*I
 
-This model consists of two reactions with the following per capita
-rates,
-
-    transmission: beta
-    recovery:     gamma
+Note that simulations of this model can generate in all zero propensity,
+if the first reaction is a recovery of the single ‘Infected’ individual.
 
 Define parameters
 
@@ -31,8 +28,8 @@ Define reactions
 
 ``` r
 reactions <- list(
-  reaction("beta * S * I", c(S = -1, I = +1)),
-  reaction("gamma * I", c(I = -1, R = +1))
+  reaction("beta * S * I", c(S = -1, I = +1), name = "transmission"),
+  reaction("gamma * I", c(I = -1, R = +1), name = "recovery")
 )
 ```
 
@@ -51,7 +48,7 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="sir_files/figure-gfm/direct-1.png" width="100%" />
+![](sir_files/figure-gfm/direct-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
@@ -68,12 +65,12 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="sir_files/figure-gfm/etl-1.png" width="100%" />
+![](sir_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulations with the Binomial tau-leap method
 
 ``` r
-set.seed(1)
+set.seed(2)
 out <- ssa(
   initial_state = initial_state,
   reactions = reactions,
@@ -85,4 +82,4 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="sir_files/figure-gfm/btl-1.png" width="100%" />
+![](sir_files/figure-gfm/btl-1.png)<!-- -->

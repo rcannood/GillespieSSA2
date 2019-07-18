@@ -303,3 +303,25 @@ List simulate(
     _["sim_name"] = sim_name
   );
 }
+
+
+// [[Rcpp::export]]
+List test_ssa_step(
+    SEXP ssa_alg,
+    const NumericVector& state,
+    const NumericVector& propensity,
+    const IntegerVector& nu_i,
+    const IntegerVector& nu_p,
+    const IntegerVector& nu_x
+) {
+  SSA *ssa_alg_ = XPtr<SSA>(ssa_alg);
+  double dtime = 0;
+  NumericVector dstate(state.size());
+  NumericVector firings(propensity.size());
+  ssa_alg_->step(state, propensity, nu_i, nu_p, nu_x, &dtime, dstate, firings);
+  return List::create(
+    _["dtime"] = dtime,
+    _["dstate"] = dstate,
+    _["firings"] = firings
+  );
+}

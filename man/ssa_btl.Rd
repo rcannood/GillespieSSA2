@@ -4,10 +4,12 @@
 \alias{ssa_btl}
 \title{Binomial tau-leap method (BTL)}
 \usage{
-ssa_btl(f = 10)
+ssa_btl(mean_firings = 10)
 }
 \arguments{
-\item{f}{coarse-graining factor (see page 4 in Chatterjee et al. 2005).}
+\item{mean_firings}{A coarse-graining factor of how many firings will occur at each iteration on average.
+Depending on the propensity functions, a value for \code{mean_firings} will result in warnings generated
+and a loss of accuracy.}
 }
 \value{
 an object of to be used by \code{\link[=ssa]{ssa()}}.

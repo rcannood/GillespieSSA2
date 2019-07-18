@@ -25,11 +25,8 @@ dI/dt = beta*N*S - gamma*I
 dR/dt = gamma*I
 ```
 
-This model consists of two reactions with the following per capita rates,
-```
-transmission: beta
-recovery:     gamma
-```
+Note that simulations of this model can generate in all zero propensity,
+if the first reaction is a recovery of the single 'Infected' individual.
 
 Define parameters
 ```{r}
@@ -43,8 +40,8 @@ initial_state <- c(S = 500, I = 1, R = 0)
 Define reactions
 ```{r}
 reactions <- list(
-  reaction("beta * S * I", c(S = -1, I = +1)),
-  reaction("gamma * I", c(I = -1, R = +1))
+  reaction("beta * S * I", c(S = -1, I = +1), name = "transmission"),
+  reaction("gamma * I", c(I = -1, R = +1), name = "recovery")
 )
 ```
 
@@ -78,13 +75,28 @@ autoplot.ssa(out)
 
 Run simulations with the Binomial tau-leap method
 ```{r btl}
-set.seed(1)
+set.seed(2)
 out <- ssa(
   initial_state = initial_state,
   reactions = reactions,
   params = params,
   final_time = final_time,
   method = ssa_btl(),
+  sim_name = sim_name
+) 
+autoplot.ssa(out)
+```
+
+
+Run simulations with the Binomial tau-leap method
+```{r btl}
+set.seed(2)
+out_b <- ssa(
+  initial_state = initial_state,
+  reactions = reactions,
+  params = params,
+  final_time = final_time,
+  method = ssa_bdtl(),
   sim_name = sim_name
 ) 
 autoplot.ssa(out)

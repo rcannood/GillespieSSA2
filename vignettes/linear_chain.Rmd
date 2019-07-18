@@ -36,7 +36,10 @@ params <- c(c = 1)
 final_time <- 5
 initial_state <- c(1000, rep(0, M)) 
 names(initial_state) <- paste0("x", seq_len(M+1))
+```
 
+Define the reactions
+```{r}
 reactions <- lapply(
   seq_len(M),
   function(i) {
@@ -84,7 +87,7 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl(f = 50),
+  method = ssa_btl(mean_firings = 50),
   sim_name = sim_name
 ) 
 autoplot.ssa(out)

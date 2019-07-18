@@ -9,8 +9,12 @@ simulate <- function(propensity_funs, num_functions, ssa_alg, initial_state, par
     .Call('_gillespie_simulate', PACKAGE = 'gillespie', propensity_funs, num_functions, ssa_alg, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, buffer_size, sim_name, max_walltime, store_propensity, store_firings, store_buffer, verbose, console_interval)
 }
 
-make_ssa_btl <- function(f) {
-    .Call('_gillespie_make_ssa_btl', PACKAGE = 'gillespie', f)
+test_ssa_step <- function(ssa_alg, state, propensity, nu_i, nu_p, nu_x) {
+    .Call('_gillespie_test_ssa_step', PACKAGE = 'gillespie', ssa_alg, state, propensity, nu_i, nu_p, nu_x)
+}
+
+make_ssa_btl <- function(mean_firings) {
+    .Call('_gillespie_make_ssa_btl', PACKAGE = 'gillespie', mean_firings)
 }
 
 make_ssa_direct <- function() {
