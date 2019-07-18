@@ -7,7 +7,8 @@
 ssa(initial_state, reactions, final_time, params = NULL,
   method = ssa_direct(), census_interval = 0,
   stop_on_neg_state = TRUE, max_walltime = Inf,
-  hardcode_params = FALSE, verbose = FALSE, console_interval = 1)
+  hardcode_params = FALSE, verbose = FALSE, console_interval = 1,
+  sim_name = NA_character_)
 }
 \arguments{
 \item{initial_state}{\code{[named numeric vector]} The initial state to start the simulation with.}
@@ -18,7 +19,7 @@ ssa(initial_state, reactions, final_time, params = NULL,
 
 \item{params}{\code{[named numeric vector]} Constant parameters to be used in the propensity functions.}
 
-\item{method}{\code{[SSA]}] Which SSA algorithm to use. Must be one of: \code{\link[=ssa_direct]{ssa_direct()}},
+\item{method}{\code{[ssa_method]}] Which SSA algorithm to use. Must be one of: \code{\link[=ssa_direct]{ssa_direct()}},
 \code{\link[=ssa_btl]{ssa_btl()}}, or \code{\link[=ssa_etl]{ssa_etl()}}.}
 
 \item{census_interval}{\code{[numeric]} The approximate interval between recording the state of the system.
@@ -38,6 +39,8 @@ Setting this to \code{TRUE} will result in a minor sacrifice in accuracy for a m
 \item{verbose}{\code{[logical]} If \code{TRUE}, intermediary information pertaining to the simulation will be displayed.}
 
 \item{console_interval}{\code{[numeric]} The approximate interval between intermediary information outputs.}
+
+\item{sim_name}{\code{[character]} An optional name for the simulation.}
 }
 \value{
 Returns a list object with the following elements:
