@@ -42,7 +42,7 @@ initial_state <- c(s1 = 10000, s2 = 0, s3 = 0)
 Define reactions
 ```{r}
 reactions <- list(
-  reaction("c1 * s1",        c(s1 = +1)),
+  reaction("c1 * s1",        c(s1 = -1)),
   reaction("c2 * s1 * s1",   c(s1 = -2, s2 = +1)),
   reaction("c3 * s2",        c(s1 = +2, s2 = -1)),
   reaction("c4 * s2",        c(s2 = -1, s3 = +1))

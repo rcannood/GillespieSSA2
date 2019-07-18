@@ -33,7 +33,7 @@ Define reactions
 
 ``` r
 reactions <- list(
-  reaction("c1 * s1",        c(s1 = +1)),
+  reaction("c1 * s1",        c(s1 = -1)),
   reaction("c2 * s1 * s1",   c(s1 = -2, s2 = +1)),
   reaction("c3 * s2",        c(s1 = +2, s2 = -1)),
   reaction("c4 * s2",        c(s2 = -1, s3 = +1))
@@ -54,7 +54,9 @@ out <- ssa(
 ssa_plot(out)
 ```
 
-<img src="decaying_dimer_files/figure-gfm/direct-1.png" width="100%" />
+    ## Loading required namespace: ggplot2
+
+![](decaying_dimer_files/figure-gfm/direct-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
@@ -70,7 +72,7 @@ out <- ssa(
 ssa_plot(out)
 ```
 
-<img src="decaying_dimer_files/figure-gfm/etl-1.png" width="100%" />
+![](decaying_dimer_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulations with the Binomial tau-leap method
 
@@ -86,4 +88,4 @@ out <- ssa(
 ssa_plot(out)
 ```
 
-<img src="decaying_dimer_files/figure-gfm/btl-1.png" width="100%" />
+![](decaying_dimer_files/figure-gfm/btl-1.png)<!-- -->
