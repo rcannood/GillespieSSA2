@@ -70,7 +70,7 @@
 #' @importFrom dynutils is_sparse
 #' @importFrom tibble tibble
 #' @importFrom Matrix Matrix
-#' @importFrom purrr is_scalar_numeric is_scalar_logical is_scalar_integer is_scalar_character
+#' @importFrom purrr is_scalar_double is_scalar_logical is_scalar_integer is_scalar_character
 ssa <- function(
   initial_state,
   reactions,
