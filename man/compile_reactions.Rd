@@ -16,7 +16,8 @@ compile_reactions(reactions, state_ids, params, buffer_ids = NULL,
 
 \item{buffer_ids}{\code{[character]} The order of any buffer calculations that are made as part of the propensity functions.}
 
-\item{hardcode_params}{\code{[logical]} Whether or not to hard code the parameters into the source code.}
+\item{hardcode_params}{\code{[logical]} Whether or not to hardcode the values of \code{params} in the compilation of the propensity functions.
+Setting this to \code{TRUE} will result in a minor sacrifice in accuracy for a minor increase in performance.}
 
 \item{write_rcpp}{\code{[character]} If not \code{NULL}, then the source code of the propensity functions will be written
 to this file location before compilation.}

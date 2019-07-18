@@ -64,7 +64,8 @@ reaction <- function(
 #' @param state_ids `[character]` The names of the states in the correct order.
 #' @param params `[named numeric]` Constants that are used in the propensity functions.
 #' @param buffer_ids `[character]` The order of any buffer calculations that are made as part of the propensity functions.
-#' @param hardcode_params `[logical]` Whether or not to hard code the parameters into the source code.
+#' @param hardcode_params `[logical]` Whether or not to hardcode the values of `params` in the compilation of the propensity functions.
+#'   Setting this to `TRUE` will result in a minor sacrifice in accuracy for a minor increase in performance.
 #' @param write_rcpp `[character]` If not `NULL`, then the source code of the propensity functions will be written
 #'   to this file location before compilation.
 #' @param fun_by `[integer]` Combine this number of propensity functions into one function.
