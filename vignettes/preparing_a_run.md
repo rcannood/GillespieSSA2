@@ -67,7 +67,7 @@ print(out$stats)
 ```
 
 ``` r
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
 <img src="preparing_a_run_files/figure-gfm/unnamed-chunk-5-1.png" width="100%" />

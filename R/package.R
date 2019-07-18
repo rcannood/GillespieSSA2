@@ -41,7 +41,7 @@
 #' @section Contents of this package:
 #'
 #' * [ssa()]: The main entry point for running an \acronym{SSA} simulation.
-#' * [ssa_plot()]: A standard visualisation for generating an overview plot fo the output.
+#' * [autoplot.ssa()]: A standard visualisation for generating an overview plot fo the output.
 #' * [ssa_direct()], [ssa_etl()], [ssa_btl()]: Different \acronym{SSA} algorithms.
 #' * [ode_em()]: An \acronym{ODE} algorithm.
 #' * [compile_reactions()]: A function for precompiling the reactions.

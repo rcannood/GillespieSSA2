@@ -91,7 +91,7 @@ out <-
     census_interval = .001,
     verbose = TRUE
   )
-ssa_plot(out)
+autoplot.ssa(out)
 
 }
 \seealso{

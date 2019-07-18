@@ -52,7 +52,7 @@ out <- ssa(
   method = ssa_direct(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
 <img src="logistic_growth_files/figure-gfm/direct-1.png" width="100%" />
@@ -69,7 +69,7 @@ out <- ssa(
   method = ssa_etl(tau = .03),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
 <img src="logistic_growth_files/figure-gfm/etl-1.png" width="100%" />
@@ -86,7 +86,7 @@ out <- ssa(
   method = ssa_btl(f = 5),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
 <img src="logistic_growth_files/figure-gfm/btl-1.png" width="100%" />

@@ -71,5 +71,5 @@ print(out$stats)
 ```
 
 ```{r fig.width=7, fig.height=5}
-ssa_plot(out)
+autoplot.ssa(out)
 ```

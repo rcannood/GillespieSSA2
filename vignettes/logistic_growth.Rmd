@@ -61,7 +61,7 @@ out <- ssa(
   method = ssa_direct(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
 Run simulations with the Explict tau-leap method
@@ -75,7 +75,7 @@ out <- ssa(
   method = ssa_etl(tau = .03),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
 Run simulations with the Binomial tau-leap method
@@ -89,5 +89,5 @@ out <- ssa(
   method = ssa_btl(f = 5),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```

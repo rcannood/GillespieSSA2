@@ -49,7 +49,7 @@ out <- ssa(
   method = ssa_direct(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
 <img src="linear_chain_files/figure-gfm/direct-1.png" width="100%" />
@@ -66,7 +66,7 @@ out <- ssa(
   method = ssa_etl(tau = .1),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
 <img src="linear_chain_files/figure-gfm/etl-1.png" width="100%" />
@@ -83,7 +83,7 @@ out <- ssa(
   method = ssa_btl(f = 50),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
 <img src="linear_chain_files/figure-gfm/btl-1.png" width="100%" />
