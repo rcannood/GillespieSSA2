@@ -7,7 +7,8 @@
 ssa(initial_state, reactions, final_time, params = NULL,
   method = ssa_direct(), census_interval = 0,
   stop_on_neg_state = TRUE, max_walltime = Inf,
-  hardcode_params = FALSE, verbose = FALSE, console_interval = 1,
+  store_propensity = FALSE, store_firings = FALSE,
+  store_buffer = FALSE, verbose = FALSE, console_interval = 1,
   sim_name = NA_character_)
 }
 \arguments{
@@ -33,8 +34,11 @@ method.}
 \item{max_walltime}{\code{[numeric]} The maximum duration (in seconds) that the
 simulation is allowed to run for before terminated.}
 
-\item{hardcode_params}{\code{[logical]} Whether or not to hardcode the values of \code{params} in the compilation of the \code{propensity_funs}.
-Setting this to \code{TRUE} will result in a minor sacrifice in accuracy for a minor increase in performance.}
+\item{store_propensity}{\code{[logical]} Whether or not to store the propensity values at each census.}
+
+\item{store_firings}{\code{[logical]} Whether or not to store number of firings of each reaction between censuses.}
+
+\item{store_buffer}{\code{[logical]} Whether or not to store the buffer at each census.}
 
 \item{verbose}{\code{[logical]} If \code{TRUE}, intermediary information pertaining to the simulation will be displayed.}
 
