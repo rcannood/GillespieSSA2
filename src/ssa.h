@@ -1,5 +1,5 @@
-#ifndef DYNGEN_SSA_H
-#define DYNGEN_SSA_H
+#ifndef GILLESPIE_SSA_H
+#define GILLESPIE_SSA_H
 
 #include <Rcpp.h>
 

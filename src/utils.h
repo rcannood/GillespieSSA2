@@ -1,5 +1,5 @@
-#ifndef DYNGEN_UTILS_H
-#define DYNGEN_UTILS_H
+#ifndef GILLESPIE_UTILS_H
+#define GILLESPIE_UTILS_H
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -41,26 +41,6 @@ int weighted_sample(const NumericVector& weight) {
     j++;
   }
   return j;
-}
-
-void fill_nu_vectors(
-    const IntegerMatrix& nu,
-    IntegerVector& nu_row,
-    IntegerVector& nu_effect,
-    bool* nu_single
-) {
-  for (int j = 0; j < nu.ncol() && *nu_single; j++) {
-    for (int i = 0; i < nu.nrow(); i++) {
-      if (nu(i, j) != 0) {
-        if (nu_effect[j] == 0) {
-          nu_effect[j] = nu(i, j);
-          nu_row[j] = i;
-        } else {
-          *nu_single = false;
-        }
-      }
-    }
-  }
 }
 
 #endif
