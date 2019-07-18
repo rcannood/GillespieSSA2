@@ -16,7 +16,8 @@ public:
       const IntegerVector& nu_p,
       const IntegerVector& nu_x,
       double* dtime,
-      NumericVector& dstate
+      NumericVector& dstate,
+      NumericVector& firings
   ) {
     int k;
     int i, j;
@@ -24,6 +25,8 @@ public:
     for (j = 0; j < propensity.size(); j++) {
       // determine reaction firing
       k = R::rpois(propensity[j] * tau);
+
+      firings[j] += k;
 
       // determine firing effect
       for (i = nu_p[j]; i < nu_p[j+1]; i++) {

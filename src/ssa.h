@@ -20,6 +20,7 @@ public:
       const IntegerVector& nu_p,
       const IntegerVector& nu_x,
       double* dtime,
-      NumericVector& dstate
+      NumericVector& dstate,
+      NumericVector& firings
   );
 } ;

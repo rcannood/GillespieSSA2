@@ -14,7 +14,8 @@ void SSA::step(
     const IntegerVector& nu_p,
     const IntegerVector& nu_x,
     double* dtime,
-    NumericVector& dstate
+    NumericVector& dstate,
+    NumericVector& firings
 ) {
   stop("step() should have been overridden but wasn't!");
 }

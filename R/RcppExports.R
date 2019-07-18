@@ -5,8 +5,8 @@ make_ode_em <- function(tau, noise_strength) {
     .Call('_gillespie_make_ode_em', PACKAGE = 'gillespie', tau, noise_strength)
 }
 
-simulate <- function(propensity_funs, num_functions, ssa_alg, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, buffer_size, max_walltime, stop_on_neg_state, verbose, console_interval, sim_name) {
-    .Call('_gillespie_simulate', PACKAGE = 'gillespie', propensity_funs, num_functions, ssa_alg, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, buffer_size, max_walltime, stop_on_neg_state, verbose, console_interval, sim_name)
+simulate <- function(propensity_funs, num_functions, ssa_alg, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, buffer_size, sim_name, max_walltime, store_propensity, store_firings, store_buffer, verbose, console_interval) {
+    .Call('_gillespie_simulate', PACKAGE = 'gillespie', propensity_funs, num_functions, ssa_alg, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, buffer_size, sim_name, max_walltime, store_propensity, store_firings, store_buffer, verbose, console_interval)
 }
 
 make_ssa_btl <- function(f) {

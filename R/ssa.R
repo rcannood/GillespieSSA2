@@ -23,13 +23,11 @@
 #' @param census_interval `[numeric]` The approximate interval between recording the state of the system.
 #'   Setting this parameter to `0` will cause each state to be recorded, and
 #'   to `Inf` will cause only the end state to be recorded.
-#' @param stop_on_neg_state `[logical]` Whether or not to stop the simulation when
-#'   the a negative value in the state has occured. This can occur, for instance, in the [ssa_etl()]
-#'   method.
 #' @param max_walltime `[numeric]` The maximum duration (in seconds) that the
 #'   simulation is allowed to run for before terminated.
-#' @param hardcode_params `[logical]` Whether or not to hardcode the values of `params` in the compilation of the `propensity_funs`.
-#'   Setting this to `TRUE` will result in a minor sacrifice in accuracy for a minor increase in performance.
+#' @param store_propensity `[logical]` Whether or not to store the propensity values at each census.
+#' @param store_firings `[logical]` Whether or not to store number of firings of each reaction between censuses.
+#' @param store_buffer `[logical]` Whether or not to store the buffer at each census.
 #' @param verbose `[logical]` If `TRUE`, intermediary information pertaining to the simulation will be displayed.
 #' @param console_interval `[numeric]` The approximate interval between intermediary information outputs.
 #' @param sim_name `[character]` An optional name for the simulation.
@@ -64,7 +62,7 @@
 #'     census_interval = .001,
 #'     verbose = TRUE
 #'   )
-#' ssa_plot(out)
+#' autoplot.ssa(out)
 #'
 #' @export
 #'
@@ -72,6 +70,7 @@
 #' @importFrom dynutils is_sparse
 #' @importFrom tibble tibble
 #' @importFrom Matrix Matrix
+#' @importFrom purrr is_scalar_numeric is_scalar_logical is_scalar_integer is_scalar_character
 ssa <- function(
   initial_state,
   reactions,
@@ -79,9 +78,10 @@ ssa <- function(
   params = NULL,
   method = ssa_direct(),
   census_interval = 0,
-  stop_on_neg_state = TRUE,
   max_walltime = Inf,
-  hardcode_params = FALSE,
+  store_propensity = FALSE,
+  store_firings = FALSE,
+  store_buffer = FALSE,
   verbose = FALSE,
   console_interval = 1,
   sim_name = NA_character_
@@ -104,14 +104,15 @@ ssa <- function(
     is(method, "gillespie::ssa_method"),
 
     # vector arguments
-    is.numeric(final_time), length(final_time) == 1, final_time >= 0,
-    is.numeric(census_interval), length(census_interval) == 1, census_interval >= 0,
-    is.logical(stop_on_neg_state), length(stop_on_neg_state) == 1,
-    is.numeric(max_walltime), length(max_walltime) == 1, max_walltime >= 0,
-    is.logical(hardcode_params), length(hardcode_params) == 1,
-    is.numeric(console_interval), length(console_interval) == 1, console_interval >= 0,
-    is.logical(verbose), length(verbose) == 1,
-    is.character(sim_name)
+    is_scalar_double(final_time), final_time >= 0,
+    is_scalar_double(census_interval), census_interval >= 0,
+    is_scalar_double(max_walltime), max_walltime >= 0,
+    is_scalar_double(console_interval), console_interval >= 0,
+    is_scalar_logical(store_propensity),
+    is_scalar_logical(store_firings),
+    is_scalar_logical(store_buffer),
+    is_scalar_logical(verbose),
+    is_scalar_character(sim_name)
   )
 
   # compile propensity functions if this has not been done already
@@ -120,8 +121,7 @@ ssa <- function(
       compile_reactions(
         reactions = reactions,
         state_ids = names(initial_state),
-        params = params,
-        hardcode_params = hardcode_params
+        params = params
       )
     } else {
       reactions
@@ -142,17 +142,28 @@ ssa <- function(
     final_time = final_time,
     census_interval = census_interval,
     buffer_size = compiled_reactions$buffer_size,
+    sim_name = sim_name,
     max_walltime = max_walltime,
-    stop_on_neg_state = stop_on_neg_state,
+    store_propensity = store_propensity,
+    store_buffer = store_buffer,
+    store_firings = store_firings,
     verbose = verbose,
-    console_interval = console_interval,
-    sim_name = sim_name
+    console_interval = console_interval
   )
 
   # set colnames of objects
   colnames(output$state) <- names(initial_state)
-  colnames(output$propensity) <- compiled_reactions$reaction_ids
-  colnames(output$buffer) <- compiled_reactions$buffer_ids
+  if (store_propensity) {
+    colnames(output$propensity) <- compiled_reactions$reaction_ids
+  }
+  if (store_buffer) {
+    colnames(output$buffer) <- compiled_reactions$buffer_ids
+  }
+  if (store_firings) {
+    colnames(output$firings) <- compiled_reactions$reaction_ids
+  }
+
+  class(output) <- c("ssa", "list")
 
   output
 }

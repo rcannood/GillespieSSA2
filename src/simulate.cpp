@@ -21,12 +21,17 @@ List simulate(
     const double final_time,
     const double census_interval,
     const int buffer_size,
+    const CharacterVector& sim_name,
     const double max_walltime,
-    const bool stop_on_neg_state,
+    const bool store_propensity,
+    const bool store_firings,
+    const bool store_buffer,
     const bool verbose,
-    const double console_interval,
-    const CharacterVector& sim_name
+    const double console_interval
 ) {
+  // a negstate should not occur if there is no bug in the SSA code
+  bool stop_on_neg_state = true;
+
   // fetch propensity functions from pointer
   TR_FUN* propensity_funs_ = XPtr<TR_FUN>(propensity_funs);
 
@@ -52,6 +57,7 @@ List simulate(
   double dtime = 0.0;
   NumericVector dstate(state.size());
   NumericVector buffer(buffer_size);
+  NumericVector firings(propensity.size());
 
   // calculate initial propensity
   for (int i = 0; i < num_functions; i++) {
@@ -59,20 +65,44 @@ List simulate(
   }
 
   int output_nexti = 0;
-  NumericVector output_time(10);
-  NumericMatrix output_state(10, state.size());
-  NumericMatrix output_propensity(10, propensity.size());
-  NumericMatrix output_buffer(10, buffer.size());
 
+  // save time in log
+  NumericVector output_time(10);
   output_time[output_nexti] = simtime;
+
+  // save state in log
+  NumericMatrix output_state(10, state.size());
   for (int i = 0; i < state.size(); i++) {
     output_state(output_nexti, i) = state[i];
   }
-  for (int i = 0; i < propensity.size(); i++) {
-    output_propensity(output_nexti, i) = propensity[i];
+
+  // save propensity in log, if desired
+  NumericMatrix output_propensity;
+  if (store_propensity) {
+    output_propensity = no_init(10, propensity.size());
+    for (int i = 0; i < propensity.size(); i++) {
+      output_propensity(output_nexti, i) = propensity[i];
+    }
+  } else {
+    output_propensity = no_init(0, 0);
   }
-  for (int i = 0; i < buffer.size(); i++) {
-    output_buffer(output_nexti, i) = buffer[i];
+  NumericMatrix output_buffer;
+  if (store_buffer) {
+    output_buffer = no_init(10, buffer.size());
+    for (int i = 0; i < buffer.size(); i++) {
+      output_buffer(output_nexti, i) = buffer[i];
+    }
+  } else {
+    output_buffer = no_init(0, 0);
+  }
+  NumericMatrix output_firings;
+  if (store_firings) {
+    output_firings = no_init(10, firings.size());
+    for (int i = 0; i < firings.size(); i++) {
+      output_firings(output_nexti, i) = firings[i];
+    }
+  } else {
+    output_firings = no_init(0, 0);
   }
   output_nexti++;
 
@@ -116,7 +146,7 @@ List simulate(
     dtime = 0;
 
     // make a step
-    ssa_alg_->step(state, propensity, nu_i, nu_p, nu_x, &dtime, dstate);
+    ssa_alg_->step(state, propensity, nu_i, nu_p, nu_x, &dtime, dstate, firings);
 
     state += dstate;
     simtime += dtime;
@@ -159,19 +189,36 @@ List simulate(
       if (output_nexti == output_time.size()) {
         output_time = gillespie::resize_vector(output_time, output_nexti * 2);
         output_state = gillespie::resize_rows(output_state, output_nexti * 2);
-        output_propensity = gillespie::resize_rows(output_propensity, output_nexti * 2);
-        output_buffer = gillespie::resize_rows(output_buffer, output_nexti * 2);
+        if (store_propensity) {
+          output_propensity = gillespie::resize_rows(output_propensity, output_nexti * 2);
+        }
+        if (store_buffer) {
+          output_buffer = gillespie::resize_rows(output_buffer, output_nexti * 2);
+        }
+        if (store_firings) {
+          output_firings = gillespie::resize_rows(output_firings, output_nexti * 2);
+        }
       }
 
       output_time[output_nexti] = simtime;
       for (int i = 0; i < state.size(); i++) {
         output_state(output_nexti, i) = state[i];
       }
-      for (int i = 0; i < propensity.size(); i++) {
-        output_propensity(output_nexti, i) = propensity[i];
+      if (store_propensity) {
+        for (int i = 0; i < propensity.size(); i++) {
+          output_propensity(output_nexti, i) = propensity[i];
+        }
       }
-      for (int i = 0; i < buffer.size(); i++) {
-        output_buffer(output_nexti, i) = buffer[i];
+      if (store_buffer) {
+        for (int i = 0; i < buffer.size(); i++) {
+          output_buffer(output_nexti, i) = buffer[i];
+        }
+      }
+      if (store_firings) {
+        for (int i = 0; i < firings.size(); i++) {
+          output_firings(output_nexti, i) = firings[i];
+          firings[i] = 0;
+        }
       }
       output_nexti++;
     }
@@ -183,11 +230,20 @@ List simulate(
     for (int i = 0; i < state.size(); i++) {
       output_state(output_nexti, i) = state[i];
     }
-    for (int i = 0; i < propensity.size(); i++) {
-      output_propensity(output_nexti, i) = propensity[i];
+    if (store_propensity) {
+      for (int i = 0; i < propensity.size(); i++) {
+        output_propensity(output_nexti, i) = propensity[i];
+      }
     }
-    for (int i = 0; i < buffer.size(); i++) {
-      output_buffer(output_nexti, i) = buffer[i];
+    if (store_buffer) {
+      for (int i = 0; i < buffer.size(); i++) {
+        output_buffer(output_nexti, i) = buffer[i];
+      }
+    }
+    if (store_firings) {
+      for (int i = 0; i < firings.size(); i++) {
+        output_firings(output_nexti, i) = firings[i];
+      }
     }
     output_nexti++;
   }
@@ -223,8 +279,15 @@ List simulate(
   // remove empty output slots
   output_time = gillespie::resize_vector(output_time, output_nexti);
   output_state = gillespie::resize_rows(output_state, output_nexti);
-  output_propensity = gillespie::resize_rows(output_propensity, output_nexti);
-  output_buffer = gillespie::resize_rows(output_buffer, output_nexti);
+  if (store_propensity) {
+    output_propensity = gillespie::resize_rows(output_propensity, output_nexti);
+  }
+  if (store_buffer) {
+    output_buffer = gillespie::resize_rows(output_buffer, output_nexti);
+  }
+  if (store_firings) {
+    output_firings = gillespie::resize_rows(output_firings, output_nexti);
+  }
 
   if (verbose) {
     Rcout << "SSA finished!" << std::endl;
@@ -234,6 +297,7 @@ List simulate(
     _["time"] = output_time,
     _["state"] = output_state,
     _["propensity"] = output_propensity,
+    _["firings"] = output_firings,
     _["buffer"] = output_buffer,
     _["stats"] = stats,
     _["sim_name"] = sim_name

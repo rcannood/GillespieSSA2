@@ -14,7 +14,8 @@ public:
       const IntegerVector& nu_p,
       const IntegerVector& nu_x,
       double* dtime,
-      NumericVector& dstate
+      NumericVector& dstate,
+      NumericVector& firings
   ) {
     // perform weighted sampling
     double max = sum(propensity);
@@ -25,8 +26,7 @@ public:
       j++;
     }
 
-    // this would allow for perfect reproducibility in comparison to GillespieSSA
-    // int j = sample(propensity.length(), 1, true, propensity)[0] - 1;
+    firings[j]++;
 
     // perform a single reaction
     for (int i = nu_p[j]; i < nu_p[j+1]; i++) {

@@ -16,13 +16,14 @@ public:
       const IntegerVector& nu_p,
       const IntegerVector& nu_x,
       double* dtime,
-      NumericVector& dstate
+      NumericVector& dstate,
+      NumericVector& firings
   ) {
     int M = propensity.size();
 
     // Calculate tau
     double tau = f / sum(propensity);
-    if (tau > 1.0) tau = 1.0; // tau cannot be larger than unity
+    if (tau > 1.0) tau = 1.0; // tau cannot be larger than one
 
     bool coercing = false;
 
@@ -56,6 +57,8 @@ public:
         } else {
           k = R::rpois(propensity[j] * tau);
         }
+
+        firings[j] += k;
 
         // determine firing effect
         for (i = nu_p[j]; i < nu_p[j+1]; i++) {

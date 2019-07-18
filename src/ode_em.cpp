@@ -17,7 +17,8 @@ public:
       const IntegerVector& nu_p,
       const IntegerVector& nu_x,
       double* dtime,
-      NumericVector& dstate
+      NumericVector& dstate,
+      NumericVector& firings
   ) {
     int i, j;
 
@@ -26,6 +27,7 @@ public:
       for (i = nu_p[j]; i < nu_p[j+1]; i++) {
         dstate[nu_i[i]] += nu_x[i] * propensity[j] * tau;
       }
+      firings[j] += propensity[j] * tau;
     }
 
     // add noise
