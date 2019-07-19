@@ -5,7 +5,13 @@ using namespace Rcpp;
 
 class ODE_EM : public SSA_method {
 public:
-  ODE_EM(double tau_ = .01, double noise_strength_ = 2.0) : SSA_method("EM"), tau(tau_), noise_strength(noise_strength_) {}
+  ODE_EM(
+    double tau_ = .01,
+    double noise_strength_ = 2.0
+  ) :
+  SSA_method("EM"),
+  tau(tau_),
+  noise_strength(noise_strength_) {}
 
   double tau;
   double noise_strength;

@@ -1,7 +1,8 @@
 context("ssa etl")
 
-test_that("ssa etl produces good results", {
-  for (i in seq_len(10)) {
+
+for (i in seq_len(10)) {
+  test_that(paste0("ssa etl produces good results, seed ", i), {
     set.seed(i)
 
     tau <- runif(1, .001, .2)
@@ -58,5 +59,5 @@ test_that("ssa etl produces good results", {
     avg_firings <- Reduce(`+`, firings) / length(firings)
     exp_firings <- propensity * tau
     expect_gte(cor(avg_firings, exp_firings), .99)
-  }
-})
+  })
+}

@@ -1,13 +1,14 @@
 context("ssa exact")
 
-test_that("ssa exact produces good results", {
-  meth <- ssa_exact()
-  expect_equal(meth$name, "exact")
-  expect_equal(meth$params, list())
 
-  ssa_alg <- meth$factory()
 
-  for (i in seq_len(10)) {
+for (i in seq_len(10)) {
+  test_that(paste0("ssa exact produces good results, seed ", i), {
+    meth <- ssa_exact()
+    expect_equal(meth$name, "exact")
+    expect_equal(meth$params, list())
+
+    ssa_alg <- meth$factory()
     set.seed(i)
 
     M <- sample.int(100, 1)
@@ -42,5 +43,5 @@ test_that("ssa exact produces good results", {
     expect_is(out$dtime, "numeric")
     expect_gt(out$dtime, 0)
     expect_lte(out$dtime, sum(propensity))
-  }
-})
+  })
+}
