@@ -24,7 +24,7 @@
 reaction <- function(
   propensity,
   effect,
-  name = NA
+  name = NA_character_
 ) {
   # check propensity
   assert_that(
@@ -36,9 +36,16 @@ reaction <- function(
 
   # check effects
   assert_that(
+    is.integer(effect),
     length(effect) > 0,
     !is.null(names(effect)),
-    all(names(effect) != "")
+    all(grepl("^[A-Za-z_0-9]+$", names(effect)))
+  )
+
+  # check name
+  assert_that(
+    is_scalar_character(name),
+    is.na(name) || grepl("^[A-Za-z_0-9]+$", name)
   )
 
   # return output

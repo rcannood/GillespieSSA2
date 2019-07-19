@@ -35,7 +35,7 @@ Suggests:
     ggplot2,
     knitr,
     rmarkdown,
-    testthat
+    testthat (>= 2.1.0)
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
