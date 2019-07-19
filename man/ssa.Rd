@@ -5,7 +5,8 @@
 \title{Invoking the stochastic simulation algorithm}
 \usage{
 ssa(initial_state, reactions, final_time, params = NULL,
-  method = ssa_direct(), census_interval = 0, max_walltime = Inf,
+  method = ssa_direct(), census_interval = 0,
+  stop_on_neg_state = TRUE, max_walltime = Inf,
   store_propensity = FALSE, store_firings = FALSE,
   store_buffer = FALSE, verbose = FALSE, console_interval = 1,
   sim_name = NA_character_)
@@ -25,6 +26,10 @@ ssa(initial_state, reactions, final_time, params = NULL,
 \item{census_interval}{\code{[numeric]} The approximate interval between recording the state of the system.
 Setting this parameter to \code{0} will cause each state to be recorded, and
 to \code{Inf} will cause only the end state to be recorded.}
+
+\item{stop_on_neg_state}{\code{[logical]} Whether or not to stop the simulation when
+the a negative value in the state has occured. This can occur, for instance, in the \code{\link[=ssa_etl]{ssa_etl()}}
+method.}
 
 \item{max_walltime}{\code{[numeric]} The maximum duration (in seconds) that the
 simulation is allowed to run for before terminated.}
