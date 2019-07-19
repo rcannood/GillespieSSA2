@@ -1,0 +1,46 @@
+context("ssa exact")
+
+test_that("ssa exact produces good results", {
+  meth <- ssa_exact()
+  expect_equal(meth$name, "exact")
+  expect_equal(meth$params, list())
+
+  ssa_alg <- meth$factory()
+
+  for (i in seq_len(10)) {
+    set.seed(i)
+
+    M <- sample.int(10, 1)
+    N <- sample.int(10, 1)
+    state <- sample.int(1000, N) %>% set_names(sample(letters, N))
+    propensity <- sample.int(1000, M)
+    nu <- Matrix::Matrix(
+      sample(-5L:5L, M * N, replace = TRUE),
+      nrow = N,
+      sparse = TRUE
+    )
+
+    out <- test_ssa_step(
+      ssa_alg,
+      state,
+      propensity,
+      nu_i = nu@i,
+      nu_p = nu@p,
+      nu_x = nu@x
+    )
+    expect_length(out$firings, length(propensity))
+    expect_is(out$firings, "numeric")
+    expect_equal(sum(out$firings == 1), 1L)
+    expect_equal(sum(out$firings == 0), length(propensity) - 1L)
+
+    expect_length(out$dstate, length(state))
+    expect_is(out$dstate, "numeric")
+    ix <- which(out$firings == 1)
+    expect_equal(out$dstate, nu[, ix])
+
+    expect_length(out$dtime, 1)
+    expect_is(out$dtime, "numeric")
+    expect_gt(out$dtime, 0)
+    expect_lte(out$dtime, sum(propensity))
+  }
+})
