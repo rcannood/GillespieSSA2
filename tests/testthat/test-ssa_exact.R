@@ -38,6 +38,7 @@ for (i in seq_len(10)) {
     expect_is(out$dstate, "numeric")
     ix <- which(out$firings == 1)
     expect_equal(out$dstate, nu[, ix])
+    expect_true(all(out$dstate + state > 0))
 
     expect_length(out$dtime, 1)
     expect_is(out$dtime, "numeric")

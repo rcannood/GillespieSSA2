@@ -1,24 +1,23 @@
-context("ssa etl")
+context("ssa btl")
 
 
 for (i in seq_len(10)) {
-  test_that(paste0("ssa etl produces good results, seed ", i), {
+  test_that(paste0("ssa btl produces good results, seed ", i), {
     set.seed(i)
+    mean_firings <- rnorm(1, mean = 10, sd = 2) %>% pmax(1)
 
-    tau <- runif(1, .001, .2)
-
-    meth <- ssa_etl(tau = tau)
-    expect_equal(meth$name, "ETL")
-    expect_equal(meth$params, list(tau = tau))
+    meth <- ssa_btl(mean_firings = mean_firings)
+    expect_equal(meth$name, "BTL")
+    expect_equal(meth$params, list(mean_firings = mean_firings))
 
     ssa_alg <- meth$factory()
 
     M <- sample.int(100, 1)
     N <- sample.int(26, 1)
-    state <- sample.int(1000, N) %>% set_names(sample(letters, N))
+    state <- sample.int(100, N) %>% set_names(sample(letters, N))
     propensity <- sample.int(1000, M)
     nu <- Matrix::Matrix(
-      sample(-5L:5L, M * N, replace = TRUE),
+      rbinom(M * N, 100, .001) * sample(c(-1, +1), M * N, replace = TRUE, prob = c(.1, .9)),
       nrow = N,
       sparse = TRUE
     )
@@ -42,7 +41,8 @@ for (i in seq_len(10)) {
 
     expect_length(out$dtime, 1)
     expect_is(out$dtime, "numeric")
-    expect_equal(out$dtime, tau)
+    expected_tau <- mean_firings / sum(propensity)
+    expect_equal(out$dtime, expected_tau)
 
     firings <- lapply(seq_len(1000), function(i) {
       out <- test_ssa_step(
@@ -57,8 +57,10 @@ for (i in seq_len(10)) {
     })
 
     avg_firings <- Reduce(`+`, firings) / length(firings)
-    exp_firings <- propensity * tau
-    expect_gte(cor(avg_firings, exp_firings), .99)
+    exp_firings <- propensity * expected_tau
+    expect_gte(cor(avg_firings, exp_firings), .9)
     expect_lte(mean(avg_firings) - mean(exp_firings), .1)
+
+    expect_true(all(out$dstate + state >= 0))
   })
 }
