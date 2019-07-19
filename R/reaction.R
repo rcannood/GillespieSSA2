@@ -89,25 +89,22 @@ compile_reactions <- function(
   # should this be a parameter? i think not...
   reuse_buffer <- FALSE
 
-  # check ids
-  assert_that(
-    is.list(reactions),
-    is.character(state_ids),
-    !any(is.duplicated(state_ids)),
-    is.numeric(params),
-    length(params) == 0 || !is.null(names(params)),
-    !any(is.duplicated(buffer_ids)),
-    is_scalar_logical(hardcode_params),
-    is_scalar_character(write_rcpp),
-    is_scalar_integer(fun_by)
-  )
-
+  assert_that(is.list(reactions))
   walk(seq_along(reactions), function(i) {
     assert_that(is(reactions[[i]], "gillespie::reaction"))
   })
-
   reaction_ids <- map_chr(reactions, function(reac) reac$name) %|% paste0("reaction", seq_along(reactions))
+
+  # check ids
   assert_that(
+    is.character(state_ids),
+    !any(duplicated(state_ids)),
+    is.numeric(params),
+    length(params) == 0 || !is.null(names(params)),
+    !any(duplicated(buffer_ids)),
+    is_scalar_logical(hardcode_params),
+    is_scalar_character(write_rcpp),
+    is_scalar_integer(fun_by),
     !any(duplicated(reaction_ids))
   )
 
