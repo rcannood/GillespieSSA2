@@ -59,22 +59,22 @@ reactions <- unlist(lapply(
       reaction(
         propensity = paste0("(1 - epsilon) * beta * ", Si, " * ", Ii), 
         effect = setNames(c(-1, +1), c(Si, Ii)),
-        name = "intra_patch_infection"
+        name = paste0("intra_patch_infection_", i)
       ),
       reaction(
         propensity = paste0("epsilon * beta * ", Si, " * ", Ij),
         effect = setNames(c(-1, +1), c(Si, Ii)),
-        name = "inter_patch_infection"
+        name = paste0("inter_patch_infection_", i)
       ), 
       reaction(
         propensity = paste0("gamma * ", Ii),
         effect = setNames(-1, Ii),
-        name = "recovery_from_infection"
+        name = paste0("recovery_from_infection_", i)
       ),
       reaction(
         propensity = paste0("rho * (N - ", Si, " - ", Ii, ")"),
         effect = setNames(+1, Si),
-        name = "loss_of_immunity"
+        name = paste0("loss_of_immunity_", i)
       )
     )
   }
@@ -96,7 +96,7 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="epi_chain_files/figure-gfm/direct-1.png" width="100%" />
+![](epi_chain_files/figure-gfm/direct-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
@@ -113,7 +113,7 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="epi_chain_files/figure-gfm/etl-1.png" width="100%" />
+![](epi_chain_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulations with the Binomial tau-leap method
 
@@ -130,4 +130,4 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="epi_chain_files/figure-gfm/btl-1.png" width="100%" />
+![](epi_chain_files/figure-gfm/btl-1.png)<!-- -->

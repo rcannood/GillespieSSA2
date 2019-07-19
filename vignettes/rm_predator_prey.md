@@ -72,7 +72,7 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="rm_predator_prey_files/figure-gfm/direct-1.png" width="100%" />
+![](rm_predator_prey_files/figure-gfm/direct-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
@@ -89,7 +89,7 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="rm_predator_prey_files/figure-gfm/etl-1.png" width="100%" />
+![](rm_predator_prey_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulations with the Binomial tau-leap method
 
@@ -106,4 +106,4 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="rm_predator_prey_files/figure-gfm/btl-1.png" width="100%" />
+![](rm_predator_prey_files/figure-gfm/btl-1.png)<!-- -->

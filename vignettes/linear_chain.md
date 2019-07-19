@@ -25,7 +25,11 @@ params <- c(c = 1)
 final_time <- 5
 initial_state <- c(1000, rep(0, M)) 
 names(initial_state) <- paste0("x", seq_len(M+1))
+```
 
+Define the reactions
+
+``` r
 reactions <- lapply(
   seq_len(M),
   function(i) {
@@ -52,7 +56,7 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="linear_chain_files/figure-gfm/direct-1.png" width="100%" />
+![](linear_chain_files/figure-gfm/direct-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
@@ -69,7 +73,7 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="linear_chain_files/figure-gfm/etl-1.png" width="100%" />
+![](linear_chain_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulations with the Binomial tau-leap method
 
@@ -86,4 +90,4 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-<img src="linear_chain_files/figure-gfm/btl-1.png" width="100%" />
+![](linear_chain_files/figure-gfm/btl-1.png)<!-- -->

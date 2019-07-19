@@ -1,6 +1,6 @@
 Preparing your first SSA run with gillespie
 ================
-2019-07-18
+2019-07-19
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/preparing_a_run.Rmd", output_format = "github_document")
@@ -56,18 +56,28 @@ out <-
     verbose = TRUE,
     sim_name = "My first SSA run!"
   )
-#> Running SSA direct with console output every 1 seconds
-#> Start time: CURRTIME
-#> walltime: 0, simtime: 0
-#> SSA finished!
 ```
+
+    ## Running SSA direct with console output every 1 seconds
+    ## Start time: CURRTIME
+    ## walltime: 0, sim_time: 0
+    ## SSA finished!
 
 ``` r
 print(out$stats)
 ```
 
+    ##   method          sim_name stop_sim_time stop_extinction
+    ## 1 direct My first SSA run!          TRUE           FALSE
+    ##   stop_negative_state stop_zero_prop stop_walltime walltime_start
+    ## 1               FALSE          FALSE         FALSE     1563532344
+    ##   walltime_end walltime_elapsed num_steps   dtime_mean     dtime_sd
+    ## 1   1563532344                0    151518 3.299954e-05 1.538995e-07
+    ##   firings_mean firings_sd
+    ## 1            1          0
+
 ``` r
 autoplot.ssa(out)
 ```
 
-<img src="preparing_a_run_files/figure-gfm/unnamed-chunk-5-1.png" width="100%" />
+![](preparing_a_run_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
