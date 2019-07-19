@@ -25,9 +25,9 @@
 #'   to `Inf` will cause only the end state to be recorded.
 #' @param max_walltime `[numeric]` The maximum duration (in seconds) that the
 #'   simulation is allowed to run for before terminated.
-#' @param store_propensity `[logical]` Whether or not to store the propensity values at each census.
-#' @param store_firings `[logical]` Whether or not to store number of firings of each reaction between censuses.
-#' @param store_buffer `[logical]` Whether or not to store the buffer at each census.
+#' @param log_propensity `[logical]` Whether or not to store the propensity values at each census.
+#' @param log_firings `[logical]` Whether or not to store number of firings of each reaction between censuses.
+#' @param log_buffer `[logical]` Whether or not to store the buffer at each census.
 #' @param verbose `[logical]` If `TRUE`, intermediary information pertaining to the simulation will be displayed.
 #' @param console_interval `[numeric]` The approximate interval between intermediary information outputs.
 #' @param sim_name `[character]` An optional name for the simulation.
@@ -79,9 +79,9 @@ ssa <- function(
   method = ssa_direct(),
   census_interval = 0,
   max_walltime = Inf,
-  store_propensity = FALSE,
-  store_firings = FALSE,
-  store_buffer = FALSE,
+  log_propensity = FALSE,
+  log_firings = FALSE,
+  log_buffer = FALSE,
   verbose = FALSE,
   console_interval = 1,
   sim_name = NA_character_
@@ -108,9 +108,9 @@ ssa <- function(
     is_scalar_double(census_interval), census_interval >= 0,
     is_scalar_double(max_walltime), max_walltime >= 0,
     is_scalar_double(console_interval), console_interval >= 0,
-    is_scalar_logical(store_propensity),
-    is_scalar_logical(store_firings),
-    is_scalar_logical(store_buffer),
+    is_scalar_logical(log_propensity),
+    is_scalar_logical(log_firings),
+    is_scalar_logical(log_buffer),
     is_scalar_logical(verbose),
     is_scalar_character(sim_name)
   )
@@ -133,7 +133,7 @@ ssa <- function(
   output <- simulate(
     propensity_funs = compiled_reactions$functions_pointer,
     num_functions = compiled_reactions$num_functions,
-    ssa_alg = method$factory(),
+    ssa_method = method$factory(),
     initial_state = initial_state,
     params = params,
     nu_i = compiled_reactions$state_change@i,
@@ -144,22 +144,22 @@ ssa <- function(
     buffer_size = compiled_reactions$buffer_size,
     sim_name = sim_name,
     max_walltime = max_walltime,
-    store_propensity = store_propensity,
-    store_buffer = store_buffer,
-    store_firings = store_firings,
+    log_propensity = log_propensity,
+    log_buffer = log_buffer,
+    log_firings = log_firings,
     verbose = verbose,
     console_interval = console_interval
   )
 
   # set colnames of objects
   colnames(output$state) <- names(initial_state)
-  if (store_propensity) {
+  if (log_propensity) {
     colnames(output$propensity) <- compiled_reactions$reaction_ids
   }
-  if (store_buffer) {
+  if (log_buffer) {
     colnames(output$buffer) <- compiled_reactions$buffer_ids
   }
-  if (store_firings) {
+  if (log_firings) {
     colnames(output$firings) <- compiled_reactions$reaction_ids
   }
 

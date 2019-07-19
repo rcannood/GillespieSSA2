@@ -1,11 +1,11 @@
 #include <Rcpp.h>
-#include "ssa.h"
+#include "ssa_method.h"
 
 using namespace Rcpp;
 
-class SSA_etl : public SSA {
+class SSA_etl : public SSA_method {
 public:
-  SSA_etl(double tau_) : SSA("ETL"), tau(tau_) {}
+  SSA_etl(double tau_) : SSA_method("ETL"), tau(tau_) {}
 
   double tau;
 

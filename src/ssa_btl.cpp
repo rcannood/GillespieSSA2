@@ -1,11 +1,11 @@
 #include <Rcpp.h>
-#include "ssa.h"
+#include "ssa_method.h"
 
 using namespace Rcpp;
 
-class SSA_BTL : public SSA {
+class SSA_BTL : public SSA_method {
 public:
-  SSA_BTL(double mean_firings_) : SSA("BTL"), mean_firings(mean_firings_) {}
+  SSA_BTL(double mean_firings_) : SSA_method("BTL"), mean_firings(mean_firings_) {}
 
   double mean_firings;
 

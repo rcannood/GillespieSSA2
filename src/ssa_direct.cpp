@@ -1,11 +1,11 @@
 #include <Rcpp.h>
-#include "ssa.h"
+#include "ssa_method.h"
 
 using namespace Rcpp;
 
-class SSA_direct : public SSA {
+class SSA_direct : public SSA_method {
 public:
-  SSA_direct() : SSA("direct") {}
+  SSA_direct() : SSA_method("direct") {}
 
   void step(
       const NumericVector& state,

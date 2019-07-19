@@ -4,14 +4,12 @@
 
 using namespace Rcpp;
 
-class SSA {
+class SSA_method {
 public:
-  SSA(std::string name_) : name(name_) {}
+  SSA_method(std::string name_) : name(name_) {}
   std::string name;
 
-  virtual ~SSA() {}
-
-  virtual void allocate(const int M, const int N);
+  virtual ~SSA_method() {}
 
   virtual void step(
       const NumericVector& state,

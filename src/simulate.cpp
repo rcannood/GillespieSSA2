@@ -1,18 +1,21 @@
 #include <Rcpp.h>
 #include <math.h>
 
-#include "ssa.h"
+#include "ssa_method.h"
 #include "utils.h"
 
 using namespace Rcpp;
 
 typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const double, NumericVector&, NumericVector&);
 
-// [[Rcpp::export]]
-List simulate(
-    SEXP propensity_funs,
+
+
+class SSA_simulation {
+public:
+  SSA_simulation(
     const int num_functions,
-    SEXP ssa_alg,
+    SEXP propensity_funs,
+    SEXP ssa_method,
     const NumericVector& initial_state,
     const NumericVector& params,
     const IntegerVector& nu_i,
@@ -21,149 +24,230 @@ List simulate(
     const double final_time,
     const double census_interval,
     const int buffer_size,
-    const CharacterVector& sim_name,
+    const std::string sim_name,
     const double max_walltime,
-    const bool store_propensity,
-    const bool store_firings,
-    const bool store_buffer,
+    const bool log_propensity,
+    const bool log_firings,
+    const bool log_buffer,
     const bool verbose,
     const double console_interval
-) {
-  // a negstate should not occur if there is no bug in the SSA code
-  bool stop_on_neg_state = true;
+  ) :
+  num_functions(num_functions),
+  initial_state(initial_state),
+  params(params),
+  nu_i(nu_i),
+  nu_p(nu_p),
+  nu_x(nu_x),
+  final_time(final_time),
+  census_interval(census_interval),
+  buffer_size(buffer_size),
+  sim_name(sim_name),
+  max_walltime(max_walltime),
+  log_propensity(log_propensity),
+  log_firings(log_firings),
+  log_buffer(log_buffer),
+  verbose(verbose),
+  console_interval(console_interval)
+  {
+    prop_funs = XPtr<TR_FUN>(propensity_funs);
+    ssa_alg = XPtr<SSA_method>(ssa_method);
 
-  // fetch propensity functions from pointer
-  TR_FUN* propensity_funs_ = XPtr<TR_FUN>(propensity_funs);
+    sim_time_nextcensus = census_interval;
 
-  // fetch ssa algorithm from pointer
-  SSA *ssa_alg_ = XPtr<SSA>(ssa_alg);
+    // initialise state
+    state = clone(initial_state);
+    dstate = NumericVector(state.size());
 
-  // initialise data structures
-  double simtime = 0.0;
-  NumericVector state(initial_state.size());
-  for (int i = 0; i < initial_state.size(); i++) {
-    state[i] = initial_state[i];
-  }
-  NumericVector propensity(nu_p.size() - 1);
-  double simtime_nextcensus = simtime + census_interval;
+    // initialise propensity and buffer
+    propensity = NumericVector(nu_p.size() - 1);
+    buffer = NumericVector(buffer_size);
 
-  // fields for storing statistics
-  double dtime_mean = 0;
-  double dtime_sd = 0;
-  int dtime_steps = 0;
+    // initialise firings
+    firings = NumericVector(propensity.size());
+    dfirings = NumericVector(propensity.size());
 
-  // preallocate data structures
-  ssa_alg_->allocate(propensity.size(), state.size());
-  double dtime = 0.0;
-  NumericVector dstate(state.size());
-  NumericVector buffer(buffer_size);
-  NumericVector firings(propensity.size());
+    // // save time in log
+    output_time = NumericVector(10);
+    output_state = NumericMatrix(10, state.size());
 
-  // calculate initial propensity
-  for (int i = 0; i < num_functions; i++) {
-    propensity_funs_[i](state, params, simtime, propensity, buffer);
-  }
-
-  int output_nexti = 0;
-
-  // save time in log
-  NumericVector output_time(10);
-  output_time[output_nexti] = simtime;
-
-  // save state in log
-  NumericMatrix output_state(10, state.size());
-  for (int i = 0; i < state.size(); i++) {
-    output_state(output_nexti, i) = state[i];
-  }
-
-  // save propensity in log, if desired
-  NumericMatrix output_propensity;
-  if (store_propensity) {
-    output_propensity = no_init(10, propensity.size());
-    for (int i = 0; i < propensity.size(); i++) {
-      output_propensity(output_nexti, i) = propensity[i];
+    // save propensity in log, if desired
+    if (log_propensity) {
+      output_propensity = NumericMatrix(10, propensity.size());
+    } else {
+      output_propensity = NumericMatrix(0, 0);
     }
-  } else {
-    output_propensity = no_init(0, 0);
-  }
-  NumericMatrix output_buffer;
-  if (store_buffer) {
-    output_buffer = no_init(10, buffer.size());
-    for (int i = 0; i < buffer.size(); i++) {
-      output_buffer(output_nexti, i) = buffer[i];
+    if (log_buffer) {
+      output_buffer = NumericMatrix(10, buffer.size());
+    } else {
+      output_buffer = NumericMatrix(0, 0);
     }
-  } else {
-    output_buffer = no_init(0, 0);
-  }
-  NumericMatrix output_firings;
-  if (store_firings) {
-    output_firings = no_init(10, firings.size());
-    for (int i = 0; i < firings.size(); i++) {
-      output_firings(output_nexti, i) = firings[i];
+    if (log_firings) {
+      output_firings = NumericMatrix(10, firings.size());
+    } else {
+      output_firings = NumericMatrix(0, 0);
     }
-  } else {
-    output_firings = no_init(0, 0);
-  }
-  output_nexti++;
-
-  // track walltime
-  int walltime_start = time(NULL);
-  int walltime_nextconsole = walltime_start, walltime_nextinterrupt = walltime_start, walltime_curr = walltime_start;
-
-  // verbose
-  if (verbose) {
-    Rcout << "Running SSA " << ssa_alg_->name << " with console output every " << console_interval << " seconds" << std::endl;
-    Rcout << "Start time: " << "CURRTIME" << std::endl;
   }
 
-  bool negative_state = false;
-  bool zero_prop = false;
+  ~SSA_simulation() {
+    // todo: free all objects again?
+  }
 
-  while (
-      simtime < final_time &&
-        (walltime_curr - walltime_start) < max_walltime &&
-        !zero_prop &&
-        (!negative_state || !stop_on_neg_state)
+  List run() {
+    // track walltime
+    int walltime_start = time(NULL);
+    int walltime_max = walltime_start + max_walltime;
+    int walltime_nextconsole = walltime_start, walltime_nextinterrupt = walltime_start, walltime_curr = walltime_start;
+
+    // calculate initial propensities
+    calculate_propensity();
+    do_census();
+
+    // verbose
+    if (verbose) {
+      Rcout << "Running SSA " << ssa_alg->name << " with console output every " << console_interval << " seconds" << std::endl;
+      Rcout << "Start time: " << "CURRTIME" << std::endl;
+    }
+
+    while (
+        sim_time < final_time &&
+          walltime_curr < walltime_max &&
+          !zero_prop &&
+          !negative_state
     )  {
-    walltime_curr = time(NULL);
 
-    // check for interrupt
-    if (walltime_nextinterrupt <= walltime_curr) {
-      checkUserInterrupt();
-      walltime_nextinterrupt += 1;
-    }
+      // check for interrupt
+      if (walltime_nextinterrupt <= walltime_curr) {
+        checkUserInterrupt();
+        walltime_nextinterrupt += 1;
+      }
 
-    // print if so desired
-    if (verbose && walltime_nextconsole <= walltime_curr) {
-      Rcout << "walltime: " << (walltime_curr - walltime_start) << ", simtime: " << simtime << std::endl;
-      walltime_nextconsole += console_interval;
-    }
+      // print if so desired
+      if (verbose && walltime_nextconsole <= walltime_curr) {
+        Rcout << "walltime: " << (walltime_curr - walltime_start) << ", sim_time: " << sim_time << std::endl;
+        walltime_nextconsole += console_interval;
+      }
 
-    // clear dstate and dtime
-    for (int i = 0; i < dstate.size(); i++) {
-      dstate[i] = 0;
-    }
-    dtime = 0;
+      // make a step
+      make_step();
 
-    // make a step
-    ssa_alg_->step(state, propensity, nu_i, nu_p, nu_x, &dtime, dstate, firings);
-
-    state += dstate;
-    simtime += dtime;
-
-    // Check that no states are negative (can occur in some tau-leaping methods)
-    for (int i = 0; i < state.length(); i++) {
-      if (state[i] < 0) {
-        negative_state = true;
-        if (!stop_on_neg_state) {
-          state[i] = 0;
+      // Check that no states are negative (can occur in some tau-leaping methods)
+      for (auto i = state.begin(); i != state.end() && !negative_state; ++i) {
+        if (*i < 0) {
+          negative_state = true;
         }
+      }
+
+      // recalculate propensity
+      calculate_propensity();
+
+      // perform census if so desired
+      if (sim_time_nextcensus <= sim_time) {
+        sim_time_nextcensus += census_interval;
+        do_census();
+      }
+
+      walltime_curr = time(NULL);
+    }
+
+    // log end state if census_interval is set to inf
+    if (std::isinf(census_interval)) {
+      do_census();
+    }
+
+    // determine whether extinction has occurred
+    bool extinction = true;
+    for (auto i = state.begin(); i != state.end() && extinction; i++) {
+      if (*i > 0) {
+        extinction = false;
       }
     }
 
-    // recalculate propensity
+    // construct output
+    int walltime_end = time(NULL);
+    int walltime_elapsed = walltime_end - walltime_start;
+
+    DataFrame stats = DataFrame::create(
+      _["method"] = ssa_alg->name,
+      _["sim_name"] = sim_name,
+      _["stop_sim_time"] = sim_time > final_time,
+      _["stop_extinction"] = extinction,
+      _["stop_negative_state"] = negative_state,
+      _["stop_zero_prop"] = zero_prop,
+      _["stop_walltime"] = walltime_elapsed >= max_walltime,
+      _["walltime_start"] = walltime_start,
+      _["walltime_end"] = walltime_end,
+      _["walltime_elapsed"] = walltime_elapsed,
+      _["num_steps"] = num_steps,
+      _["dtime_mean"] = dtime_mean,
+      _["dtime_sd"] = dtime_sd,
+      _["firings_mean"] = firings_mean,
+      _["firings_sd"] = firings_sd
+    );
+
+    // remove empty output slots
+    output_time = resize_vector(output_time, output_nexti);
+    output_state = resize_rows(output_state, output_nexti);
+    if (log_propensity) {
+      output_propensity = resize_rows(output_propensity, output_nexti);
+    }
+    if (log_buffer) {
+      output_buffer = resize_rows(output_buffer, output_nexti);
+    }
+    if (log_firings) {
+      output_firings = resize_rows(output_firings, output_nexti);
+    }
+
+    if (verbose) {
+      Rcout << "SSA finished!" << std::endl;
+    }
+
+    return List::create(
+      _["time"] = output_time,
+      _["state"] = output_state,
+      _["propensity"] = output_propensity,
+      _["firings"] = output_firings,
+      _["buffer"] = output_buffer,
+      _["stats"] = stats,
+      _["sim_name"] = sim_name
+    );
+  }
+
+
+
+  void do_census() {
+
+
+    if (output_nexti == output_time.size()) {
+      output_time = resize_vector(output_time, output_nexti * 2);
+      output_state = resize_rows(output_state, output_nexti * 2);
+      if (log_propensity) {
+        output_propensity = resize_rows(output_propensity, output_nexti * 2);
+      }
+      if (log_buffer) {
+        output_buffer = resize_rows(output_buffer, output_nexti * 2);
+      }
+      if (log_firings) {
+        output_firings = resize_rows(output_firings, output_nexti * 2);
+      }
+    }
+    output_time[output_nexti] = sim_time;
+    output_state(output_nexti, _) = state;
+    if (log_propensity) {
+      output_propensity(output_nexti, _) = propensity;
+    }
+    if (log_buffer) {
+      output_buffer(output_nexti, _) = buffer;
+    }
+    if (log_firings) {
+      output_firings(output_nexti, _) = firings;
+      std::fill(firings.begin(), firings.end(), 0);
+    }
+    output_nexti++;
+  }
+
+  void calculate_propensity() {
     for (int i = 0; i < num_functions; i++) {
-      propensity_funs_[i](state, params, simtime, propensity, buffer);
+      prop_funs[i](state, params, sim_time, propensity, buffer);
     }
 
     // check whether all propensity functions are zero
@@ -173,135 +257,158 @@ List simulate(
         zero_prop = false;
       }
     }
+  }
+
+  void make_step() {
+    // clear dtime, dstate and dfirings
+    dtime = 0;
+    std::fill(dstate.begin(), dstate.end(), 0);
+    std::fill(dfirings.begin(), dfirings.end(), 0);
+
+    // make a step
+    ssa_alg->step(state, propensity, nu_i, nu_p, nu_x, &dtime, dstate, dfirings);
+
+    num_steps++;
+    sim_time += dtime;
+    state += dstate;
+    firings += dfirings;
 
     // update statistics
-    dtime_steps++;
-    if (dtime_steps == 1) {
+    int firings_sum = sum(dfirings);
+    if (num_steps == 1) {
       dtime_sd = 0;
+      firings_sd = 0;
     } else {
-      dtime_sd = sqrt((dtime_steps - 2) / (dtime_steps - 1) * pow(dtime_sd, 2) + pow(dtime - dtime_mean, 2) / dtime_steps);
+      dtime_sd = sqrt((num_steps - 2) / (num_steps - 1) * pow(dtime_sd, 2) + pow(dtime - dtime_mean, 2) / num_steps);
+      firings_sd = sqrt((num_steps - 2) / (num_steps - 1) * pow(firings_sd, 2) + pow(firings_sum - firings_mean, 2) / num_steps);
     }
-    dtime_mean = (dtime_mean * (dtime_steps - 1) + dtime) / dtime_steps;
-
-    // perform census if so desired
-    if (simtime_nextcensus <= simtime) {
-      simtime_nextcensus += census_interval;
-      if (output_nexti == output_time.size()) {
-        output_time = gillespie::resize_vector(output_time, output_nexti * 2);
-        output_state = gillespie::resize_rows(output_state, output_nexti * 2);
-        if (store_propensity) {
-          output_propensity = gillespie::resize_rows(output_propensity, output_nexti * 2);
-        }
-        if (store_buffer) {
-          output_buffer = gillespie::resize_rows(output_buffer, output_nexti * 2);
-        }
-        if (store_firings) {
-          output_firings = gillespie::resize_rows(output_firings, output_nexti * 2);
-        }
-      }
-
-      output_time[output_nexti] = simtime;
-      for (int i = 0; i < state.size(); i++) {
-        output_state(output_nexti, i) = state[i];
-      }
-      if (store_propensity) {
-        for (int i = 0; i < propensity.size(); i++) {
-          output_propensity(output_nexti, i) = propensity[i];
-        }
-      }
-      if (store_buffer) {
-        for (int i = 0; i < buffer.size(); i++) {
-          output_buffer(output_nexti, i) = buffer[i];
-        }
-      }
-      if (store_firings) {
-        for (int i = 0; i < firings.size(); i++) {
-          output_firings(output_nexti, i) = firings[i];
-          firings[i] = 0;
-        }
-      }
-      output_nexti++;
-    }
+    dtime_mean = (dtime_mean * (num_steps - 1) + dtime) / num_steps;
+    firings_mean = (firings_mean * (num_steps - 1) + firings_sum) / num_steps;
   }
 
-  // end state if census_interval is set to inf
-  if (std::isinf(census_interval)) {
-    output_time[output_nexti] = simtime;
-    for (int i = 0; i < state.size(); i++) {
-      output_state(output_nexti, i) = state[i];
+  template <typename T>
+  T resize_vector(const T& x, int n){
+    int oldsize = x.size();
+    if (n < oldsize) {
+      oldsize = n;
     }
-    if (store_propensity) {
-      for (int i = 0; i < propensity.size(); i++) {
-        output_propensity(output_nexti, i) = propensity[i];
-      }
+    T y(n);
+    for( int i = 0; i < oldsize; i++) {
+      y[i] = x[i];
     }
-    if (store_buffer) {
-      for (int i = 0; i < buffer.size(); i++) {
-        output_buffer(output_nexti, i) = buffer[i];
-      }
-    }
-    if (store_firings) {
-      for (int i = 0; i < firings.size(); i++) {
-        output_firings(output_nexti, i) = firings[i];
-      }
-    }
-    output_nexti++;
+    return y;
   }
 
-  // determine whether extinction has occurred
-  bool extinction = true;
-  for (int i = 0; i < state.size() && extinction; i++) {
-    if (state[i] > 0) {
-      extinction = false;
+  template <typename T>
+  T resize_rows(const T& x, int n){
+    int oldsize = x.nrow();
+    if (n < oldsize) {
+      oldsize = n;
     }
+    T y(n, x.ncol());
+    for( int i = 0; i < oldsize; i++) {
+      for (int j = 0; j < x.ncol(); j++) {
+        y(i, j) = x(i, j);
+      }
+    }
+    return y;
   }
 
-  // construct output
-  int walltime_end = time(NULL);
-  int walltime_elapsed = walltime_end - walltime_start;
+private:
+  const int num_functions;
+  TR_FUN *prop_funs;
+  SSA_method *ssa_alg;
+  const NumericVector& initial_state;
+  const NumericVector& params;
+  const IntegerVector& nu_i;
+  const IntegerVector& nu_p;
+  const IntegerVector& nu_x;
+  const double final_time;
+  const double census_interval;
+  const int buffer_size;
+  const std::string sim_name;
+  const double max_walltime;
+  const bool log_propensity;
+  const bool log_firings;
+  const bool log_buffer;
+  const bool verbose;
+  const double console_interval;
 
-  DataFrame stats = DataFrame::create(
-    _["method"] = ssa_alg_->name,
-    _["sim_name"] = sim_name,
-    _["stop_simtime"] = simtime > final_time,
-    _["stop_extinction"] = extinction,
-    _["stop_negative_state"] = negative_state,
-    _["stop_zero_prop"] = zero_prop,
-    _["stop_walltime"] = walltime_elapsed >= max_walltime,
-    _["walltime_start"] = walltime_start,
-    _["walltime_end"] = walltime_end,
-    _["walltime_elapsed"] = walltime_elapsed,
-    _["num_steps"] = dtime_steps,
-    _["dtime_mean"] = dtime_mean,
-    _["dtime_sd"] = dtime_sd
+  // state data structures
+  double sim_time = 0;
+  double dtime = 0;
+  double sim_time_nextcensus;
+  NumericVector state;
+  NumericVector dstate;
+  NumericVector propensity;
+  NumericVector buffer;
+  NumericVector firings;
+  NumericVector dfirings;
+
+  // statistics data structures
+  int num_steps = 0;
+  double dtime_mean = 0;
+  double dtime_sd = 0;
+  double firings_mean = 0;
+  double firings_sd = 0;
+
+  bool negative_state = false;
+  bool zero_prop = false;
+
+  // log data structures
+  int output_nexti = 0;
+  NumericVector output_time;
+  NumericMatrix output_state;
+  NumericMatrix output_propensity;
+  NumericMatrix output_buffer;
+  NumericMatrix output_firings;
+} ;
+
+// here comes the boilerplate
+// [[Rcpp::export]]
+List simulate(
+  const int num_functions,
+  SEXP propensity_funs,
+  SEXP ssa_method,
+  const NumericVector& initial_state,
+  const NumericVector& params,
+  const IntegerVector& nu_i,
+  const IntegerVector& nu_p,
+  const IntegerVector& nu_x,
+  const double final_time,
+  const double census_interval,
+  const int buffer_size,
+  const std::string sim_name,
+  const double max_walltime,
+  const bool log_propensity,
+  const bool log_firings,
+  const bool log_buffer,
+  const bool verbose,
+  const double console_interval
+) {
+  SSA_simulation *sim = new SSA_simulation(
+    num_functions,
+    propensity_funs,
+    ssa_method,
+    initial_state,
+    params,
+    nu_i,
+    nu_p,
+    nu_x,
+    final_time,
+    census_interval,
+    buffer_size,
+    sim_name,
+    max_walltime,
+    log_propensity,
+    log_firings,
+    log_buffer,
+    verbose,
+    console_interval
   );
-
-  // remove empty output slots
-  output_time = gillespie::resize_vector(output_time, output_nexti);
-  output_state = gillespie::resize_rows(output_state, output_nexti);
-  if (store_propensity) {
-    output_propensity = gillespie::resize_rows(output_propensity, output_nexti);
-  }
-  if (store_buffer) {
-    output_buffer = gillespie::resize_rows(output_buffer, output_nexti);
-  }
-  if (store_firings) {
-    output_firings = gillespie::resize_rows(output_firings, output_nexti);
-  }
-
-  if (verbose) {
-    Rcout << "SSA finished!" << std::endl;
-  }
-
-  return List::create(
-    _["time"] = output_time,
-    _["state"] = output_state,
-    _["propensity"] = output_propensity,
-    _["firings"] = output_firings,
-    _["buffer"] = output_buffer,
-    _["stats"] = stats,
-    _["sim_name"] = sim_name
-  );
+  List out = sim->run();
+  // delete sim;
+  return out;
 }
 
 
@@ -314,7 +421,7 @@ List test_ssa_step(
     const IntegerVector& nu_p,
     const IntegerVector& nu_x
 ) {
-  SSA *ssa_alg_ = XPtr<SSA>(ssa_alg);
+  SSA_method *ssa_alg_ = XPtr<SSA_method>(ssa_alg);
   double dtime = 0;
   NumericVector dstate(state.size());
   NumericVector firings(propensity.size());
