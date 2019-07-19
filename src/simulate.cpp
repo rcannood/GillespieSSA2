@@ -132,6 +132,9 @@ public:
       // Check that no states are negative (can occur in some tau-leaping methods)
       for (auto i = state.begin(); i != state.end() && !negative_state; ++i) {
         if (*i < 0) {
+          if (!stop_on_neg_state) {
+            *i = 0;
+          }
           negative_state = true;
         }
       }
