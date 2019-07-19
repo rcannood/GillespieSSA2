@@ -17,11 +17,11 @@ make_ssa_btl <- function(mean_firings) {
     .Call('_gillespie_make_ssa_btl', PACKAGE = 'gillespie', mean_firings)
 }
 
-make_ssa_exact <- function() {
-    .Call('_gillespie_make_ssa_exact', PACKAGE = 'gillespie')
-}
-
 make_ssa_etl <- function(tau) {
     .Call('_gillespie_make_ssa_etl', PACKAGE = 'gillespie', tau)
+}
+
+make_ssa_exact <- function() {
+    .Call('_gillespie_make_ssa_exact', PACKAGE = 'gillespie')
 }
 

@@ -73,16 +73,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// make_ssa_exact
-SEXP make_ssa_exact();
-RcppExport SEXP _gillespie_make_ssa_exact() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(make_ssa_exact());
-    return rcpp_result_gen;
-END_RCPP
-}
 // make_ssa_etl
 SEXP make_ssa_etl(double tau);
 RcppExport SEXP _gillespie_make_ssa_etl(SEXP tauSEXP) {
@@ -94,14 +84,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// make_ssa_exact
+SEXP make_ssa_exact();
+RcppExport SEXP _gillespie_make_ssa_exact() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(make_ssa_exact());
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gillespie_make_ode_em", (DL_FUNC) &_gillespie_make_ode_em, 2},
     {"_gillespie_simulate", (DL_FUNC) &_gillespie_simulate, 19},
     {"_gillespie_test_ssa_step", (DL_FUNC) &_gillespie_test_ssa_step, 6},
     {"_gillespie_make_ssa_btl", (DL_FUNC) &_gillespie_make_ssa_btl, 1},
-    {"_gillespie_make_ssa_exact", (DL_FUNC) &_gillespie_make_ssa_exact, 0},
     {"_gillespie_make_ssa_etl", (DL_FUNC) &_gillespie_make_ssa_etl, 1},
+    {"_gillespie_make_ssa_exact", (DL_FUNC) &_gillespie_make_ssa_exact, 0},
     {NULL, NULL, 0}
 };
 
