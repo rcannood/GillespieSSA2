@@ -1,0 +1,62 @@
+context("ssa etl")
+
+test_that("ssa etl produces good results", {
+  for (i in seq_len(10)) {
+    set.seed(i)
+
+    tau <- runif(1, .001, .2)
+
+    meth <- ssa_etl(tau = tau)
+    expect_equal(meth$name, "ETL")
+    expect_equal(meth$params, list(tau = tau))
+
+    ssa_alg <- meth$factory()
+
+    M <- sample.int(100, 1)
+    N <- sample.int(26, 1)
+    state <- sample.int(1000, N) %>% set_names(sample(letters, N))
+    propensity <- sample.int(1000, M)
+    nu <- Matrix::Matrix(
+      sample(-5L:5L, M * N, replace = TRUE),
+      nrow = N,
+      sparse = TRUE
+    )
+
+    out <- test_ssa_step(
+      ssa_alg,
+      state,
+      propensity,
+      nu_i = nu@i,
+      nu_p = nu@p,
+      nu_x = nu@x
+    )
+    expect_length(out$firings, length(propensity))
+    expect_is(out$firings, "numeric")
+    expect_true(all(out$firings >= 0))
+
+    expect_length(out$dstate, length(state))
+    expect_is(out$dstate, "numeric")
+    expected_dstate <- (nu %*% out$firings)[,1]
+    expect_equal(out$dstate, expected_dstate)
+
+    expect_length(out$dtime, 1)
+    expect_is(out$dtime, "numeric")
+    expect_equal(out$dtime, tau)
+
+    firings <- lapply(seq_len(1000), function(i) {
+      out <- test_ssa_step(
+        ssa_alg,
+        state,
+        propensity,
+        nu_i = nu@i,
+        nu_p = nu@p,
+        nu_x = nu@x
+      )
+      out$firings
+    })
+
+    avg_firings <- Reduce(`+`, firings) / length(firings)
+    exp_firings <- propensity * tau
+    expect_gte(cor(avg_firings, exp_firings), .99)
+  }
+})

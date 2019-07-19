@@ -10,8 +10,8 @@ test_that("ssa exact produces good results", {
   for (i in seq_len(10)) {
     set.seed(i)
 
-    M <- sample.int(10, 1)
-    N <- sample.int(10, 1)
+    M <- sample.int(100, 1)
+    N <- sample.int(26, 1)
     state <- sample.int(1000, N) %>% set_names(sample(letters, N))
     propensity <- sample.int(1000, M)
     nu <- Matrix::Matrix(
