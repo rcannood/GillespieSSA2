@@ -83,16 +83,37 @@ compile_reactions <- function(
   params,
   buffer_ids = NULL,
   hardcode_params = FALSE,
-  write_rcpp = NULL,
-  fun_by = 100
+  write_rcpp = NA_character_,
+  fun_by = 100L
 ) {
   # should this be a parameter? i think not...
   reuse_buffer <- FALSE
 
+  # check ids
+  assert_that(
+    is.list(reactions),
+    is.character(state_ids),
+    !any(is.duplicated(state_ids)),
+    is.numeric(params),
+    length(params) == 0 || !is.null(names(params)),
+    !any(is.duplicated(buffer_ids)),
+    is_scalar_logical(hardcode_params),
+    is_scalar_character(write_rcpp),
+    is_scalar_integer(fun_by)
+  )
+
+  walk(seq_along(reactions), function(i) {
+    assert_that(is(reactions[[i]], "gillespie::reaction"))
+  })
+
+  reaction_ids <- map_chr(reactions, function(reac) reac$name) %|% paste0("reaction", seq_along(reactions))
+  assert_that(
+    !any(duplicated(reaction_ids))
+  )
+
   # create nu sparse matrix
   state_change_df <- map_df(seq_along(reactions), function(j) {
     reac <- reactions[[j]]
-    assert_that(is(reactions[[j]], "gillespie::reaction"))
 
     tibble(
       i = match(names(reac$effect), state_ids),
@@ -107,7 +128,6 @@ compile_reactions <- function(
   )
 
   # add reaction ids assignments to propensity functions
-  reaction_ids <- map_chr(reactions, function(reac) reac$name) %|% paste0("reaction", seq_along(reactions))
   propensity_funs <- map_chr(reactions, "propensity")
   for (i in seq_along(propensity_funs)) {
     propensity_funs[[i]] <- gsub("(.*;)?([^;]*)", paste0("\\1", reaction_ids[[i]], " = \\2"), propensity_funs[[i]])
@@ -222,7 +242,7 @@ compile_reactions <- function(
   on.exit(unlink(tmpdir, recursive = TRUE, force = TRUE))
 
   # compile code
-  if (!is.null(write_rcpp)) {
+  if (!is.na(write_rcpp)) {
     readr::write_lines(rcpp_code, write_rcpp)
   }
   return_functions <- NULL # sourceCpp will override this

@@ -5,7 +5,7 @@
 \title{Precompile the reactions}
 \usage{
 compile_reactions(reactions, state_ids, params, buffer_ids = NULL,
-  hardcode_params = FALSE, write_rcpp = NULL, fun_by = 100)
+  hardcode_params = FALSE, write_rcpp = NA_character_, fun_by = 100L)
 }
 \arguments{
 \item{reactions}{'\link{reaction}' A list of multiple \code{\link[=reaction]{reaction()}} objects.}
