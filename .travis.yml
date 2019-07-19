@@ -1,6 +1,7 @@
 language: r
 sudo: required
-dist: trusty
-bioc_required: true
 cache: packages
-warnings_are_errors: true
+r_packages:
+ - covr
+after_success:
+- R -e 'covr::codecov()'
