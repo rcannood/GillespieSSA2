@@ -39,6 +39,7 @@ public:
   nu_x(nu_x),
   final_time(final_time),
   census_interval(census_interval),
+  stop_on_neg_state(stop_on_neg_state),
   buffer_size(buffer_size),
   sim_name(sim_name),
   max_walltime(max_walltime),
@@ -94,7 +95,6 @@ public:
   List run() {
     // track walltime
     int walltime_start = time(NULL);
-    int walltime_max = walltime_start + max_walltime;
     int walltime_nextconsole = walltime_start, walltime_nextinterrupt = walltime_start, walltime_curr = walltime_start;
 
     // calculate initial propensities
@@ -109,9 +109,9 @@ public:
 
     while (
         sim_time < final_time &&
-          walltime_curr < walltime_max &&
+          (walltime_curr - walltime_start) < max_walltime &&
           !zero_prop &&
-          !negative_state
+          (!negative_state || !stop_on_neg_state)
     )  {
 
       // check for interrupt
@@ -211,11 +211,7 @@ public:
     );
   }
 
-
-
   void do_census() {
-
-
     if (output_nexti == output_time.size()) {
       output_time = resize_vector(output_time, output_nexti * 2);
       output_state = resize_rows(output_state, output_nexti * 2);
@@ -324,6 +320,7 @@ private:
   const IntegerVector& nu_x;
   const double final_time;
   const double census_interval;
+  const bool stop_on_neg_state;
   const int buffer_size;
   const std::string sim_name;
   const double max_walltime;
