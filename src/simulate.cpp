@@ -8,8 +8,6 @@ using namespace Rcpp;
 
 typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const double, NumericVector&, NumericVector&);
 
-
-
 class SSA_simulation {
 public:
   SSA_simulation(
@@ -23,6 +21,7 @@ public:
     const IntegerVector& nu_x,
     const double final_time,
     const double census_interval,
+    const bool stop_on_neg_state,
     const int buffer_size,
     const std::string sim_name,
     const double max_walltime,
@@ -377,6 +376,7 @@ List simulate(
   const IntegerVector& nu_x,
   const double final_time,
   const double census_interval,
+  const bool stop_on_neg_state,
   const int buffer_size,
   const std::string sim_name,
   const double max_walltime,
@@ -397,6 +397,7 @@ List simulate(
     nu_x,
     final_time,
     census_interval,
+    stop_on_neg_state,
     buffer_size,
     sim_name,
     max_walltime,

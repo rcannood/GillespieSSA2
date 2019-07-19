@@ -5,8 +5,8 @@ make_ode_em <- function(tau, noise_strength) {
     .Call('_gillespie_make_ode_em', PACKAGE = 'gillespie', tau, noise_strength)
 }
 
-simulate <- function(num_functions, propensity_funs, ssa_method, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, buffer_size, sim_name, max_walltime, log_propensity, log_firings, log_buffer, verbose, console_interval) {
-    .Call('_gillespie_simulate', PACKAGE = 'gillespie', num_functions, propensity_funs, ssa_method, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, buffer_size, sim_name, max_walltime, log_propensity, log_firings, log_buffer, verbose, console_interval)
+simulate <- function(num_functions, propensity_funs, ssa_method, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, stop_on_neg_state, buffer_size, sim_name, max_walltime, log_propensity, log_firings, log_buffer, verbose, console_interval) {
+    .Call('_gillespie_simulate', PACKAGE = 'gillespie', num_functions, propensity_funs, ssa_method, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, stop_on_neg_state, buffer_size, sim_name, max_walltime, log_propensity, log_firings, log_buffer, verbose, console_interval)
 }
 
 test_ssa_step <- function(ssa_alg, state, propensity, nu_i, nu_p, nu_x) {

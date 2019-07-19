@@ -23,6 +23,9 @@
 #' @param census_interval `[numeric]` The approximate interval between recording the state of the system.
 #'   Setting this parameter to `0` will cause each state to be recorded, and
 #'   to `Inf` will cause only the end state to be recorded.
+#' @param stop_on_neg_state `[logical]` Whether or not to stop the simulation when
+#'   the a negative value in the state has occured. This can occur, for instance, in the [ssa_etl()]
+#'   method.
 #' @param max_walltime `[numeric]` The maximum duration (in seconds) that the
 #'   simulation is allowed to run for before terminated.
 #' @param log_propensity `[logical]` Whether or not to store the propensity values at each census.
@@ -31,6 +34,7 @@
 #' @param verbose `[logical]` If `TRUE`, intermediary information pertaining to the simulation will be displayed.
 #' @param console_interval `[numeric]` The approximate interval between intermediary information outputs.
 #' @param sim_name `[character]` An optional name for the simulation.
+
 #'
 #' @return Returns a list object with the following elements:
 #'
@@ -78,6 +82,7 @@ ssa <- function(
   params = NULL,
   method = ssa_direct(),
   census_interval = 0,
+  stop_on_neg_state = TRUE,
   max_walltime = Inf,
   log_propensity = FALSE,
   log_firings = FALSE,
@@ -141,6 +146,7 @@ ssa <- function(
     nu_x = compiled_reactions$state_change@x,
     final_time = final_time,
     census_interval = census_interval,
+    stop_on_neg_state = stop_on_neg_state,
     buffer_size = compiled_reactions$buffer_size,
     sim_name = sim_name,
     max_walltime = max_walltime,

@@ -5,10 +5,10 @@
 \title{Invoking the stochastic simulation algorithm}
 \usage{
 ssa(initial_state, reactions, final_time, params = NULL,
-  method = ssa_direct(), census_interval = 0, max_walltime = Inf,
-  store_propensity = FALSE, store_firings = FALSE,
-  store_buffer = FALSE, verbose = FALSE, console_interval = 1,
-  sim_name = NA_character_)
+  method = ssa_direct(), census_interval = 0,
+  stop_on_neg_state = TRUE, max_walltime = Inf,
+  log_propensity = FALSE, log_firings = FALSE, log_buffer = FALSE,
+  verbose = FALSE, console_interval = 1, sim_name = NA_character_)
 }
 \arguments{
 \item{initial_state}{\code{[named numeric vector]} The initial state to start the simulation with.}
@@ -26,14 +26,18 @@ ssa(initial_state, reactions, final_time, params = NULL,
 Setting this parameter to \code{0} will cause each state to be recorded, and
 to \code{Inf} will cause only the end state to be recorded.}
 
+\item{stop_on_neg_state}{\code{[logical]} Whether or not to stop the simulation when
+the a negative value in the state has occured. This can occur, for instance, in the \code{\link[=ssa_etl]{ssa_etl()}}
+method.}
+
 \item{max_walltime}{\code{[numeric]} The maximum duration (in seconds) that the
 simulation is allowed to run for before terminated.}
 
-\item{store_propensity}{\code{[logical]} Whether or not to store the propensity values at each census.}
+\item{log_propensity}{\code{[logical]} Whether or not to store the propensity values at each census.}
 
-\item{store_firings}{\code{[logical]} Whether or not to store number of firings of each reaction between censuses.}
+\item{log_firings}{\code{[logical]} Whether or not to store number of firings of each reaction between censuses.}
 
-\item{store_buffer}{\code{[logical]} Whether or not to store the buffer at each census.}
+\item{log_buffer}{\code{[logical]} Whether or not to store the buffer at each census.}
 
 \item{verbose}{\code{[logical]} If \code{TRUE}, intermediary information pertaining to the simulation will be displayed.}
 
