@@ -20,6 +20,7 @@ List simulate(
     const IntegerVector& nu_x,
     const double final_time,
     const double census_interval,
+    const bool stop_on_neg_state,
     const int buffer_size,
     const CharacterVector& sim_name,
     const double max_walltime,
@@ -29,9 +30,6 @@ List simulate(
     const bool verbose,
     const double console_interval
 ) {
-  // a negstate should not occur if there is no bug in the SSA code
-  bool stop_on_neg_state = true;
-
   // fetch propensity functions from pointer
   TR_FUN* propensity_funs_ = XPtr<TR_FUN>(propensity_funs);
 
