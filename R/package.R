@@ -53,7 +53,7 @@
 #' @importFrom dplyr first
 #' @importFrom tibble lst
 #' @importFrom assertthat assert_that
-#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep discard invoke pmap map2 map2_df set_names imap
+#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep discard invoke pmap map2 map2_df set_names imap walk
 
 NULL
 
