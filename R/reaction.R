@@ -13,7 +13,7 @@
 #' @param effect `[named integer vector]` The change in state caused by this reaction.
 #' @param name `[character]` A name for this reaction (Optional). May only contain characters matching `[A-Za-z0-9_]`.
 #'
-#' @importFrom rlang is_formula
+#' @importFrom rlang is_formula is_integerish
 #'
 #' @export
 #' @examples
@@ -36,11 +36,13 @@ reaction <- function(
 
   # check effects
   assert_that(
-    is.integer(effect),
+    is_integerish(effect),
     length(effect) > 0,
     !is.null(names(effect)),
     all(grepl("^[A-Za-z_0-9]+$", names(effect)))
   )
+
+  effect <- set_names(as.integer(effect), names(effect))
 
   # check name
   assert_that(
