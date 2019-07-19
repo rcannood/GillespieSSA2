@@ -5,7 +5,7 @@
 \title{Invoking the stochastic simulation algorithm}
 \usage{
 ssa(initial_state, reactions, final_time, params = NULL,
-  method = ssa_direct(), census_interval = 0,
+  method = ssa_exact(), census_interval = 0,
   stop_on_neg_state = TRUE, max_walltime = Inf,
   log_propensity = FALSE, log_firings = FALSE, log_buffer = FALSE,
   verbose = FALSE, console_interval = 1, sim_name = NA_character_)
@@ -19,7 +19,7 @@ ssa(initial_state, reactions, final_time, params = NULL,
 
 \item{params}{\code{[named numeric vector]} Constant parameters to be used in the propensity functions.}
 
-\item{method}{\code{[ssa_method]}] Which SSA algorithm to use. Must be one of: \code{\link[=ssa_direct]{ssa_direct()}},
+\item{method}{\code{[ssa_method]}] Which SSA algorithm to use. Must be one of: \code{\link[=ssa_exact]{ssa_exact()}},
 \code{\link[=ssa_btl]{ssa_btl()}}, or \code{\link[=ssa_etl]{ssa_etl()}}.}
 
 \item{census_interval}{\code{[numeric]} The approximate interval between recording the state of the system.
@@ -64,7 +64,7 @@ or using \code{vignette("preparing_a_run", package = "gillespie")}.
 \details{
 Substantial improvements in speed and accuracy can be obtained by
 adjusting the additional (and optional) \code{ssa} arguments. By default
-\code{ssa} uses conservative parameters (o.a. \code{\link[=ssa_direct]{ssa_direct()}}) which prioritise
+\code{ssa} uses conservative parameters (o.a. \code{\link[=ssa_exact]{ssa_exact()}}) which prioritise
 computational accuracy over computational speed.
 
 Approximate methods (\code{\link[=ssa_etl]{ssa_etl()}} and \code{\link[=ssa_btl]{ssa_btl()}}) are not fool proof!
@@ -85,7 +85,7 @@ out <-
     initial_state = initial_state,
     reactions = reactions,
     params = params,
-    method = ssa_direct(),
+    method = ssa_exact(),
     final_time = 5,
     census_interval = .001,
     verbose = TRUE

@@ -3,9 +3,9 @@
 
 using namespace Rcpp;
 
-class SSA_direct : public SSA_method {
+class SSA_exact : public SSA_method {
 public:
-  SSA_direct() : SSA_method("direct") {}
+  SSA_exact() : SSA_method("exact") {}
 
   void step(
       const NumericVector& state,
@@ -38,8 +38,8 @@ public:
 } ;
 
 // [[Rcpp::export]]
-SEXP make_ssa_direct() {
-  SSA_direct *ssa = new SSA_direct();
-  XPtr<SSA_direct> ptr(ssa);
+SEXP make_ssa_exact() {
+  SSA_exact *ssa = new SSA_exact();
+  XPtr<SSA_exact> ptr(ssa);
   return ptr;
 }

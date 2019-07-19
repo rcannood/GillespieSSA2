@@ -9,7 +9,7 @@
 A fast, scalable, and versatile framework for simulating large systems with
 Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). It is the spiritual successor of
 \pkg{GillespieSSA}, but written entirely in Rcpp with large scale systems in mind, to make
-it blazingly fast. The SSA methods currently implemented are: Direct, Explicit
+it blazingly fast. The SSA methods currently implemented are: Exact, Explicit
 tau-leaping (\acronym{ETL}), and the Binomial tau-leaping (\acronym{BTL})
 }
 \section{The stochastic simulation algorithm}{
@@ -47,7 +47,7 @@ reaction \eqn{j} will occur in the next infinitesimal time interval
 \itemize{
 \item \code{\link[=ssa]{ssa()}}: The main entry point for running an \acronym{SSA} simulation.
 \item \code{\link[=autoplot.ssa]{autoplot.ssa()}}: A standard visualisation for generating an overview plot fo the output.
-\item \code{\link[=ssa_direct]{ssa_direct()}}, \code{\link[=ssa_etl]{ssa_etl()}}, \code{\link[=ssa_btl]{ssa_btl()}}: Different \acronym{SSA} algorithms.
+\item \code{\link[=ssa_exact]{ssa_exact()}}, \code{\link[=ssa_etl]{ssa_etl()}}, \code{\link[=ssa_btl]{ssa_btl()}}: Different \acronym{SSA} algorithms.
 \item \code{\link[=ode_em]{ode_em()}}: An \acronym{ODE} algorithm.
 \item \code{\link[=compile_reactions]{compile_reactions()}}: A function for precompiling the reactions.
 }

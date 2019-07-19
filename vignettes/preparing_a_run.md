@@ -50,7 +50,7 @@ out <-
     initial_state = initial_state,
     reactions = reactions,
     params = params,
-    method = ssa_direct(),
+    method = ssa_exact(),
     final_time = 5,
     census_interval = .001,
     verbose = TRUE,

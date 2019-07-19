@@ -8,7 +8,7 @@
 #'
 #' Substantial improvements in speed and accuracy can be obtained by
 #' adjusting the additional (and optional) `ssa` arguments. By default
-#' `ssa` uses conservative parameters (o.a. [ssa_direct()]) which prioritise
+#' `ssa` uses conservative parameters (o.a. [ssa_exact()]) which prioritise
 #' computational accuracy over computational speed.
 #'
 #' Approximate methods ([ssa_etl()] and [ssa_btl()]) are not fool proof!
@@ -18,7 +18,7 @@
 #' @param reactions A list of reactions, see [reaction()].
 #' @param final_time `[numeric]` The final simulation time.
 #' @param params `[named numeric vector]` Constant parameters to be used in the propensity functions.
-#' @param method `[ssa_method]`] Which SSA algorithm to use. Must be one of: [ssa_direct()],
+#' @param method `[ssa_method]`] Which SSA algorithm to use. Must be one of: [ssa_exact()],
 #'   [ssa_btl()], or [ssa_etl()].
 #' @param census_interval `[numeric]` The approximate interval between recording the state of the system.
 #'   Setting this parameter to `0` will cause each state to be recorded, and
@@ -61,7 +61,7 @@
 #'     initial_state = initial_state,
 #'     reactions = reactions,
 #'     params = params,
-#'     method = ssa_direct(),
+#'     method = ssa_exact(),
 #'     final_time = 5,
 #'     census_interval = .001,
 #'     verbose = TRUE
@@ -80,7 +80,7 @@ ssa <- function(
   reactions,
   final_time,
   params = NULL,
-  method = ssa_direct(),
+  method = ssa_exact(),
   census_interval = 0,
   stop_on_neg_state = TRUE,
   max_walltime = Inf,

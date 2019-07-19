@@ -12,7 +12,7 @@ simulating large systems with Gillespie’s Stochastic Simulation
 Algorithm (SSA). It is conceptually based on
 [GillespieSSA](https://cran.r-project.org/web/packages/GillespieSSA/index.html),
 but rewritten entirely in Rcpp with large scale systems in mind to make
-it blazingly fast. The SSA methods currently implemented are: Direct,
+it blazingly fast. The SSA methods currently implemented are: Exact,
 Explicit tau-leaping (ETL), and the Binomial tau-leaping (BTL).
 
 ## Install

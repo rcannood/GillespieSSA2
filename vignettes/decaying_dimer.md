@@ -36,7 +36,7 @@ reactions <- list(
 )
 ```
 
-Run simulations with the Direct method
+Run simulations with the Exact method
 
 ``` r
 set.seed(1)
@@ -45,7 +45,7 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct(),
+  method = ssa_exact(),
   sim_name = sim_name
 )
 autoplot.ssa(out)
