@@ -134,27 +134,42 @@ ssa <- function(
 
   assert_that(is(compiled_reactions, "gillespie::reactions"))
 
-  # run SSA
-  output <- simulate(
-    propensity_funs = compiled_reactions$functions_pointer,
-    num_functions = compiled_reactions$num_functions,
-    ssa_method = method$factory(),
-    initial_state = initial_state,
-    params = params,
-    nu_i = compiled_reactions$state_change@i,
-    nu_p = compiled_reactions$state_change@p,
-    nu_x = compiled_reactions$state_change@x,
-    final_time = final_time,
-    census_interval = census_interval,
-    stop_on_neg_state = stop_on_neg_state,
-    buffer_size = compiled_reactions$buffer_size,
-    sim_name = sim_name,
-    max_walltime = max_walltime,
-    log_propensity = log_propensity,
-    log_buffer = log_buffer,
-    log_firings = log_firings,
-    verbose = verbose,
-    console_interval = console_interval
+  # create new simulation object
+  sim <- new(SSA_simulation)
+
+  # set propensity functions
+  sim$set_propensity_functions(
+    compiled_reactions$num_functions,
+    compiled_reactions$functions_pointer,
+    params,
+    compiled_reactions$buffer_size
+  )
+
+  # set method
+  sim$set_ssa_method(method$factory())
+
+  # set initial state
+  sim$set_initial_state(initial_state)
+
+  # set state change vectors
+  sim$set_nu(
+    compiled_reactions$state_change@i,
+    compiled_reactions$state_change@p,
+    compiled_reactions$state_change@x
+  )
+
+  # run simulation
+  output <- sim$run(
+    final_time,
+    census_interval,
+    stop_on_neg_state,
+    sim_name,
+    max_walltime,
+    log_propensity,
+    log_firings,
+    log_buffer,
+    verbose,
+    console_interval
   )
 
   # set colnames of objects
