@@ -56,7 +56,7 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-![](linear_chain_files/figure-gfm/direct-1.png)<!-- -->
+![](linear_chain_files/figure-gfm/exact-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 

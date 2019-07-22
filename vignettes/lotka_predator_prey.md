@@ -53,7 +53,7 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-![](lotka_predator_prey_files/figure-gfm/direct-1.png)<!-- -->
+![](lotka_predator_prey_files/figure-gfm/exact-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
