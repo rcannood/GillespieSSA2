@@ -40,6 +40,7 @@ create_simulation <- function(
     console_interval
   )
   configure_method(method, sim)
+  sim$reset()
 
   sim
 }
@@ -81,7 +82,6 @@ create_simulation <- function(
 #' @param verbose `[logical]` If `TRUE`, intermediary information pertaining to the simulation will be displayed.
 #' @param console_interval `[numeric]` The approximate interval between intermediary information outputs.
 #' @param sim_name `[character]` An optional name for the simulation.
-
 #'
 #' @return Returns a list object with the following elements:
 #'
@@ -101,7 +101,6 @@ create_simulation <- function(
 #'   reaction(~c2 * prey * predators,    c(prey = -1, predators = +1),    name = "predation"),
 #'   reaction(~c3 * predators,           c(predators = -1),               name = "pred_down")
 #' )
-
 #'
 #' out <-
 #'   ssa(
