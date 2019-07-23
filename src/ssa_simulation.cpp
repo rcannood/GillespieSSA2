@@ -16,25 +16,49 @@ public:
   ~SSA_simulation() {}
   */
 
-  void set_propensity_functions(int num_functions_, SEXP propensity_funs_, NumericVector& params_, int buffer_size_) {
+  void initialise(
+    // propensity functions
+    int num_functions_,
+    SEXP propensity_funs_,
+    NumericVector& params_,
+    int buffer_size_,
+    // algorithm
+    SEXP ssa_method_,
+    // state
+    NumericVector& initial_state_,
+    // state change matrix
+    IntegerVector& nu_i_,
+    IntegerVector& nu_p_,
+    IntegerVector& nu_x_,
+    // output parameters
+    double census_interval_,
+    bool log_propensity_,
+    bool log_firings_,
+    bool log_buffer_,
+    // stopping conditions
+    bool stop_on_neg_state_,
+    double final_time_,
+    double max_walltime_,
+    // meta information
+    std::string sim_name_,
+    bool verbose_,
+    double console_interval_
+  ) {
+    // process prop funs
     num_functions = num_functions_;
     prop_funs = XPtr<TR_FUN>(propensity_funs_);
     params = params_;
-
     buffer = NumericVector(buffer_size_);
-  }
 
-  void set_ssa_method(SEXP ssa_method_) {
+    // process algorithm
     ssa_alg = XPtr<SSA_method>(ssa_method_);
-  }
 
-  void set_initial_state(NumericVector& initial_state_) {
+    // process state
     initial_state = initial_state_;
     state = NumericVector(initial_state.size());
     dstate = NumericVector(initial_state.size());
-  }
 
-  void set_nu(IntegerVector& nu_i_, IntegerVector& nu_p_, IntegerVector& nu_x_) {
+    // process state change matrix
     nu_i = nu_i_;
     nu_p = nu_p_;
     nu_x = nu_x_;
@@ -42,21 +66,23 @@ public:
     propensity = NumericVector(nu_p.size() - 1);
     firings = NumericVector(propensity.size());
     dfirings = NumericVector(propensity.size());
-  }
 
+    // process output parameters
+    census_interval = census_interval_;
+    log_propensity = log_propensity_;
+    log_firings = log_firings_;
+    log_buffer = log_buffer_;
 
-  List run(
-    double final_time,
-    double census_interval,
-    bool stop_on_neg_state_,
-    std::string sim_name,
-    double max_walltime,
-    bool log_propensity,
-    bool log_firings,
-    bool log_buffer,
-    bool verbose,
-    double console_interval
-  ) {
+    // process stopping conditions
+    stop_on_neg_state = stop_on_neg_state_;
+    final_time = final_time_;
+    max_walltime = max_walltime_;
+
+    // meta information
+    sim_name = sim_name_;
+    verbose = verbose_;
+    console_interval = console_interval_;
+
     // initialise output structures
     output_nexti = 0;
     output_time = NumericVector(10);
@@ -76,6 +102,12 @@ public:
     } else {
       output_firings = NumericMatrix(0, 0);
     }
+  }
+
+  List run() {
+    // reset output strunctures
+    output_nexti = 0;
+    resize_outputs(10, true);
 
     // initialise walltime fields
     int walltime_start = time(NULL);
@@ -181,17 +213,7 @@ public:
     );
 
     // remove empty output slots
-    output_time = resize_vector(output_time, output_nexti);
-    output_state = resize_rows(output_state, output_nexti);
-    if (output_propensity.nrow() > 0) {
-      output_propensity = resize_rows(output_propensity, output_nexti);
-    }
-    if (output_buffer.nrow() > 0) {
-      output_buffer = resize_rows(output_buffer, output_nexti);
-    }
-    if (output_firings.nrow() > 0) {
-      output_firings = resize_rows(output_firings, output_nexti);
-    }
+    resize_outputs(output_nexti, false);
 
     if (verbose) {
       Rcout << "SSA finished!" << std::endl;
@@ -211,17 +233,7 @@ public:
   void do_census() {
     // enlarge output objects, if needed
     if (output_nexti == output_time.size()) {
-      output_time = resize_vector(output_time, output_nexti * 2);
-      output_state = resize_rows(output_state, output_nexti * 2);
-      if (output_propensity.nrow() > 0) {
-        output_propensity = resize_rows(output_propensity, output_nexti * 2);
-      }
-      if (output_buffer.nrow() > 0) {
-        output_buffer = resize_rows(output_buffer, output_nexti * 2);
-      }
-      if (output_firings.nrow() > 0) {
-        output_firings = resize_rows(output_firings, output_nexti * 2);
-      }
+      resize_outputs(output_nexti * 2, false);
     }
 
     // copy state to output objects
@@ -291,29 +303,64 @@ public:
     }
   }
 
+  void resize_outputs(int num_rows, bool fill_zero) {
+    output_time = resize_vector(output_time, num_rows, !fill_zero);
+    output_state = resize_matrix(output_state, num_rows, output_state.ncol(), !fill_zero);
+    if (output_propensity.nrow() > 0) {
+      output_propensity = resize_matrix(output_propensity, num_rows, output_propensity.ncol(), !fill_zero);
+    }
+    if (output_buffer.nrow() > 0) {
+      output_buffer = resize_matrix(output_buffer, num_rows, output_buffer.ncol(), !fill_zero);
+    }
+    if (output_firings.nrow() > 0) {
+      output_firings = resize_matrix(output_firings, num_rows, output_firings.ncol(), !fill_zero);
+    }
+
+    if (fill_zero) {
+      std::fill(output_time.begin(), output_time.end(), 0);
+      std::fill(output_state.begin(), output_state.end(), 0);
+      std::fill(output_propensity.begin(), output_propensity.end(), 0);
+      std::fill(output_buffer.begin(), output_buffer.end(), 0);
+      std::fill(output_firings.begin(), output_firings.end(), 0);
+    }
+  }
+
   template <typename T>
-  T resize_vector(const T& x, int n){
+  T resize_vector(const T& x, int n, bool copy){
     int oldsize = x.size();
-    if (n < oldsize) {
+    if (n == oldsize) {
+      return x;
+    } else if (n < oldsize) {
       oldsize = n;
     }
-    T y(n);
-    for( int i = 0; i < oldsize; i++) {
-      y[i] = x[i];
+    T y(n); // TODO: no init?
+    if (copy) {
+      for( int i = 0; i < oldsize; i++) {
+        y[i] = x[i];
+      }
     }
     return y;
   }
 
   template <typename T>
-  T resize_rows(const T& x, int n){
-    int oldsize = x.nrow();
-    if (n < oldsize) {
-      oldsize = n;
+  T resize_matrix(const T& x, int nr, int nc, bool copy){
+    int oldnr = x.nrow();
+    int oldnc = x.ncol();
+    if (nr == oldnr && nc == oldnc) {
+      return x;
     }
-    T y(n, x.ncol());
-    for( int i = 0; i < oldsize; i++) {
-      for (int j = 0; j < x.ncol(); j++) {
-        y(i, j) = x(i, j);
+    if (nr < oldnr) {
+      oldnr = nr;
+    }
+    if (nc < oldnc) {
+      oldnc = nc;
+    }
+    T y(nr, nc); // TODO: no init?
+    if (copy) {
+      for( int i = 0; i < oldnr; i++) {
+        for (int j = 0; j < oldnc; j++) {
+          y(i, j) = x(i, j);
+        }
       }
     }
     return y;
@@ -338,17 +385,12 @@ public:
   NumericVector firings;
   NumericVector dfirings;
 
-  // runtime variables
-  bool zero_prop;
-  bool negative_state;
-  bool stop_on_neg_state;
-
   // statistics data structures
   int num_steps;
   double dtime_mean;
   double dtime_sd;
-  double firings_mean ;
-  double firings_sd ;
+  double firings_mean;
+  double firings_sd;
 
   // log data structures
   int output_nexti;
@@ -357,6 +399,24 @@ public:
   NumericMatrix output_propensity;
   NumericMatrix output_buffer;
   NumericMatrix output_firings;
+
+  // output parameters
+  double census_interval;
+  bool log_propensity;
+  bool log_firings;
+  bool log_buffer;
+
+  // stopping conditions
+  bool zero_prop;
+  bool negative_state;
+  bool stop_on_neg_state;
+  double final_time;
+  double max_walltime;
+
+  // meta information
+  std::string sim_name;
+  bool verbose;
+  double console_interval;
 };
 
 
@@ -364,14 +424,18 @@ public:
 RCPP_MODULE(gillespie) {
   class_<SSA_simulation>("SSA_simulation")
   .constructor()
+  .method("initialise", &SSA_simulation::initialise)
   .method("run", &SSA_simulation::run)
-  .method("set_propensity_functions", &SSA_simulation::set_propensity_functions)
-  .method("set_ssa_method", &SSA_simulation::set_ssa_method)
-  .method("set_initial_state", &SSA_simulation::set_initial_state)
-  .method("set_nu", &SSA_simulation::set_nu)
   .method("do_census", &SSA_simulation::do_census)
   .method("calculate_propensity", &SSA_simulation::calculate_propensity)
   .method("make_step", &SSA_simulation::make_step)
+  .method("resize_outputs", &SSA_simulation::resize_outputs)
+  .field("num_functions", &SSA_simulation::num_functions)
+  .field("initial_state", &SSA_simulation::initial_state)
+  .field("params", &SSA_simulation::params)
+  .field("nu_i", &SSA_simulation::nu_i)
+  .field("nu_p", &SSA_simulation::nu_p)
+  .field("nu_x", &SSA_simulation::nu_x)
   .field("sim_time", &SSA_simulation::sim_time)
   .field("dtime", &SSA_simulation::dtime)
   .field("state", &SSA_simulation::state)
@@ -391,6 +455,18 @@ RCPP_MODULE(gillespie) {
   .field("output_propensity", &SSA_simulation::output_propensity)
   .field("output_buffer", &SSA_simulation::output_buffer)
   .field("output_firings", &SSA_simulation::output_firings)
+  .field("census_interval", &SSA_simulation::census_interval)
+  .field("log_propensity", &SSA_simulation::log_propensity)
+  .field("log_firings", &SSA_simulation::log_firings)
+  .field("log_buffer", &SSA_simulation::log_buffer)
+  .field("zero_prop", &SSA_simulation::zero_prop)
+  .field("negative_state", &SSA_simulation::negative_state)
+  .field("stop_on_neg_state", &SSA_simulation::stop_on_neg_state)
+  .field("final_time", &SSA_simulation::final_time)
+  .field("max_walltime", &SSA_simulation::max_walltime)
+  .field("sim_name", &SSA_simulation::sim_name)
+  .field("verbose", &SSA_simulation::verbose)
+  .field("console_interval", &SSA_simulation::console_interval)
   ;
 }
 

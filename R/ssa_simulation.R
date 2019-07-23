@@ -138,39 +138,30 @@ ssa <- function(
   sim <- new(SSA_simulation)
 
   # set propensity functions
-  sim$set_propensity_functions(
-    compiled_reactions$num_functions,
-    compiled_reactions$functions_pointer,
-    params,
-    compiled_reactions$buffer_size
-  )
-
-  # set method
-  sim$set_ssa_method(method$factory())
-
-  # set initial state
-  sim$set_initial_state(initial_state)
-
-  # set state change vectors
-  sim$set_nu(
-    compiled_reactions$state_change@i,
-    compiled_reactions$state_change@p,
-    compiled_reactions$state_change@x
+  sim$initialise(
+    num_functions = compiled_reactions$num_functions,
+    propensity_funs_ = compiled_reactions$functions_pointer,
+    params_ = params,
+    buffer_size_ = compiled_reactions$buffer_size,
+    ssa_method_ = method$factory(),
+    initial_state_ = initial_state,
+    nu_i_ = compiled_reactions$state_change@i,
+    nu_p_ = compiled_reactions$state_change@p,
+    nu_x_ = compiled_reactions$state_change@x,
+    census_interval_ = census_interval,
+    log_propensity_ = log_propensity,
+    log_firings_ = log_firings,
+    log_buffer_ = log_buffer,
+    stop_on_neg_state_ = stop_on_neg_state,
+    final_time_ = final_time,
+    max_walltime_ = max_walltime,
+    sim_name_ = sim_name,
+    verbose_ = verbose,
+    console_interval_ = console_interval
   )
 
   # run simulation
-  output <- sim$run(
-    final_time,
-    census_interval,
-    stop_on_neg_state,
-    sim_name,
-    max_walltime,
-    log_propensity,
-    log_firings,
-    log_buffer,
-    verbose,
-    console_interval
-  )
+  output <- sim$run()
 
   # set colnames of objects
   colnames(output$state) <- names(initial_state)

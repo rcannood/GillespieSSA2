@@ -5,10 +5,6 @@ make_ode_em <- function(tau, noise_strength) {
     .Call('_gillespie_make_ode_em', PACKAGE = 'gillespie', tau, noise_strength)
 }
 
-test_ssa_step <- function(ssa_alg, state, propensity, nu_i, nu_p, nu_x) {
-    .Call('_gillespie_test_ssa_step', PACKAGE = 'gillespie', ssa_alg, state, propensity, nu_i, nu_p, nu_x)
-}
-
 make_ssa_btl <- function(mean_firings) {
     .Call('_gillespie_make_ssa_btl', PACKAGE = 'gillespie', mean_firings)
 }
@@ -19,5 +15,9 @@ make_ssa_etl <- function(tau) {
 
 make_ssa_exact <- function() {
     .Call('_gillespie_make_ssa_exact', PACKAGE = 'gillespie')
+}
+
+test_ssa_step <- function(ssa_alg, state, propensity, nu_i, nu_p, nu_x) {
+    .Call('_gillespie_test_ssa_step', PACKAGE = 'gillespie', ssa_alg, state, propensity, nu_i, nu_p, nu_x)
 }
 
