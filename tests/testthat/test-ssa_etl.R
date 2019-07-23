@@ -1,6 +1,5 @@
 context("ssa etl")
 
-
 for (i in seq_len(10)) {
   test_that(paste0("ssa etl produces good results, seed ", i), {
     set.seed(i)
@@ -10,8 +9,6 @@ for (i in seq_len(10)) {
     meth <- ssa_etl(tau = tau)
     expect_equal(meth$name, "ETL")
     expect_equal(meth$params, list(tau = tau))
-
-    ssa_alg <- meth$factory()
 
     M <- sample.int(100, 1)
     N <- sample.int(26, 1)
@@ -23,14 +20,14 @@ for (i in seq_len(10)) {
       sparse = TRUE
     )
 
-    out <- test_ssa_step(
-      ssa_alg,
+    sim <- test_ssa_step(
+      meth,
       state,
       propensity,
-      nu_i = nu@i,
-      nu_p = nu@p,
-      nu_x = nu@x
+      nu
     )
+
+    out <- sim$step_fun()
     expect_length(out$firings, length(propensity))
     expect_is(out$firings, "numeric")
     expect_true(all(out$firings >= 0))
@@ -45,15 +42,7 @@ for (i in seq_len(10)) {
     expect_equal(out$dtime, tau)
 
     firings <- lapply(seq_len(1000), function(i) {
-      out <- test_ssa_step(
-        ssa_alg,
-        state,
-        propensity,
-        nu_i = nu@i,
-        nu_p = nu@p,
-        nu_x = nu@x
-      )
-      out$firings
+      sim$step_fun()$firings
     })
 
     avg_firings <- Reduce(`+`, firings) / length(firings)

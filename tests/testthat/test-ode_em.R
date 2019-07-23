@@ -1,6 +1,5 @@
 context("ode em")
 
-
 for (i in seq_len(10)) {
   test_that(paste0("ode em produces good results, seed ", i), {
     set.seed(i)
@@ -12,8 +11,6 @@ for (i in seq_len(10)) {
     expect_equal(meth$name, "EM")
     expect_equal(meth$params, list(tau = tau, noise_strength = noise_strength))
 
-    ssa_alg <- meth$factory()
-
     M <- sample.int(100, 1)
     N <- sample.int(26, 1)
     state <- sample.int(1000, N) %>% set_names(sample(letters, N))
@@ -24,14 +21,14 @@ for (i in seq_len(10)) {
       sparse = TRUE
     )
 
-    out <- test_ssa_step(
-      ssa_alg,
+    sim <- test_ssa_step(
+      meth,
       state,
       propensity,
-      nu_i = nu@i,
-      nu_p = nu@p,
-      nu_x = nu@x
+      nu
     )
+    out <- sim$step_fun()
+
     expect_length(out$firings, length(propensity))
     expect_is(out$firings, "numeric")
     expect_lte(sum(abs(out$firings - propensity * tau)), .01)
@@ -40,7 +37,7 @@ for (i in seq_len(10)) {
     expect_is(out$dstate, "numeric")
     expected_dstate <- (nu %*% out$firings)[,1]
     if (noise_strength > 0) {
-      expect_true(any(abs(out$dstate - expected_dstate) > 0))
+      expect_true(any(abs(out$dstate - expected_dstate) > .1))
     } else {
       expect_true(sum(abs(out$dstate - expected_dstate)) < .1)
     }
@@ -50,20 +47,11 @@ for (i in seq_len(10)) {
     expect_equal(out$dtime, tau)
 
     if (noise_strength > 0) {
-      dstates <- lapply(seq_len(1000), function(i) {
-        out <- test_ssa_step(
-          ssa_alg,
-          state,
-          propensity,
-          nu_i = nu@i,
-          nu_p = nu@p,
-          nu_x = nu@x
-        )
-        out$dstate - expected_dstate
+      noise <- sapply(seq_len(1000), function(i) {
+        (sim$step_fun()$dstate - expected_dstate) / noise_strength / sqrt(abs(state))
       })
-
-      avg_dstates <- Reduce(`+`, dstates) / length(dstates)
-      expect_true(all(abs(avg_dstates / sqrt(abs(state)) / noise_strength) - tau < 0))
+      expect_equal(mean(noise), 0, tolerance = .01)
+      expect_equal(sd(noise), tau, tolerance = .01)
     }
   })
 }

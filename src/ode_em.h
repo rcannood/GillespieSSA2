@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Rcpp.h>
 #include "ssa_method.h"
 
@@ -44,10 +46,3 @@ public:
     *dtime = tau;
   }
 } ;
-
-// [[Rcpp::export]]
-SEXP make_ode_em(double tau, double noise_strength) {
-  ODE_EM *ssa = new ODE_EM(tau, noise_strength);
-  XPtr<ODE_EM> ptr(ssa);
-  return ptr;
-}

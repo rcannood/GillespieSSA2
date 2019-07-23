@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Rcpp.h>
 #include "ssa_method.h"
 
@@ -77,10 +79,3 @@ public:
     *dtime = tau;
   }
 } ;
-
-// [[Rcpp::export]]
-SEXP make_ssa_btl(double mean_firings) {
-  SSA_BTL *ssa = new SSA_BTL(mean_firings);
-  XPtr<SSA_BTL> ptr(ssa);
-  return ptr;
-}

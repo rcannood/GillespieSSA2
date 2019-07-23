@@ -73,7 +73,6 @@ test_that("compilation works", {
   sim <- create_simulation(
     compiled_reactions = comp_reac,
     params = params,
-    ssa_method = ssa_exact(),
     initial_state = state,
     final_time = 1
   )
@@ -103,7 +102,6 @@ test_that("compilation works when params are hardcoded", {
   sim <- create_simulation(
     compiled_reactions = comp_reac,
     params = params,
-    ssa_method = ssa_exact(),
     initial_state = state,
     final_time = 1
   )

@@ -2,6 +2,10 @@
 #include <math.h>
 
 #include "ssa_method.h"
+#include "ode_em.h"
+#include "ssa_exact.h"
+#include "ssa_etl.h"
+#include "ssa_btl.h"
 #include "utils.h"
 
 using namespace Rcpp;
@@ -12,9 +16,10 @@ class SSA_simulation {
 public:
   SSA_simulation() {}
 
-  /*
-  ~SSA_simulation() {}
-  */
+  ~SSA_simulation() {
+    // Rcout << "FREE WILLY" << std::endl;
+    free(ssa_alg);
+  }
 
   void initialise(
     // propensity functions
@@ -22,8 +27,6 @@ public:
     SEXP propensity_funs_,
     NumericVector& params_,
     int buffer_size_,
-    // algorithm
-    SEXP ssa_method_,
     // state
     NumericVector& initial_state_,
     // state change matrix
@@ -46,12 +49,14 @@ public:
   ) {
     // process prop funs
     num_functions = num_functions_;
-    prop_funs = XPtr<TR_FUN>(propensity_funs_);
+    if (!Rf_isNull(propensity_funs_)) {
+      prop_funs = XPtr<TR_FUN>(propensity_funs_);
+    }
     params = params_;
     buffer = NumericVector(buffer_size_);
 
     // process algorithm
-    ssa_alg = XPtr<SSA_method>(ssa_method_);
+    ssa_alg = new SSA_exact();
 
     // process state
     initial_state = initial_state_;
@@ -104,25 +109,20 @@ public:
     }
   }
 
-  List run() {
+  void reset() {
     // reset output strunctures
     output_nexti = 0;
     resize_outputs(10, true);
-
-    // initialise walltime fields
-    int walltime_start = time(NULL);
-    int walltime_nextconsole = walltime_start, walltime_nextinterrupt = walltime_start, walltime_curr = walltime_start;
+    sim_time_nextcensus = census_interval;
 
     // initialise state data structures
     sim_time = 0;
     dtime = 0;
-    double sim_time_nextcensus = census_interval;
-    std::copy(initial_state.begin(), initial_state.end(), state.begin()) ;
+    std::copy(initial_state.begin(), initial_state.end(), state.begin());
     std::fill(dstate.begin(), dstate.end(), 0);
     std::fill(buffer.begin(), buffer.end(), 0);
     std::fill(firings.begin(), firings.end(), 0);
     std::fill(dfirings.begin(), dfirings.end(), 0);
-    calculate_propensity();
 
     // statistics data structures
     num_steps = 0;
@@ -130,12 +130,22 @@ public:
     dtime_sd = 0;
     firings_mean = 0;
     firings_sd = 0;
+    walltime_elapsed = 0;
 
+    // stopping conditions
     negative_state = false;
-    zero_prop = false;
+    negative_propensity = false;
+    all_zero_propensity = false;
+    all_zero_state = false;
 
-    // do census of initial state
+    calculate_propensity();
     do_census();
+  }
+
+  void run() {
+    // initialise walltime fields
+    int walltime_start = time(NULL);
+    int walltime_nextconsole = walltime_start, walltime_nextinterrupt = walltime_start, walltime_curr = walltime_start;
 
     // verbose
     if (verbose) {
@@ -146,7 +156,8 @@ public:
     while (
         sim_time < final_time &&
           (walltime_curr - walltime_start) < max_walltime &&
-          !zero_prop &&
+          !negative_propensity &&
+          !all_zero_propensity &&
           (!negative_state || !stop_on_neg_state)
     )  {
 
@@ -183,34 +194,16 @@ public:
     }
 
     // determine whether extinction has occurred
-    bool extinction = true;
-    for (auto i = state.begin(); i != state.end() && extinction; i++) {
+    all_zero_state = true;
+    for (auto i = state.begin(); i != state.end() && all_zero_state; i++) {
       if (*i > 0) {
-        extinction = false;
+        all_zero_state = false;
       }
     }
 
     // construct output
     int walltime_end = time(NULL);
-    int walltime_elapsed = walltime_end - walltime_start;
-
-    DataFrame stats = DataFrame::create(
-      _["method"] = ssa_alg->name,
-      _["sim_name"] = sim_name,
-      _["stop_sim_time"] = sim_time > final_time,
-      _["stop_extinction"] = extinction,
-      _["stop_negative_state"] = negative_state,
-      _["stop_zero_prop"] = zero_prop,
-      _["stop_walltime"] = walltime_elapsed >= max_walltime,
-      _["walltime_start"] = walltime_start,
-      _["walltime_end"] = walltime_end,
-      _["walltime_elapsed"] = walltime_elapsed,
-      _["num_steps"] = num_steps,
-      _["dtime_mean"] = dtime_mean,
-      _["dtime_sd"] = dtime_sd,
-      _["firings_mean"] = firings_mean,
-      _["firings_sd"] = firings_sd
-    );
+    walltime_elapsed += walltime_end - walltime_start;
 
     // remove empty output slots
     resize_outputs(output_nexti, false);
@@ -218,15 +211,24 @@ public:
     if (verbose) {
       Rcout << "SSA finished!" << std::endl;
     }
+  }
 
-    return List::create(
-      _["time"] = output_time,
-      _["state"] = output_state,
-      _["propensity"] = output_propensity,
-      _["firings"] = output_firings,
-      _["buffer"] = output_buffer,
-      _["stats"] = stats,
-      _["sim_name"] = sim_name
+  DataFrame get_statistics() {
+    return DataFrame::create(
+      _["method"] = ssa_alg->name,
+      _["sim_name"] = sim_name,
+      _["sim_time_exceeded"] = sim_time > final_time,
+      _["all_zero_state"] = all_zero_state,
+      _["negative_state"] = negative_state,
+      _["all_zero_propensity"] = all_zero_propensity,
+      _["negative_propensity"] = negative_propensity,
+      _["walltime_exceeded"] = walltime_elapsed >= max_walltime,
+      _["walltime_elapsed"] = walltime_elapsed,
+      _["num_steps"] = num_steps,
+      _["dtime_mean"] = dtime_mean,
+      _["dtime_sd"] = dtime_sd,
+      _["firings_mean"] = firings_mean,
+      _["firings_sd"] = firings_sd
     );
   }
 
@@ -258,10 +260,12 @@ public:
     }
 
     // check whether all propensity functions are zero
-    zero_prop = true;
-    for (int i = 0; i < propensity.size() && zero_prop; i++) {
-      if (propensity[i] > 0) {
-        zero_prop = false;
+    all_zero_propensity = true;
+    for (auto i = propensity.begin(); i != propensity.end(); ++i) {
+      if (*i > 0) {
+        all_zero_propensity = false;
+      } else if (*i < 0) {
+        negative_propensity = true;
       }
     }
   }
@@ -323,6 +327,26 @@ public:
       std::fill(output_buffer.begin(), output_buffer.end(), 0);
       std::fill(output_firings.begin(), output_firings.end(), 0);
     }
+  }
+
+  void use_ssa_exact() {
+    free(ssa_alg);
+    ssa_alg = new SSA_exact();
+  }
+
+  void use_ssa_etl(double tau) {
+    free(ssa_alg);
+    ssa_alg = new SSA_ETL(tau);
+  }
+
+  void use_ssa_btl(double mean_firings) {
+    free(ssa_alg);
+    ssa_alg = new SSA_BTL(mean_firings);
+  }
+
+  void use_ode_em(double tau, double noise_strength) {
+    free(ssa_alg);
+    ssa_alg = new ODE_EM(tau, noise_strength);
   }
 
   template <typename T>
@@ -391,6 +415,7 @@ public:
   double dtime_sd;
   double firings_mean;
   double firings_sd;
+  double walltime_elapsed;
 
   // log data structures
   int output_nexti;
@@ -402,13 +427,16 @@ public:
 
   // output parameters
   double census_interval;
+  double sim_time_nextcensus;
   bool log_propensity;
   bool log_firings;
   bool log_buffer;
 
   // stopping conditions
-  bool zero_prop;
+  bool all_zero_propensity;
+  bool all_zero_state;
   bool negative_state;
+  bool negative_propensity;
   bool stop_on_neg_state;
   double final_time;
   double max_walltime;
@@ -420,16 +448,22 @@ public:
 };
 
 
-// all of these fields are made publicly accessible to allow unit testing
+// export everything so it can be unit tested
 RCPP_MODULE(gillespie) {
   class_<SSA_simulation>("SSA_simulation")
   .constructor()
   .method("initialise", &SSA_simulation::initialise)
   .method("run", &SSA_simulation::run)
+  .method("reset", &SSA_simulation::reset)
+  .method("get_statistics", &SSA_simulation::get_statistics)
   .method("do_census", &SSA_simulation::do_census)
   .method("calculate_propensity", &SSA_simulation::calculate_propensity)
   .method("make_step", &SSA_simulation::make_step)
   .method("resize_outputs", &SSA_simulation::resize_outputs)
+  .method("use_ssa_exact", &SSA_simulation::use_ssa_exact)
+  .method("use_ssa_etl", &SSA_simulation::use_ssa_etl)
+  .method("use_ssa_btl", &SSA_simulation::use_ssa_btl)
+  .method("use_ode_em", &SSA_simulation::use_ode_em)
   .field("num_functions", &SSA_simulation::num_functions)
   .field("initial_state", &SSA_simulation::initial_state)
   .field("params", &SSA_simulation::params)
@@ -459,7 +493,9 @@ RCPP_MODULE(gillespie) {
   .field("log_propensity", &SSA_simulation::log_propensity)
   .field("log_firings", &SSA_simulation::log_firings)
   .field("log_buffer", &SSA_simulation::log_buffer)
-  .field("zero_prop", &SSA_simulation::zero_prop)
+  .field("all_zero_propensity", &SSA_simulation::all_zero_propensity)
+  .field("all_zero_state", &SSA_simulation::all_zero_state)
+  .field("negative_propensity", &SSA_simulation::negative_propensity)
   .field("negative_state", &SSA_simulation::negative_state)
   .field("stop_on_neg_state", &SSA_simulation::stop_on_neg_state)
   .field("final_time", &SSA_simulation::final_time)
@@ -468,26 +504,4 @@ RCPP_MODULE(gillespie) {
   .field("verbose", &SSA_simulation::verbose)
   .field("console_interval", &SSA_simulation::console_interval)
   ;
-}
-
-
-// [[Rcpp::export]]
-List test_ssa_step(
-    SEXP ssa_alg,
-    NumericVector& state,
-    NumericVector& propensity,
-    IntegerVector& nu_i,
-    IntegerVector& nu_p,
-    IntegerVector& nu_x
-) {
-  SSA_method *ssa_alg_ = XPtr<SSA_method>(ssa_alg);
-  double dtime = 0;
-  NumericVector dstate(state.size());
-  NumericVector firings(propensity.size());
-  ssa_alg_->step(state, propensity, nu_i, nu_p, nu_x, &dtime, dstate, firings);
-  return List::create(
-    _["dtime"] = dtime,
-    _["dstate"] = dstate,
-    _["firings"] = firings
-  );
 }

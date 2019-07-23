@@ -1,11 +1,13 @@
+#pragma once
+
 #include <Rcpp.h>
 #include "ssa_method.h"
 
 using namespace Rcpp;
 
-class SSA_etl : public SSA_method {
+class SSA_ETL : public SSA_method {
 public:
-  SSA_etl(double tau_) : SSA_method("ETL"), tau(tau_) {}
+  SSA_ETL(double tau_) : SSA_method("ETL"), tau(tau_) {}
 
   double tau;
 
@@ -38,10 +40,3 @@ public:
     *dtime = tau;
   }
 } ;
-
-// [[Rcpp::export]]
-SEXP make_ssa_etl(double tau) {
-  SSA_etl *ssa = new SSA_etl(tau);
-  XPtr<SSA_etl> ptr(ssa);
-  return ptr;
-}

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Rcpp.h>
 #include "ssa_method.h"
 
@@ -36,10 +38,3 @@ public:
     *dtime = -log(R::runif(0, 1)) / sum(propensity);
   }
 } ;
-
-// [[Rcpp::export]]
-SEXP make_ssa_exact() {
-  SSA_exact *ssa = new SSA_exact();
-  XPtr<SSA_exact> ptr(ssa);
-  return ptr;
-}

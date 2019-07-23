@@ -1,14 +1,11 @@
 context("ssa exact")
 
-
-
 for (i in seq_len(10)) {
   test_that(paste0("ssa exact produces good results, seed ", i), {
     meth <- ssa_exact()
     expect_equal(meth$name, "exact")
     expect_equal(meth$params, list())
 
-    ssa_alg <- meth$factory()
     set.seed(i)
 
     M <- sample.int(100, 1)
@@ -21,14 +18,14 @@ for (i in seq_len(10)) {
       sparse = TRUE
     )
 
-    out <- test_ssa_step(
-      ssa_alg,
+    sim <- test_ssa_step(
+      meth,
       state,
       propensity,
-      nu_i = nu@i,
-      nu_p = nu@p,
-      nu_x = nu@x
+      nu
     )
+    out <- sim$step_fun()
+
     expect_length(out$firings, length(propensity))
     expect_is(out$firings, "numeric")
     expect_equal(sum(out$firings == 1), 1L)

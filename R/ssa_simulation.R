@@ -2,7 +2,7 @@
 create_simulation <- function(
   compiled_reactions,
   params = NULL,
-  ssa_method,
+  method = ssa_exact(),
   initial_state,
   census_interval = 0,
   log_propensity = FALSE,
@@ -24,7 +24,6 @@ create_simulation <- function(
     compiled_reactions$functions_pointer,
     params,
     compiled_reactions$buffer_size,
-    ssa_method$factory(),
     initial_state,
     compiled_reactions$state_change@i,
     compiled_reactions$state_change@p,
@@ -40,6 +39,7 @@ create_simulation <- function(
     verbose,
     console_interval
   )
+  configure_method(method, sim)
 
   sim
 }
@@ -155,7 +155,7 @@ ssa <- dynutils::inherit_default_params(
       !any(duplicated(c(names(initial_state), names(params)))),
 
       # method
-      is(method, "gillespie::ssa_method"),
+      is(method, "SSA_method"),
 
       # vector arguments
       is_scalar_double(final_time), final_time >= 0,
@@ -187,7 +187,7 @@ ssa <- dynutils::inherit_default_params(
     sim <- create_simulation(
       compiled_reactions = compiled_reactions,
       params = params,
-      ssa_method = method,
+      method = method,
       initial_state = initial_state,
       census_interval = census_interval,
       log_propensity = log_propensity,
@@ -202,7 +202,17 @@ ssa <- dynutils::inherit_default_params(
     )
 
     # run simulation
-    output <- sim$run()
+    sim$run()
+
+    output <- list(
+      time = sim$output_time,
+      state = sim$output_state,
+      propensity = sim$output_propensity,
+      firings = sim$output_firings,
+      buffer = sim$output_buffer,
+      stats = sim$get_statistics(),
+      name = sim$sim_name
+    )
 
     # set colnames of objects
     colnames(output$state) <- names(initial_state)
