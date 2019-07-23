@@ -74,7 +74,7 @@ compile_reactions <- function(
   }
 
   # preprocess propensity functions
-  variable_names <- propensity_funs %>% str_extract_all("[A-Za-z_0-9]* *=") %>% map(~ str_replace_all(., "[ =]", ""))
+  variable_names <- propensity_funs %>% str_extract_all("[A-Za-z_0-9]* *=") %>% map(function(x) str_replace_all(x, "[ =]", ""))
   reaction_ids <- variable_names %>% map_chr(last)
 
   buffer_usages <- map_int(variable_names, length) - 1

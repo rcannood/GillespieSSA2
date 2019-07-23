@@ -1,4 +1,5 @@
 # boilerplate function but allows for parameter name auto completion
+#' @importFrom methods new
 create_simulation <- function(
   compiled_reactions,
   params = NULL,
