@@ -1,3 +1,50 @@
+# boilerplate function but allows for parameter name auto completion
+create_simulation <- function(
+  compiled_reactions,
+  params = NULL,
+  ssa_method,
+  initial_state,
+  census_interval = 0,
+  log_propensity = FALSE,
+  log_firings = FALSE,
+  log_buffer = FALSE,
+  stop_on_neg_state = TRUE,
+  final_time,
+  max_walltime = Inf,
+  sim_name = NA_character_,
+  verbose = FALSE,
+  console_interval = 1
+) {
+  # create new simulation object
+  sim <- new(SSA_simulation)
+
+  # set propensity functions
+  sim$initialise(
+    compiled_reactions$num_functions,
+    compiled_reactions$functions_pointer,
+    params,
+    compiled_reactions$buffer_size,
+    ssa_method$factory(),
+    initial_state,
+    compiled_reactions$state_change@i,
+    compiled_reactions$state_change@p,
+    compiled_reactions$state_change@x,
+    census_interval,
+    log_propensity,
+    log_firings,
+    log_buffer,
+    stop_on_neg_state,
+    final_time,
+    max_walltime,
+    sim_name,
+    verbose,
+    console_interval
+  )
+
+  sim
+}
+
+
 #' Invoking the stochastic simulation algorithm
 #'
 #' Main interface function to the implemented \acronym{SSA} methods. Runs a
@@ -71,111 +118,107 @@
 #' @export
 #'
 #' @importFrom methods is
-#' @importFrom dynutils is_sparse
+#' @importFrom dynutils is_sparse inherit_default_params
 #' @importFrom tibble tibble
 #' @importFrom Matrix Matrix
 #' @importFrom purrr is_scalar_double is_scalar_logical is_scalar_integer is_scalar_character
-ssa <- function(
-  initial_state,
-  reactions,
-  final_time,
-  params = NULL,
-  method = ssa_exact(),
-  census_interval = 0,
-  stop_on_neg_state = TRUE,
-  max_walltime = Inf,
-  log_propensity = FALSE,
-  log_firings = FALSE,
-  log_buffer = FALSE,
-  verbose = FALSE,
-  console_interval = 1,
-  sim_name = NA_character_
-) {
+ssa <- dynutils::inherit_default_params(
+  list(create_simulation),
+  function(
+    initial_state,
+    reactions,
+    final_time,
+    params,
+    method = ssa_exact(),
+    census_interval,
+    stop_on_neg_state,
+    max_walltime,
+    log_propensity,
+    log_firings,
+    log_buffer,
+    verbose,
+    console_interval,
+    sim_name
+  ) {
 
-  # check parameters
-  assert_that(
-    # initial state
-    is.numeric(initial_state),
-    !is.null(names(initial_state)),
-    !any(c("state", "time", "params") %in% names(initial_state)),
+    # check parameters
+    assert_that(
+      # initial state
+      is.numeric(initial_state),
+      !is.null(names(initial_state)),
+      !any(c("state", "time", "params") %in% names(initial_state)),
 
-    # params
-    is.numeric(params),
-    length(params) == 0 || !is.null(names(params)),
-    !any(c("state", "time", "params") %in% names(params)),
-    !any(duplicated(c(names(initial_state), names(params)))),
+      # params
+      is.numeric(params),
+      length(params) == 0 || !is.null(names(params)),
+      !any(c("state", "time", "params") %in% names(params)),
+      !any(duplicated(c(names(initial_state), names(params)))),
 
-    # method
-    is(method, "gillespie::ssa_method"),
+      # method
+      is(method, "gillespie::ssa_method"),
 
-    # vector arguments
-    is_scalar_double(final_time), final_time >= 0,
-    is_scalar_double(census_interval), census_interval >= 0,
-    is_scalar_double(max_walltime), max_walltime >= 0,
-    is_scalar_double(console_interval), console_interval >= 0,
-    is_scalar_logical(log_propensity),
-    is_scalar_logical(log_firings),
-    is_scalar_logical(log_buffer),
-    is_scalar_logical(verbose),
-    is_scalar_character(sim_name)
-  )
+      # vector arguments
+      is_scalar_double(final_time), final_time >= 0,
+      is_scalar_double(census_interval), census_interval >= 0,
+      is_scalar_double(max_walltime), max_walltime >= 0,
+      is_scalar_double(console_interval), console_interval >= 0,
+      is_scalar_logical(log_propensity),
+      is_scalar_logical(log_firings),
+      is_scalar_logical(log_buffer),
+      is_scalar_logical(verbose),
+      is_scalar_character(sim_name)
+    )
 
-  # compile propensity functions if this has not been done already
-  compiled_reactions <-
-    if (is.list(reactions) && !is(reactions, "gillespie::reactions")) {
-      compile_reactions(
-        reactions = reactions,
-        state_ids = names(initial_state),
-        params = params
-      )
-    } else {
-      reactions
+    # compile propensity functions if this has not been done already
+    compiled_reactions <-
+      if (is.list(reactions) && !is(reactions, "gillespie::reactions")) {
+        compile_reactions(
+          reactions = reactions,
+          state_ids = names(initial_state),
+          params = params
+        )
+      } else {
+        reactions
+      }
+
+    assert_that(is(compiled_reactions, "gillespie::reactions"))
+
+    # create new simulation object
+    sim <- create_simulation(
+      compiled_reactions = compiled_reactions,
+      params = params,
+      ssa_method = method,
+      initial_state = initial_state,
+      census_interval = census_interval,
+      log_propensity = log_propensity,
+      log_firings = log_firings,
+      log_buffer = log_buffer,
+      stop_on_neg_state = stop_on_neg_state,
+      final_time = final_time,
+      max_walltime = max_walltime,
+      sim_name = sim_name,
+      verbose = verbose,
+      console_interval = console_interval
+    )
+
+    # run simulation
+    output <- sim$run()
+
+    # set colnames of objects
+    colnames(output$state) <- names(initial_state)
+    if (log_propensity) {
+      colnames(output$propensity) <- compiled_reactions$reaction_ids
+    }
+    if (log_buffer) {
+      colnames(output$buffer) <- compiled_reactions$buffer_ids
+    }
+    if (log_firings) {
+      colnames(output$firings) <- compiled_reactions$reaction_ids
     }
 
-  assert_that(is(compiled_reactions, "gillespie::reactions"))
+    class(output) <- c("ssa", "list")
 
-  # create new simulation object
-  sim <- new(SSA_simulation)
-
-  # set propensity functions
-  sim$initialise(
-    num_functions = compiled_reactions$num_functions,
-    propensity_funs_ = compiled_reactions$functions_pointer,
-    params_ = params,
-    buffer_size_ = compiled_reactions$buffer_size,
-    ssa_method_ = method$factory(),
-    initial_state_ = initial_state,
-    nu_i_ = compiled_reactions$state_change@i,
-    nu_p_ = compiled_reactions$state_change@p,
-    nu_x_ = compiled_reactions$state_change@x,
-    census_interval_ = census_interval,
-    log_propensity_ = log_propensity,
-    log_firings_ = log_firings,
-    log_buffer_ = log_buffer,
-    stop_on_neg_state_ = stop_on_neg_state,
-    final_time_ = final_time,
-    max_walltime_ = max_walltime,
-    sim_name_ = sim_name,
-    verbose_ = verbose,
-    console_interval_ = console_interval
-  )
-
-  # run simulation
-  output <- sim$run()
-
-  # set colnames of objects
-  colnames(output$state) <- names(initial_state)
-  if (log_propensity) {
-    colnames(output$propensity) <- compiled_reactions$reaction_ids
+    output
   }
-  if (log_buffer) {
-    colnames(output$buffer) <- compiled_reactions$buffer_ids
-  }
-  if (log_firings) {
-    colnames(output$firings) <- compiled_reactions$reaction_ids
-  }
+)
 
-  class(output) <- c("ssa", "list")
-
-  output
-}
