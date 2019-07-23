@@ -213,6 +213,8 @@ ssa <- dynutils::inherit_default_params(
       name = sim$sim_name
     )
 
+    rm(sim)
+
     # set colnames of objects
     colnames(output$state) <- names(initial_state)
     if (log_propensity) {
