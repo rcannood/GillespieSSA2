@@ -1,22 +1,13 @@
-#pragma once
-
 #include <Rcpp.h>
 #include "ssa_method.h"
 
 using namespace Rcpp;
 
-class ODE_EM : public SSA_method {
+class SSA_ETL : public SSA_method {
 public:
-  ODE_EM(
-    double tau_ = .01,
-    double noise_strength_ = 2.0
-  ) :
-  SSA_method("EM"),
-  tau(tau_),
-  noise_strength(noise_strength_) {}
+  SSA_ETL(double tau_) : SSA_method("ETL"), tau(tau_) {}
 
   double tau;
-  double noise_strength;
 
   void step(
       const NumericVector& state,
@@ -28,21 +19,30 @@ public:
       NumericVector& dstate,
       NumericVector& firings
   ) {
+    int k;
     int i, j;
 
-    // update state
     for (j = 0; j < propensity.size(); j++) {
+      // determine reaction firing
+      k = R::rpois(propensity[j] * tau);
+
+      firings[j] += k;
+
+      // determine firing effect
       for (i = nu_p[j]; i < nu_p[j+1]; i++) {
-        dstate[nu_i[i]] += nu_x[i] * propensity[j] * tau;
+        dstate[nu_i[i]] += nu_x[i] * k;
       }
-      firings[j] += propensity[j] * tau;
     }
 
-    // add noise
-    for (i = 0; i < state.size(); i++) {
-      dstate[i] += sqrt(abs(state[i])) * noise_strength * R::rnorm(0.0, tau);
-    }
-
+    // tau leap
     *dtime = tau;
   }
 } ;
+
+
+// [[Rcpp::export]]
+SEXP make_ssa_etl(double tau) {
+  SSA_ETL *ssa = new SSA_ETL(tau);
+  XPtr<SSA_ETL> ptr(ssa);
+  return ptr;
+}

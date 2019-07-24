@@ -32,7 +32,7 @@ compile_reactions <- function(
   assert_that(is.list(reactions))
   walk(seq_along(reactions), function(i) {
     assert_that(
-      is(reactions[[i]], "gillespie::reaction"),
+      is(reactions[[i]], "SSA_reaction"),
       names(reactions[[i]]$effect) %all_in% state_ids
     )
   })
@@ -194,6 +194,6 @@ compile_reactions <- function(
     num_functions,
     hardcode_params
   )
-  class(l) <- "gillespie::reactions"
+  class(l) <- "SSA_reactions"
   l
 }

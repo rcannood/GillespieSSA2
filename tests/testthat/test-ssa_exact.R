@@ -18,13 +18,12 @@ for (i in seq_len(10)) {
       sparse = TRUE
     )
 
-    sim <- test_ssa_step(
+    out <- test_ssa_method_step(
       meth,
       state,
       propensity,
       nu
     )
-    out <- sim$step_fun()
 
     expect_length(out$firings, length(propensity))
     expect_is(out$firings, "numeric")

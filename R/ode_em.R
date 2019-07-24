@@ -10,10 +10,9 @@ ode_em <- function(tau = 0.01, noise_strength = 2) {
   ssa_method(
     name = "EM",
     class = "ODE_EM",
-    params = lst(tau, noise_strength)
+    params = lst(tau, noise_strength),
+    factory = function() {
+      make_ode_em(tau, noise_strength)
+    }
   )
-}
-
-configure_method.ODE_EM <- function(method, simulation) {
-  simulation$use_ode_em(method$params$tau, method$params$noise_strength)
 }

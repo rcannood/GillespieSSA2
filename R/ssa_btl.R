@@ -18,10 +18,9 @@ ssa_btl <- function(mean_firings = 10) {
   )
   ssa_method(
     name = "BTL",
-    params = lst(mean_firings)
+    params = lst(mean_firings),
+    factory = function() {
+      make_ssa_btl(mean_firings)
+    }
   )
-}
-
-configure_method.SSA_BTL <- function(method, simulation) {
-  simulation$use_ssa_btl(method$params$mean_firings)
 }

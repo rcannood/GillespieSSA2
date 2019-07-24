@@ -12,10 +12,9 @@
 ssa_etl <- function(tau = .3) {
   ssa_method(
     name = "ETL",
-    params = lst(tau)
+    params = lst(tau),
+    factory = function() {
+      make_ssa_etl(tau)
+    }
   )
-}
-
-configure_method.SSA_ETL <- function(method, simulation) {
-  simulation$use_ssa_etl(method$params$tau)
 }

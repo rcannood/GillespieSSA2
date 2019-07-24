@@ -10,10 +10,9 @@
 ssa_exact <- function() {
   ssa_method(
     name = "exact",
-    params = list()
+    params = list(),
+    factory = function() {
+      make_ssa_exact()
+    }
   )
-}
-
-configure_method.SSA_exact <- function(method, simulation) {
-  simulation$use_ssa_exact()
 }

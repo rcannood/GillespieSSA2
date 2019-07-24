@@ -21,13 +21,12 @@ for (i in seq_len(10)) {
       sparse = TRUE
     )
 
-    sim <- test_ssa_step(
+    out <- test_ssa_method_step(
       meth,
       state,
       propensity,
       nu
     )
-    out <- sim$step_fun()
 
     expect_length(out$firings, length(propensity))
     expect_is(out$firings, "numeric")
@@ -48,7 +47,13 @@ for (i in seq_len(10)) {
 
     if (noise_strength > 0) {
       noise <- sapply(seq_len(1000), function(i) {
-        (sim$step_fun()$dstate - expected_dstate) / noise_strength / sqrt(abs(state))
+        out <- test_ssa_method_step(
+          meth,
+          state,
+          propensity,
+          nu
+        )
+        (out$dstate - expected_dstate) / noise_strength / sqrt(abs(state))
       })
       expect_equal(mean(noise), 0, tolerance = .01)
       expect_equal(sd(noise), tau, tolerance = .01)

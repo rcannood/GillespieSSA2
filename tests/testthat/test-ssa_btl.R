@@ -19,13 +19,12 @@ for (i in seq_len(10)) {
       sparse = TRUE
     )
 
-    sim <- test_ssa_step(
+    out <- test_ssa_method_step(
       meth,
       state,
       propensity,
       nu
     )
-    out <- sim$step_fun()
 
     expect_length(out$firings, length(propensity))
     expect_is(out$firings, "numeric")
@@ -42,7 +41,13 @@ for (i in seq_len(10)) {
     expect_equal(out$dtime, expected_tau)
 
     firings <- lapply(seq_len(1000), function(i) {
-      sim$step_fun()$firings
+      out <- test_ssa_method_step(
+        meth,
+        state,
+        propensity,
+        nu
+      )
+      out$firings
     })
 
     avg_firings <- Reduce(`+`, firings) / length(firings)

@@ -50,7 +50,7 @@ test_that("simulation works", {
   sim <- create_simulation(
     compiled_reactions = comp_reac,
     params = params,
-    method = ssa_exact(),
+    method = ssa_exact()$factory(),
     initial_state = state,
     final_time = 1,
     log_buffer = TRUE,
@@ -166,6 +166,7 @@ test_that("simulation works", {
   sim$reset()
 
   # let simulator run freely
+  sim$verbose <- FALSE
   sim$run()
 
   # check simulator values again
@@ -230,7 +231,7 @@ test_that("simulation works", {
   expect_gte(sim$sim_time, 1)
   expect_equal(sim$state, exp_state %>% unname)
   expect_equal(sim$stop_on_neg_state, FALSE)
-  expect_equal(sim$verbose, TRUE)
+  expect_equal(sim$verbose, FALSE)
 
   stats <- sim$get_statistics()
   expect_is(stats, "data.frame")

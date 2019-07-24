@@ -70,14 +70,12 @@ test_that("compilation works", {
   expect_equal(comp_reac$hardcode_params, FALSE)
 
   # check funs (have to start up a simulation object for this)
-  sim <- create_simulation(
-    compiled_reactions = comp_reac,
-    params = params,
-    initial_state = state,
-    final_time = 1
+  out <- test_propensity_calculation(
+    comp_reac,
+    params,
+    state,
+    0
   )
-  sim$state <- state
-  sim$calculate_propensity()
   expected_prop <- with(as.list(c(params, state)), c(
     params,
     state,
@@ -86,8 +84,8 @@ test_that("compilation works", {
     (a * b + c) / d
   )) %>%
     unname()
-  expect_equal(sim$propensity, expected_prop, tolerance = .001)
-  expect_equal(sim$buffer, 2:5, tolerance = .001)
+  expect_equal(out$propensity, expected_prop, tolerance = .001)
+  expect_equal(out$buffer, 2:5, tolerance = .001)
 })
 
 
@@ -98,15 +96,12 @@ test_that("compilation works when params are hardcoded", {
     params = params,
     hardcode_params = TRUE
   )
-
-  sim <- create_simulation(
-    compiled_reactions = comp_reac,
-    params = params,
-    initial_state = state,
-    final_time = 1
+  out <- test_propensity_calculation(
+    comp_reac,
+    params,
+    state,
+    0
   )
-  sim$state <- state
-  sim$calculate_propensity()
   expected_prop <- with(as.list(c(params, state)), c(
     params,
     state,
@@ -115,6 +110,6 @@ test_that("compilation works when params are hardcoded", {
     (a * b + c) / d
   )) %>%
     unname()
-  expect_equal(sim$propensity, expected_prop, tolerance = .001)
-  expect_equal(sim$buffer, 2:5, tolerance = .001)
+  expect_equal(out$propensity, expected_prop, tolerance = .001)
+  expect_equal(out$buffer, 2:5, tolerance = .001)
 })

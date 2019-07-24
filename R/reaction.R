@@ -56,7 +56,7 @@ reaction <- function(
     effect = effect,
     name = name
   )
-  class(out) <- "gillespie::reaction"
+  class(out) <- "SSA_reaction"
   out
 }
 

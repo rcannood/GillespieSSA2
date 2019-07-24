@@ -1,19 +1,14 @@
 ssa_method <- function(
   name,
   class = paste0("SSA_", name),
-  params
+  params,
+  factory
 ) {
   l <- lst(
     name,
-    params
+    params,
+    factory
   )
   class(l) <- c(class, "SSA_method")
   l
-}
-
-configure_method <- function(
-  method,
-  simulation
-) {
-  UseMethod("configure_method")
 }

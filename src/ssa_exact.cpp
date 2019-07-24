@@ -1,7 +1,6 @@
-#pragma once
-
 #include <Rcpp.h>
 #include "ssa_method.h"
+#include "utils.h"
 
 using namespace Rcpp;
 
@@ -20,13 +19,7 @@ public:
       NumericVector& firings
   ) {
     // perform weighted sampling
-    double max = sum(propensity);
-    double ran = R::runif(0, max);
-    int j = 0;
-    while (ran > propensity[j]) {
-      ran -= propensity[j];
-      j++;
-    }
+    int j = gillespie::weighted_sample(propensity);
 
     firings[j]++;
 
@@ -38,3 +31,10 @@ public:
     *dtime = -log(R::runif(0, 1)) / sum(propensity);
   }
 } ;
+
+// [[Rcpp::export]]
+SEXP make_ssa_exact() {
+  SSA_exact *ssa = new SSA_exact();
+  XPtr<SSA_exact> ptr(ssa);
+  return ptr;
+}

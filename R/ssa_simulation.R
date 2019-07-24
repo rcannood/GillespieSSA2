@@ -3,7 +3,7 @@
 create_simulation <- function(
   compiled_reactions,
   params = NULL,
-  method = ssa_exact(),
+  method_ptr = ssa_exact()$factory(),
   initial_state,
   census_interval = 0,
   log_propensity = FALSE,
@@ -25,6 +25,7 @@ create_simulation <- function(
     compiled_reactions$functions_pointer,
     params,
     compiled_reactions$buffer_size,
+    method_ptr,
     initial_state,
     compiled_reactions$state_change@i,
     compiled_reactions$state_change@p,
@@ -40,7 +41,10 @@ create_simulation <- function(
     verbose,
     console_interval
   )
-  configure_method(method, sim)
+  # make sure these pointers do not get GCed
+  attr(sim, "prop_ptr") <- compiled_reactions$functions_pointer
+  attr(sim, "method_ptr") <- method_ptr
+
   sim$reset()
 
   sim
@@ -171,7 +175,7 @@ ssa <- dynutils::inherit_default_params(
 
     # compile propensity functions if this has not been done already
     compiled_reactions <-
-      if (is.list(reactions) && !is(reactions, "gillespie::reactions")) {
+      if (is.list(reactions) && !is(reactions, "SSA_reactions")) {
         compile_reactions(
           reactions = reactions,
           state_ids = names(initial_state),
@@ -181,13 +185,13 @@ ssa <- dynutils::inherit_default_params(
         reactions
       }
 
-    assert_that(is(compiled_reactions, "gillespie::reactions"))
+    assert_that(is(compiled_reactions, "SSA_reactions"))
 
     # create new simulation object
     sim <- create_simulation(
       compiled_reactions = compiled_reactions,
       params = params,
-      method = method,
+      method = method$factory(),
       initial_state = initial_state,
       census_interval = census_interval,
       log_propensity = log_propensity,

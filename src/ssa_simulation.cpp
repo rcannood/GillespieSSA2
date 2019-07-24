@@ -2,10 +2,6 @@
 #include <math.h>
 
 #include "ssa_method.h"
-#include "ode_em.h"
-#include "ssa_exact.h"
-#include "ssa_etl.h"
-#include "ssa_btl.h"
 #include "utils.h"
 
 using namespace Rcpp;
@@ -27,6 +23,8 @@ public:
     SEXP propensity_funs_,
     NumericVector& params_,
     int buffer_size_,
+    // method
+    SEXP ssa_method_,
     // state
     NumericVector& initial_state_,
     // state change matrix
@@ -56,7 +54,9 @@ public:
     buffer = NumericVector(buffer_size_);
 
     // process algorithm
-    ssa_alg = new SSA_exact();
+    if (!Rf_isNull(ssa_method_)) {
+      ssa_alg = XPtr<SSA_method>(ssa_method_);
+    }
 
     // process state
     initial_state = initial_state_;
@@ -329,26 +329,6 @@ public:
     }
   }
 
-  void use_ssa_exact() {
-    free(ssa_alg);
-    ssa_alg = new SSA_exact();
-  }
-
-  void use_ssa_etl(double tau) {
-    free(ssa_alg);
-    ssa_alg = new SSA_ETL(tau);
-  }
-
-  void use_ssa_btl(double mean_firings) {
-    free(ssa_alg);
-    ssa_alg = new SSA_BTL(mean_firings);
-  }
-
-  void use_ode_em(double tau, double noise_strength) {
-    free(ssa_alg);
-    ssa_alg = new ODE_EM(tau, noise_strength);
-  }
-
   template <typename T>
   T resize_vector(const T& x, int n, bool copy){
     int oldsize = x.size();
@@ -460,10 +440,6 @@ RCPP_MODULE(gillespie) {
   .method("calculate_propensity", &SSA_simulation::calculate_propensity)
   .method("make_step", &SSA_simulation::make_step)
   .method("resize_outputs", &SSA_simulation::resize_outputs)
-  .method("use_ssa_exact", &SSA_simulation::use_ssa_exact)
-  .method("use_ssa_etl", &SSA_simulation::use_ssa_etl)
-  .method("use_ssa_btl", &SSA_simulation::use_ssa_btl)
-  .method("use_ode_em", &SSA_simulation::use_ode_em)
   .field("num_functions", &SSA_simulation::num_functions)
   .field("initial_state", &SSA_simulation::initial_state)
   .field("params", &SSA_simulation::params)
