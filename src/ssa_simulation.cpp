@@ -14,7 +14,6 @@ public:
 
   ~SSA_simulation() {
     // Rcout << "FREE WILLY" << std::endl;
-    free(ssa_alg);
   }
 
   void initialise(
