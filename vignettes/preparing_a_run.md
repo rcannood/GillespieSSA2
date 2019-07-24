@@ -1,6 +1,6 @@
 Preparing your first SSA run with gillespie
 ================
-2019-07-22
+2019-07-23
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/preparing_a_run.Rmd", output_format = "github_document")
@@ -67,14 +67,14 @@ out <-
 print(out$stats)
 ```
 
-    ##   method          sim_name stop_sim_time stop_extinction
-    ## 1  exact My first SSA run!          TRUE           FALSE
-    ##   stop_negative_state stop_zero_prop stop_walltime walltime_start
-    ## 1               FALSE          FALSE         FALSE     1563811216
-    ##   walltime_end walltime_elapsed num_steps   dtime_mean     dtime_sd
-    ## 1   1563811216                0    151518 3.299954e-05 1.538995e-07
-    ##   firings_mean firings_sd
-    ## 1            1          0
+    ##   method          sim_name sim_time_exceeded all_zero_state negative_state
+    ## 1  exact My first SSA run!              TRUE          FALSE          FALSE
+    ##   all_zero_propensity negative_propensity walltime_exceeded
+    ## 1               FALSE               FALSE             FALSE
+    ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
+    ## 1                0    151518 3.299954e-05 1.538995e-07            1
+    ##   firings_sd
+    ## 1          0
 
 ``` r
 autoplot.ssa(out)
