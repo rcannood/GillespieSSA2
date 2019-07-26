@@ -1,46 +1,46 @@
 context("ssa simulation")
 
-test_that("simulation works", {
-  params <- c(
-    "a" = 1,
-    "b" = 2,
-    "c" = 3,
-    "d" = 4.5321
+params <- c(
+  "a" = 1,
+  "b" = 2,
+  "c" = 3,
+  "d" = 4.5321
+)
+state <- c(
+  "a_very_long_state_name_value_is_just_to_try_and_see_if_it_works" = 14,
+  "short_one" = 7,
+  "x" = 1,
+  "y" = 0,
+  "z" = 0
+)
+reactions <- list(
+  reaction("a", c(x = +1), "react1"),
+  reaction("b", c(x = +2), "react2"),
+  reaction("c", c(y = +3), "react3"),
+  reaction("d", c(z = +4), "react4"),
+  reaction("a_very_long_state_name_value_is_just_to_try_and_see_if_it_works", c(x = +5, short_one = +1), "react5"),
+  reaction("short_one", c(short_one = -1, z = 1), "react6"),
+  reaction("x", c(x = -1), "react7"),
+  reaction("y", c(y = -1), "react8"),
+  reaction("z", c(z = -1), "react9"),
+  reaction(
+    propensity = "a * b * a_very_long_state_name_value_is_just_to_try_and_see_if_it_works * short_one / c / d",
+    effect = c(x = 3, y = 1),
+    name = "react10"
+  ),
+  reaction(
+    propensity = "buf1 = a + 1; buf2 = buf1 + 1; buf3 = buf2 + 1; buf4 = buf3 + 1; buf4 + 1",
+    effect = c(y = +1, z = +1),
+    name = "react11"
+  ),
+  reaction(
+    propensity = ~ (a * b + c) / d,
+    effect = c(y = +1, z = +1),
+    name = "react12"
   )
-  state <- c(
-    "a_very_long_state_name_value_is_just_to_try_and_see_if_it_works" = 14,
-    "short_one" = 7,
-    "x" = 1,
-    "y" = 0,
-    "z" = 0
-  )
-  reactions <- list(
-    reaction("a", c(x = +1), "react1"),
-    reaction("b", c(x = +2), "react2"),
-    reaction("c", c(y = +3), "react3"),
-    reaction("d", c(z = +4), "react4"),
-    reaction("a_very_long_state_name_value_is_just_to_try_and_see_if_it_works", c(x = +5, short_one = +1), "react5"),
-    reaction("short_one", c(short_one = -1, z = 1), "react6"),
-    reaction("x", c(x = -1), "react7"),
-    reaction("y", c(y = -1), "react8"),
-    reaction("z", c(z = -1), "react9"),
-    reaction(
-      propensity = "a * b * a_very_long_state_name_value_is_just_to_try_and_see_if_it_works * short_one / c / d",
-      effect = c(x = 3, y = 1),
-      name = "react10"
-    ),
-    reaction(
-      propensity = "buf1 = a + 1; buf2 = buf1 + 1; buf3 = buf2 + 1; buf4 = buf3 + 1; buf4 + 1",
-      effect = c(y = +1, z = +1),
-      name = "react11"
-    ),
-    reaction(
-      propensity = ~ (a * b + c) / d,
-      effect = c(y = +1, z = +1),
-      name = "react12"
-    )
-  )
+)
 
+test_that("perform manual steps", {
   comp_reac <- compile_reactions(
     reactions = reactions,
     state_ids = names(state),
@@ -79,7 +79,7 @@ test_that("simulation works", {
   expect_equal(sim$all_zero_state, FALSE)
   expect_equal(sim$buffer, 2:5)
   expect_equal(sim$census_interval, 0.01)
-  expect_equal(sim$console_interval, 1)
+  expect_equal(sim$console_interval, 1000)
   expect_equal(sim$dfirings, rep(0, length(reactions)))
   expect_equal(sim$dstate, rep(0, length(state)))
   expect_equal(sim$dtime, 0)
@@ -93,7 +93,7 @@ test_that("simulation works", {
   expect_equal(sim$log_buffer, TRUE)
   expect_equal(sim$log_firings, TRUE)
   expect_equal(sim$log_propensity, TRUE)
-  expect_equal(sim$max_walltime, 10)
+  expect_equal(sim$max_walltime, 10000)
   expect_equal(sim$negative_propensity, FALSE)
   expect_equal(sim$negative_state, FALSE)
   expect_equal(sim$nu_i, comp_reac$state_change@i)
@@ -161,8 +161,34 @@ test_that("simulation works", {
   expect_false(sim$negative_state)
   expect_false(sim$all_zero_propensity)
   expect_false(sim$all_zero_state)
+})
 
-  # reset simulation again
+
+
+
+test_that("perform simulation with Rcpp function", {
+  comp_reac <- compile_reactions(
+    reactions = reactions,
+    state_ids = names(state),
+    params = params,
+    hardcode_params = FALSE
+  )
+  sim <- create_simulation(
+    compiled_reactions = comp_reac,
+    params = params,
+    method_ptr = ssa_exact()$factory(),
+    initial_state = state,
+    final_time = 1,
+    log_buffer = TRUE,
+    log_propensity = TRUE,
+    log_firings = TRUE,
+    census_interval = .01,
+    max_walltime = 10,
+    stop_on_neg_state = FALSE,
+    sim_name = "test",
+    verbose = TRUE,
+    console_interval = 1
+  )
   sim$reset()
 
   # let simulator run freely
@@ -174,7 +200,7 @@ test_that("simulation works", {
   expect_equal(sim$all_zero_state, FALSE)
   expect_equal(sim$buffer, 2:5)
   expect_equal(sim$census_interval, 0.01)
-  expect_equal(sim$console_interval, 1)
+  expect_equal(sim$console_interval, 1000)
   expect_equal(sum(sim$dfirings), 1)
   expect_equal(sum(sim$dfirings != 0), 1)
   ix <- which(sim$dfirings != 0)
@@ -191,7 +217,7 @@ test_that("simulation works", {
   expect_equal(sim$log_buffer, TRUE)
   expect_equal(sim$log_firings, TRUE)
   expect_equal(sim$log_propensity, TRUE)
-  expect_equal(sim$max_walltime, 10)
+  expect_equal(sim$max_walltime, 10000)
   expect_equal(sim$negative_propensity, FALSE)
   expect_equal(sim$negative_state, FALSE)
   expect_equal(sim$nu_i, comp_reac$state_change@i)
@@ -234,6 +260,59 @@ test_that("simulation works", {
   expect_equal(sim$verbose, FALSE)
 
   stats <- sim$get_statistics()
+  expect_is(stats, "data.frame")
+})
+
+test_that("perform simulation with R function", {
+  # use r function to simulate
+  out <- ssa(
+    initial_state = state,
+    reactions = reactions,
+    final_time = 1,
+    params = params,
+    method = ssa_exact(),
+    census_interval = .01,
+    max_walltime = 10,
+    stop_on_neg_state = TRUE,
+    log_propensity = TRUE,
+    log_firings = TRUE,
+    log_buffer = TRUE,
+    verbose = TRUE,
+    console_interval = 1,
+    sim_name = "test"
+  )
+
+
+  # check simulator values again
+  expect_equal(ncol(out$buffer), 4)
+  expect_true(all(apply(out$buffer, 1, function(x) all(x == 2:5))))
+  expect_equal(nrow(out$firings), nrow(out$buffer))
+  expect_equal(ncol(out$firings), length(reactions))
+  expect_true(all(rowSums(out$firings[-1,]) >= 1))
+  expect_equal(nrow(out$propensity), nrow(out$buffer))
+  expect_equal(ncol(out$propensity), length(reactions))
+  expect_equal(out$propensity[1, ], expected_prop)
+  expect_equal(nrow(out$state), nrow(out$buffer))
+  expect_equal(ncol(out$state), length(state))
+  expect_equal(out$state[1, ], state)
+  expect_equal(length(out$time), nrow(out$buffer))
+  expect_true(all(diff(out$time) > 0))
+
+  exp_state <- state + (comp_reac$state_change %*% colSums(out$firings))[,1]
+
+  exp_prop <- with(as.list(c(params, exp_state)), c(
+    params,
+    exp_state,
+    a * b * a_very_long_state_name_value_is_just_to_try_and_see_if_it_works * short_one / c / d,
+    a + 5,
+    (a * b + c) / d
+  )) %>% set_names(reactions %>% map_chr("name"))
+  expect_equal(out$propensity[nrow(out$propensity),], exp_prop)
+  expect_equal(out$name, "test")
+  expect_gte(out$time[[nrow(out$buffer)]], 1)
+  expect_equal(out$state[nrow(out$state), ], exp_state)
+
+  stats <- out$stats
   expect_is(stats, "data.frame")
 })
 
