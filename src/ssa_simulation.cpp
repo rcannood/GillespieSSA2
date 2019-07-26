@@ -1,3 +1,5 @@
+// [[Rcpp::plugins("cpp11")]]
+
 #include <Rcpp.h>
 #include <math.h>
 
