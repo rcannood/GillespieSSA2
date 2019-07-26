@@ -185,7 +185,7 @@ public:
 
       // perform census if so desired
       if (sim_time_nextcensus <= sim_time) {
-        sim_time_nextcensus += census_interval * 1000000000;
+        sim_time_nextcensus += census_interval;
         do_census();
       }
 
