@@ -11,7 +11,7 @@ The SIRS epidemiological metapopulation model is defined in Pineda-Krch
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "SIRS metapopulation model"
 patchPopSize <- 500                    # Patch size
 U <- 20                                # Number of patches

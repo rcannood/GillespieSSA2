@@ -18,7 +18,7 @@ as follows:
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Linear Chain System"
 M <- 50
 params <- c(c = 1)

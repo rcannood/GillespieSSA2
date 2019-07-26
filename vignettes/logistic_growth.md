@@ -24,7 +24,7 @@ where `d'=d+(b-d)N/K`. The propensity functions are `a_1=bN` and
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Pearl-Verhulst Logistic Growth model"
 params <- c(b = 2, d = 1, K = 1000)
 final_time <- 10

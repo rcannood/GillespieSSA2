@@ -30,7 +30,7 @@ Propensity functions:
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Rosenzweig-MacArthur Predator-Prey model"
 params <- c(
   b = 2, 

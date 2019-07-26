@@ -1,4 +1,4 @@
 library(testthat)
-library(gillespie)
+library(GillespieSSA2)
 
-test_check("gillespie")
+test_check("GillespieSSA2")

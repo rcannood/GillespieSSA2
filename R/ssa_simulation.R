@@ -56,8 +56,8 @@ create_simulation <- function(
 #' Main interface function to the implemented \acronym{SSA} methods. Runs a
 #' single realization of a predefined system. For a detailed explanation
 #' on how to set up your first \acronym{SSA} system, check the vignette
-#' available on [GitHub](https://github.com/dynverse/gillespie/tree/master/vignettes/preparing_a_run.md)
-#' or using `vignette("preparing_a_run", package = "gillespie")`.
+#' available on [GitHub](https://github.com/dynverse/GillespieSSA2/tree/master/vignettes/preparing_a_run.md)
+#' or using `vignette("preparing_a_run", package = "GillespieSSA2")`.
 #'
 #' Substantial improvements in speed and accuracy can be obtained by
 #' adjusting the additional (and optional) `ssa` arguments. By default
@@ -95,7 +95,7 @@ create_simulation <- function(
 #' * `propensity`: `[numeric matrix]` The propensity values for each of the timepoints.
 #' * `buffer`: `[numeric matrix]` The temporary calculation buffer used as part of the propensity functions.
 #'
-#' @seealso [gillespie] for a high level explanation of the package
+#' @seealso [GillespieSSA2] for a high level explanation of the package
 #'
 #' @examples
 #' initial_state <- c(prey = 1000, predators = 1000)

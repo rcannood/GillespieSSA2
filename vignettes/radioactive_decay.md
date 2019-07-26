@@ -13,7 +13,7 @@ It consists of a single species and single reaction channels,
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Radioactive Decay model"
 params <- c(k = 0.5)
 final_time <- 20

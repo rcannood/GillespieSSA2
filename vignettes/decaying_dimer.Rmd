@@ -29,7 +29,7 @@ The Decaying-Dimerization Reaction Set consists of three species and four reacti
 
 Define parameters
 ```{r}
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Decaying-Dimerizing Reaction Set"
 final_time <- 10
 params <- c(c1 = 1.0, c2 = 0.002, c3 = 0.5, c4 = 0.04)

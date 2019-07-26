@@ -1,6 +1,5 @@
-Preparing your first SSA run with gillespie
+Preparing your first SSA run with GillespieSSA2
 ================
-2019-07-23
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/preparing_a_run.Rmd", output_format = "github_document")
@@ -19,7 +18,7 @@ at \(t = 0\). For example, for a system with two species `prey` and
 initial state vector is defined as follows.
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 initial_state <- c(prey = 1000, predators = 1000)
 ```
 

@@ -18,7 +18,7 @@ four reaction channels.
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Decaying-Dimerizing Reaction Set"
 final_time <- 10
 params <- c(c1 = 1.0, c2 = 0.002, c3 = 0.5, c4 = 0.04)
@@ -50,6 +50,8 @@ out <- ssa(
 )
 autoplot.ssa(out)
 ```
+
+    ## Loading required namespace: ggplot2
 
 ![](decaying_dimer_files/figure-gfm/exact-1.png)<!-- -->
 

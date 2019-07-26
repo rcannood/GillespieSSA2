@@ -21,7 +21,7 @@ consisting of the three reaction channels,
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Lotka Predator-Prey model"
 params <- c(c1 = 10, c2 = .01, c3 = 10)
 final_time <- 2

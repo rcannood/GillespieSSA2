@@ -30,7 +30,7 @@ if the first reaction is a recovery of the single 'Infected' individual.
 
 Define parameters
 ```{r}
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Kermack-McKendrick SIR model"
 params <- c(beta = .001, gamma = .1)
 final_time <- 100
