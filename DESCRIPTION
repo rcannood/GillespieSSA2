@@ -18,6 +18,8 @@ Description: A fast, scalable, and versatile framework for simulating large syst
   tau-leaping ('ETL'), and the Binomial tau-leaping ('BTL').
 License: GPL (>= 3)
 LazyData: TRUE
+Requires:
+    R (>= 3.0)
 Imports:
     assertthat,
     dplyr,
