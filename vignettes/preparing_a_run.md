@@ -57,8 +57,7 @@ out <-
   )
 ```
 
-    ## Running SSA exact with console output every 1 seconds
-    ## Start time: CURRTIME
+    ## Running SSA exact with console output every 1000 seconds
     ## walltime: 0, sim_time: 0
     ## SSA finished!
 
@@ -71,7 +70,7 @@ print(out$stats)
     ##   all_zero_propensity negative_propensity walltime_exceeded
     ## 1               FALSE               FALSE             FALSE
     ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
-    ## 1                0    151518 3.299954e-05 1.538995e-07            1
+    ## 1            0.023    151518 3.299954e-05 1.538995e-07            1
     ##   firings_sd
     ## 1          0
 

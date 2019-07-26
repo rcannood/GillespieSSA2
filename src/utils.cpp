@@ -1,4 +1,6 @@
 #include <Rcpp.h>
+#include <chrono>
+
 using namespace Rcpp;
 
 #include "utils.h"
@@ -12,4 +14,9 @@ int gillespie::weighted_sample(const NumericVector& weight) {
     j++;
   }
   return j;
+}
+
+uint64_t gillespie::timems() {
+  using namespace std::chrono;
+  return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
