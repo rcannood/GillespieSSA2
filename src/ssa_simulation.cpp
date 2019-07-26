@@ -1,7 +1,6 @@
-// [[Rcpp::plugins("cpp11")]]
-
 #include <Rcpp.h>
 #include <math.h>
+#include <Rcpp/Benchmark/Timer.h>
 
 #include "ssa_method.h"
 #include "utils.h"
@@ -82,12 +81,12 @@ public:
     // process stopping conditions
     stop_on_neg_state = stop_on_neg_state_;
     final_time = final_time_;
-    max_walltime = max_walltime_ * 1000;
+    max_walltime = max_walltime_;
 
     // meta information
     sim_name = sim_name_;
     verbose = verbose_;
-    console_interval = console_interval_ * 1000;
+    console_interval = console_interval_;
 
     // initialise output structures
     output_nexti = 0;
@@ -145,8 +144,13 @@ public:
 
   void run() {
     // initialise walltime fields
-    auto walltime_start = gillespie::timems();
-    auto walltime_nextconsole = walltime_start, walltime_nextinterrupt = walltime_start, walltime_curr = walltime_start;
+    Timer timer;
+    timer.step("start");
+
+    nanotime_t walltime_start = timer.origin(),
+      walltime_nextconsole = timer.origin(),
+      walltime_nextinterrupt = timer.origin(),
+      walltime_curr = timer.origin();
 
     // verbose
     if (verbose) {
@@ -155,22 +159,22 @@ public:
 
     while (
         sim_time < final_time &&
-          walltime_curr - walltime_start < max_walltime &&
+          (walltime_curr - walltime_start) / 1000000000 < max_walltime &&
           !negative_propensity &&
           !all_zero_propensity &&
           (!negative_state || !stop_on_neg_state)
     )  {
 
       // check for interrupt
-      if (walltime_nextinterrupt <= walltime_curr) {
+      if (walltime_nextinterrupt <= timer.now()) {
         checkUserInterrupt();
-        walltime_nextinterrupt += 1000;
+        walltime_nextinterrupt += 1000000000;
       }
 
       // print if so desired
       if (verbose && walltime_nextconsole <= walltime_curr) {
         Rcout << "walltime: " << (walltime_curr - walltime_start) << ", sim_time: " << sim_time << std::endl;
-        walltime_nextconsole += console_interval;
+        walltime_nextconsole += console_interval * 1000000000;
       }
 
       // make a step
@@ -181,11 +185,11 @@ public:
 
       // perform census if so desired
       if (sim_time_nextcensus <= sim_time) {
-        sim_time_nextcensus += census_interval;
+        sim_time_nextcensus += census_interval * 1000000000;
         do_census();
       }
 
-      walltime_curr = gillespie::timems();
+      walltime_curr = timer.now();
     }
 
     // log end state if census_interval is set to inf
@@ -202,7 +206,7 @@ public:
     }
 
     // construct output
-    auto walltime_end = gillespie::timems();
+    nanotime_t walltime_end = timer.now();
     walltime_elapsed += walltime_end - walltime_start;
 
     // remove empty output slots
@@ -223,7 +227,7 @@ public:
       _["all_zero_propensity"] = all_zero_propensity,
       _["negative_propensity"] = negative_propensity,
       _["walltime_exceeded"] = walltime_elapsed >= max_walltime,
-      _["walltime_elapsed"] = walltime_elapsed / 1000.0,
+      _["walltime_elapsed"] = walltime_elapsed / 1000000000.0,
       _["num_steps"] = num_steps,
       _["dtime_mean"] = dtime_mean,
       _["dtime_sd"] = dtime_sd,
