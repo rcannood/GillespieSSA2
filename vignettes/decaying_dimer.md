@@ -51,8 +51,6 @@ out <- ssa(
 autoplot.ssa(out)
 ```
 
-    ## Loading required namespace: ggplot2
-
 ![](decaying_dimer_files/figure-gfm/exact-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
