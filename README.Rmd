@@ -61,7 +61,7 @@ walk(
       ifelse(submission_to_cran, "", "["),
       title, 
       ifelse(submission_to_cran, "", paste0("](vignettes/", markdown_name, ")")),
-      ": ",
+      ":  \n",
       "`vignette(\"", vignette_name, "\", package=\"GillespieSSA2\")`\n",
       sep = ""
     )

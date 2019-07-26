@@ -30,30 +30,32 @@ devtools::install_github("rcannood/GillespieSSA2", build_vignettes = TRUE)
 The following example models are available:
 
   - [Decaying-Dimerization Reaction Set (Gillespie,
-    2001)](vignettes/decaying_dimer.md): `vignette("decaying_dimer",
-    package="GillespieSSA2")`
+    2001)](vignettes/decaying_dimer.md):  
+    `vignette("decaying_dimer", package="GillespieSSA2")`
   - [SIRS metapopulation model (Pineda-Krch,
-    2008)](vignettes/epi_chain.md): `vignette("epi_chain",
-    package="GillespieSSA2")`
-  - [Linear Chain System (Cao et al., 2004)](vignettes/linear_chain.md):
+    2008)](vignettes/epi_chain.md):  
+    `vignette("epi_chain", package="GillespieSSA2")`
+  - [Linear Chain System (Cao et al.,
+    2004)](vignettes/linear_chain.md):  
     `vignette("linear_chain", package="GillespieSSA2")`
   - [Pearl-Verhulst Logistic Growth model (Kot,
-    2001)](vignettes/logistic_growth.md): `vignette("logistic_growth",
-    package="GillespieSSA2")`
+    2001)](vignettes/logistic_growth.md):  
+    `vignette("logistic_growth", package="GillespieSSA2")`
   - [Lotka Predator-Prey model (Gillespie, 1977; Kot,
-    2001)](vignettes/lotka_predator_prey.md):
+    2001)](vignettes/lotka_predator_prey.md):  
     `vignette("lotka_predator_prey", package="GillespieSSA2")`
   - [Preparing your first SSA run with
-    GillespieSSA2](vignettes/preparing_a_run.md):
+    GillespieSSA2](vignettes/preparing_a_run.md):  
     `vignette("preparing_a_run", package="GillespieSSA2")`
   - [Radioactive Decay model (Gillespie,
-    1977)](vignettes/radioactive_decay.md):
+    1977)](vignettes/radioactive_decay.md):  
     `vignette("radioactive_decay", package="GillespieSSA2")`
   - [Rosenzweig-MacArthur Predator-Prey model (Pineda-Krch et al.,
-    2007)](vignettes/rm_predator_prey.md): `vignette("rm_predator_prey",
-    package="GillespieSSA2")`
+    2007)](vignettes/rm_predator_prey.md):  
+    `vignette("rm_predator_prey", package="GillespieSSA2")`
   - [Kermack-McKendrick SIR model (Brown & Rothery,
-    1993)](vignettes/sir.md): `vignette("sir", package="GillespieSSA2")`
+    1993)](vignettes/sir.md):  
+    `vignette("sir", package="GillespieSSA2")`
 
 ## Latest changes
 
