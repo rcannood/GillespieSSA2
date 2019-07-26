@@ -286,7 +286,6 @@ test_that("perform simulation with R function", {
     regexp = "Running SSA exact"
   )
 
-
   # check simulator values again
   expect_equal(ncol(out$buffer), 4)
   expect_true(all(apply(out$buffer, 1, function(x) all(x == 2:5))))
@@ -318,6 +317,24 @@ test_that("perform simulation with R function", {
 
   stats <- out$stats
   expect_is(stats, "data.frame")
+
+  g <- autoplot.ssa(
+    out,
+    state = TRUE,
+    propensity = TRUE,
+    buffer = TRUE
+  )
+  expect_is(g, "ggplot")
+
+
+  g <- autoplot.ssa(
+    out,
+    state = FALSE,
+    propensity = FALSE,
+    buffer = TRUE,
+    geom = "step"
+  )
+  expect_is(g, "ggplot")
 })
 
 
