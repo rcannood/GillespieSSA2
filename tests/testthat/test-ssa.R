@@ -50,7 +50,7 @@ test_that("simulation works", {
   sim <- create_simulation(
     compiled_reactions = comp_reac,
     params = params,
-    method = ssa_exact()$factory(),
+    method_ptr = ssa_exact()$factory(),
     initial_state = state,
     final_time = 1,
     log_buffer = TRUE,

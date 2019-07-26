@@ -191,7 +191,7 @@ ssa <- dynutils::inherit_default_params(
     sim <- create_simulation(
       compiled_reactions = compiled_reactions,
       params = params,
-      method = method$factory(),
+      method_ptr = method$factory(),
       initial_state = initial_state,
       census_interval = census_interval,
       log_propensity = log_propensity,
