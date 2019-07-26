@@ -188,7 +188,9 @@ test_that("perform simulation with Rcpp function", {
 
   # let simulator run freely
   expect_output(
-    sim$run(),
+    {
+      sim$run()
+    },
     regexp = "Running SSA exact"
   )
 
@@ -255,7 +257,7 @@ test_that("perform simulation with Rcpp function", {
   expect_gte(sim$sim_time, 1)
   expect_equal(sim$state, exp_state %>% unname)
   expect_equal(sim$stop_on_neg_state, FALSE)
-  expect_equal(sim$verbose, FALSE)
+  expect_equal(sim$verbose, TRUE)
 
   stats <- sim$get_statistics()
   expect_is(stats, "data.frame")
