@@ -55,7 +55,7 @@ compile_reactions <- function(
   state_change_df <- map_df(seq_along(reactions), function(j) {
     reac <- reactions[[j]]
 
-    tibble(
+    data.frame(
       i = match(names(reac$effect), state_ids),
       j = j,
       x = reac$effect
@@ -185,14 +185,14 @@ compile_reactions <- function(
   num_functions <- num_functions()
 
   # return output
-  l <- lst(
-    state_change,
-    reaction_ids,
-    buffer_ids,
-    buffer_size,
-    functions_pointer,
-    num_functions,
-    hardcode_params
+  l <- list(
+    state_change = state_change,
+    reaction_ids = reaction_ids,
+    buffer_ids = buffer_ids,
+    buffer_size = buffer_size,
+    functions_pointer = functions_pointer,
+    num_functions = num_functions,
+    hardcode_params = hardcode_params
   )
   class(l) <- "SSA_reactions"
   l

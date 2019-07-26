@@ -123,7 +123,6 @@ create_simulation <- function(
 #'
 #' @importFrom methods is
 #' @importFrom dynutils is_sparse inherit_default_params
-#' @importFrom tibble tibble
 #' @importFrom Matrix Matrix
 #' @importFrom purrr is_scalar_double is_scalar_logical is_scalar_integer is_scalar_character
 ssa <- dynutils::inherit_default_params(

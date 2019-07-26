@@ -29,7 +29,6 @@ Imports:
     readr,
     rlang,
     stringr,
-    tibble,
     tidyr
 Suggests: 
     ggplot2,

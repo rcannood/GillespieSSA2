@@ -12,7 +12,7 @@
 ssa_etl <- function(tau = .3) {
   ssa_method(
     name = "ETL",
-    params = lst(tau),
+    params = list(tau = tau),
     factory = function() {
       make_ssa_etl(tau)
     }
