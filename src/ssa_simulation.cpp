@@ -80,12 +80,12 @@ public:
     // process stopping conditions
     stop_on_neg_state = stop_on_neg_state_;
     final_time = final_time_;
-    max_walltime = max_walltime_;
+    max_walltime = max_walltime_ * 1000;
 
     // meta information
     sim_name = sim_name_;
     verbose = verbose_;
-    console_interval = console_interval_;
+    console_interval = console_interval_ * 1000;
 
     // initialise output structures
     output_nexti = 0;
@@ -143,18 +143,17 @@ public:
 
   void run() {
     // initialise walltime fields
-    int walltime_start = time(NULL);
-    int walltime_nextconsole = walltime_start, walltime_nextinterrupt = walltime_start, walltime_curr = walltime_start;
+    auto walltime_start = gillespie::timems();
+    auto walltime_nextconsole = walltime_start, walltime_nextinterrupt = walltime_start, walltime_curr = walltime_start;
 
     // verbose
     if (verbose) {
       Rcout << "Running SSA " << ssa_alg->name << " with console output every " << console_interval << " seconds" << std::endl;
-      Rcout << "Start time: " << "CURRTIME" << std::endl;
     }
 
     while (
         sim_time < final_time &&
-          (walltime_curr - walltime_start) < max_walltime &&
+          walltime_curr - walltime_start < max_walltime &&
           !negative_propensity &&
           !all_zero_propensity &&
           (!negative_state || !stop_on_neg_state)
@@ -163,7 +162,7 @@ public:
       // check for interrupt
       if (walltime_nextinterrupt <= walltime_curr) {
         checkUserInterrupt();
-        walltime_nextinterrupt += 1;
+        walltime_nextinterrupt += 1000;
       }
 
       // print if so desired
@@ -184,7 +183,7 @@ public:
         do_census();
       }
 
-      walltime_curr = time(NULL);
+      walltime_curr = gillespie::timems();
     }
 
     // log end state if census_interval is set to inf
@@ -201,7 +200,7 @@ public:
     }
 
     // construct output
-    int walltime_end = time(NULL);
+    auto walltime_end = gillespie::timems();
     walltime_elapsed += walltime_end - walltime_start;
 
     // remove empty output slots
@@ -222,7 +221,7 @@ public:
       _["all_zero_propensity"] = all_zero_propensity,
       _["negative_propensity"] = negative_propensity,
       _["walltime_exceeded"] = walltime_elapsed >= max_walltime,
-      _["walltime_elapsed"] = walltime_elapsed,
+      _["walltime_elapsed"] = walltime_elapsed / 1000.0,
       _["num_steps"] = num_steps,
       _["dtime_mean"] = dtime_mean,
       _["dtime_sd"] = dtime_sd,

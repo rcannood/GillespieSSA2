@@ -39,10 +39,7 @@ List test_propensity_cpp(
     NumericVector& state,
     double sim_time
 ) {
-  TR_FUN *prop_funs;
-  if (!Rf_isNull(propensity_funs)) {
-    prop_funs = XPtr<TR_FUN>(propensity_funs);
-  }
+  TR_FUN *prop_funs = XPtr<TR_FUN>(propensity_funs);
   NumericVector buffer = NumericVector(buffer_size);
   NumericVector propensity = NumericVector(propensity_size);
 

@@ -60,7 +60,7 @@ autoplot.ssa <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FAL
       title = ssa_out$sim_name %|% "SSA Simulation",
       subtitle = paste0(
         ssa_out$stats$method, ", ",
-        round(ssa_out$stats$walltime_elapsed, 2), " sec, ",
+        round(ssa_out$stats$walltime_elapsed, 3), " sec, ",
         ssa_out$stats$num_steps, " steps"
       )
     ) +
