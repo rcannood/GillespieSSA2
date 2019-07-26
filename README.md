@@ -65,7 +65,7 @@ changes.
 
 ### Recent changes in GillespieSSA2 0.2.4 (26-07-2019)
 
-  - MAJOR CHANGE: Split up Rcpp code to make seperate parts easier to
+  - MAJOR CHANGE: Split up Rcpp code to make separate parts easier to
     test.
 
   - TESTING: Write unit tests for many of the functions.
