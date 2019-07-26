@@ -11,7 +11,7 @@ The SIRS epidemiological metapopulation model is defined in Pineda-Krch
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "SIRS metapopulation model"
 patchPopSize <- 500                    # Patch size
 U <- 20                                # Number of patches
@@ -59,29 +59,29 @@ reactions <- unlist(lapply(
       reaction(
         propensity = paste0("(1 - epsilon) * beta * ", Si, " * ", Ii), 
         effect = setNames(c(-1, +1), c(Si, Ii)),
-        name = "intra_patch_infection"
+        name = paste0("intra_patch_infection_", i)
       ),
       reaction(
         propensity = paste0("epsilon * beta * ", Si, " * ", Ij),
         effect = setNames(c(-1, +1), c(Si, Ii)),
-        name = "inter_patch_infection"
+        name = paste0("inter_patch_infection_", i)
       ), 
       reaction(
         propensity = paste0("gamma * ", Ii),
         effect = setNames(-1, Ii),
-        name = "recovery_from_infection"
+        name = paste0("recovery_from_infection_", i)
       ),
       reaction(
         propensity = paste0("rho * (N - ", Si, " - ", Ii, ")"),
         effect = setNames(+1, Si),
-        name = "loss_of_immunity"
+        name = paste0("loss_of_immunity_", i)
       )
     )
   }
 ), recursive = FALSE)
 ```
 
-Run simulations with the Direct method
+Run simulations with the Exact method
 
 ``` r
 set.seed(1)
@@ -90,13 +90,13 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct(),
+  method = ssa_exact(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="epi_chain_files/figure-gfm/direct-1.png" width="100%" />
+![](epi_chain_files/figure-gfm/exact-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
@@ -110,10 +110,10 @@ out <- ssa(
   method = ssa_etl(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="epi_chain_files/figure-gfm/etl-1.png" width="100%" />
+![](epi_chain_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulations with the Binomial tau-leap method
 
@@ -127,7 +127,7 @@ out <- ssa(
   method = ssa_btl(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="epi_chain_files/figure-gfm/btl-1.png" width="100%" />
+![](epi_chain_files/figure-gfm/btl-1.png)<!-- -->

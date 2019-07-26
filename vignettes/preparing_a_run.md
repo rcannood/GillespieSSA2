@@ -1,6 +1,5 @@
-Preparing your first SSA run with gillespie
+Preparing your first SSA run with GillespieSSA2
 ================
-2019-07-18
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/preparing_a_run.Rmd", output_format = "github_document")
@@ -19,7 +18,7 @@ at \(t = 0\). For example, for a system with two species `prey` and
 initial state vector is defined as follows.
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 initial_state <- c(prey = 1000, predators = 1000)
 ```
 
@@ -50,24 +49,33 @@ out <-
     initial_state = initial_state,
     reactions = reactions,
     params = params,
-    method = ssa_direct(),
+    method = ssa_exact(),
     final_time = 5,
     census_interval = .001,
     verbose = TRUE,
     sim_name = "My first SSA run!"
   )
-#> Running SSA direct with console output every 1 seconds
-#> Start time: CURRTIME
-#> walltime: 0, simtime: 0
-#> SSA finished!
 ```
+
+    ## Running SSA exact with console output every 1000 seconds
+    ## walltime: 0, sim_time: 0
+    ## SSA finished!
 
 ``` r
 print(out$stats)
 ```
 
+    ##   method          sim_name sim_time_exceeded all_zero_state negative_state
+    ## 1  exact My first SSA run!              TRUE          FALSE          FALSE
+    ##   all_zero_propensity negative_propensity walltime_exceeded
+    ## 1               FALSE               FALSE             FALSE
+    ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
+    ## 1            0.023    151518 3.299954e-05 1.538995e-07            1
+    ##   firings_sd
+    ## 1          0
+
 ``` r
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="preparing_a_run_files/figure-gfm/unnamed-chunk-5-1.png" width="100%" />
+![](preparing_a_run_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->

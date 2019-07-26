@@ -4,7 +4,7 @@
 \alias{reaction}
 \title{Define a reaction}
 \usage{
-reaction(propensity, effect, name = NA)
+reaction(propensity, effect, name = NA_character_)
 }
 \arguments{
 \item{propensity}{\code{[character/formula]} A character or formula representation of the propensity function, written in C++.}

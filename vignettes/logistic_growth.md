@@ -24,7 +24,7 @@ where `d'=d+(b-d)N/K`. The propensity functions are `a_1=bN` and
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Pearl-Verhulst Logistic Growth model"
 params <- c(b = 2, d = 1, K = 1000)
 final_time <- 10
@@ -40,7 +40,7 @@ reactions <- list(
 )
 ```
 
-Run simulations with the Direct method
+Run simulations with the Exact method
 
 ``` r
 set.seed(1)
@@ -49,13 +49,13 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct(),
+  method = ssa_exact(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="logistic_growth_files/figure-gfm/direct-1.png" width="100%" />
+![](logistic_growth_files/figure-gfm/exact-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
@@ -69,10 +69,10 @@ out <- ssa(
   method = ssa_etl(tau = .03),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="logistic_growth_files/figure-gfm/etl-1.png" width="100%" />
+![](logistic_growth_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulations with the Binomial tau-leap method
 
@@ -83,10 +83,10 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl(f = 5),
+  method = ssa_btl(mean_firings = 5),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="logistic_growth_files/figure-gfm/btl-1.png" width="100%" />
+![](logistic_growth_files/figure-gfm/btl-1.png)<!-- -->

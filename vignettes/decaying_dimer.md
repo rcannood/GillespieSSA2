@@ -18,7 +18,7 @@ four reaction channels.
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Decaying-Dimerizing Reaction Set"
 final_time <- 10
 params <- c(c1 = 1.0, c2 = 0.002, c3 = 0.5, c4 = 0.04)
@@ -36,7 +36,7 @@ reactions <- list(
 )
 ```
 
-Run simulations with the Direct method
+Run simulations with the Exact method
 
 ``` r
 set.seed(1)
@@ -45,13 +45,15 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct(),
+  method = ssa_exact(),
   sim_name = sim_name
 )
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="decaying_dimer_files/figure-gfm/direct-1.png" width="100%" />
+    ## Loading required namespace: ggplot2
+
+![](decaying_dimer_files/figure-gfm/exact-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
@@ -65,10 +67,10 @@ out <- ssa(
   method = ssa_etl(tau = 0.003),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="decaying_dimer_files/figure-gfm/etl-1.png" width="100%" />
+![](decaying_dimer_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulations with the Binomial tau-leap method
 
@@ -82,7 +84,7 @@ out <- ssa(
   method = ssa_btl(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="decaying_dimer_files/figure-gfm/btl-1.png" width="100%" />
+![](decaying_dimer_files/figure-gfm/btl-1.png)<!-- -->

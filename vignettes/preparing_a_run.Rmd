@@ -1,9 +1,8 @@
 ---
-title: "Preparing your first SSA run with gillespie"
-date: "`r Sys.Date()`"
+title: "Preparing your first SSA run with GillespieSSA2"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Preparing your first SSA run with gillespie}
+  %\VignetteIndexEntry{Preparing your first SSA run with GillespieSSA2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -29,7 +28,7 @@ at $t = 0$. For example, for a system with two species `prey` and `predators`
 where both have an initial population size of 1000, the initial state vector
 is defined as follows.
 ```{r}
-library(gillespie)
+library(GillespieSSA2)
 initial_state <- c(prey = 1000, predators = 1000)
 ```
 
@@ -58,7 +57,7 @@ out <-
     initial_state = initial_state,
     reactions = reactions,
     params = params,
-    method = ssa_direct(),
+    method = ssa_exact(),
     final_time = 5,
     census_interval = .001,
     verbose = TRUE,
@@ -71,5 +70,5 @@ print(out$stats)
 ```
 
 ```{r fig.width=7, fig.height=5}
-ssa_plot(out)
+autoplot.ssa(out)
 ```

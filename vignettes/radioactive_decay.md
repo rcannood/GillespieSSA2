@@ -13,7 +13,7 @@ It consists of a single species and single reaction channels,
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Radioactive Decay model"
 params <- c(k = 0.5)
 final_time <- 20
@@ -28,7 +28,7 @@ reactions <- list(
 )
 ```
 
-Run simulations with the Direct method
+Run simulations with the Exact method
 
 ``` r
 set.seed(1)
@@ -37,13 +37,13 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct(),
+  method = ssa_exact(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="radioactive_decay_files/figure-gfm/direct-1.png" width="100%" />
+![](radioactive_decay_files/figure-gfm/exact-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
@@ -57,10 +57,10 @@ out <- ssa(
   method = ssa_etl(tau = .003),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="radioactive_decay_files/figure-gfm/etl-1.png" width="100%" />
+![](radioactive_decay_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulations with the Binomial tau-leap method
 
@@ -74,7 +74,7 @@ out <- ssa(
   method = ssa_btl(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="radioactive_decay_files/figure-gfm/btl-1.png" width="100%" />
+![](radioactive_decay_files/figure-gfm/btl-1.png)<!-- -->

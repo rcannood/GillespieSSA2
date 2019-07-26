@@ -1,13 +1,13 @@
-#' \pkg{gillespie}: Gillespie's Stochastic Simulation Algorithm for impatient people.
+#' \pkg{GillespieSSA2}: Gillespie's Stochastic Simulation Algorithm for impatient people.
 #'
 #' A fast, scalable, and versatile framework for simulating large systems with
 #' Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). It is the spiritual successor of
 #' \pkg{GillespieSSA}, but written entirely in Rcpp with large scale systems in mind, to make
-#' it blazingly fast. The SSA methods currently implemented are: Direct, Explicit
+#' it blazingly fast. The SSA methods currently implemented are: Exact, Explicit
 #' tau-leaping (\acronym{ETL}), and the Binomial tau-leaping (\acronym{BTL})
 #'
-#' @name gillespie
-#' @aliases gillespie-package gillespie
+#' @name GillespieSSA2
+#' @aliases GillespieSSA2-package GillespieSSA2
 #' @docType package
 #'
 #' @section The stochastic simulation algorithm:
@@ -41,19 +41,19 @@
 #' @section Contents of this package:
 #'
 #' * [ssa()]: The main entry point for running an \acronym{SSA} simulation.
-#' * [ssa_plot()]: A standard visualisation for generating an overview plot fo the output.
-#' * [ssa_direct()], [ssa_etl()], [ssa_btl()]: Different \acronym{SSA} algorithms.
+#' * [autoplot.ssa()]: A standard visualisation for generating an overview plot fo the output.
+#' * [ssa_exact()], [ssa_etl()], [ssa_btl()]: Different \acronym{SSA} algorithms.
 #' * [ode_em()]: An \acronym{ODE} algorithm.
 #' * [compile_reactions()]: A function for precompiling the reactions.
 #'
-#' @seealso [ssa()] for more explanation on how to use \pkg{gillespie}
+#' @seealso [ssa()] for more explanation on how to use \pkg{GillespieSSA2}
 #'
-#' @useDynLib gillespie
+#' @useDynLib GillespieSSA2
 #'
 #' @importFrom dplyr first
 #' @importFrom tibble lst
 #' @importFrom assertthat assert_that
-#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep discard invoke pmap map2 map2_df set_names imap
+#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep discard invoke pmap map2 map2_df set_names imap walk
 
 NULL
 

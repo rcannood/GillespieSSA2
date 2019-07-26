@@ -1,11 +1,11 @@
 #include <Rcpp.h>
-#include "ssa.h"
+#include "ssa_method.h"
 
 using namespace Rcpp;
 
-class SSA_etl : public SSA {
+class SSA_ETL : public SSA_method {
 public:
-  SSA_etl(double tau_) : SSA("ETL"), tau(tau_) {}
+  SSA_ETL(double tau_) : SSA_method("ETL"), tau(tau_) {}
 
   double tau;
 
@@ -16,7 +16,8 @@ public:
       const IntegerVector& nu_p,
       const IntegerVector& nu_x,
       double* dtime,
-      NumericVector& dstate
+      NumericVector& dstate,
+      NumericVector& firings
   ) {
     int k;
     int i, j;
@@ -24,6 +25,8 @@ public:
     for (j = 0; j < propensity.size(); j++) {
       // determine reaction firing
       k = R::rpois(propensity[j] * tau);
+
+      firings[j] += k;
 
       // determine firing effect
       for (i = nu_p[j]; i < nu_p[j+1]; i++) {
@@ -36,9 +39,10 @@ public:
   }
 } ;
 
+
 // [[Rcpp::export]]
 SEXP make_ssa_etl(double tau) {
-  SSA_etl *ssa = new SSA_etl(tau);
-  XPtr<SSA_etl> ptr(ssa);
+  SSA_ETL *ssa = new SSA_ETL(tau);
+  XPtr<SSA_ETL> ptr(ssa);
   return ptr;
 }

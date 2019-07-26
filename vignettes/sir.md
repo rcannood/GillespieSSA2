@@ -11,16 +11,13 @@ The Kermack-McKendrick SIR model is defined as
     dI/dt = beta*N*S - gamma*I
     dR/dt = gamma*I
 
-This model consists of two reactions with the following per capita
-rates,
-
-    transmission: beta
-    recovery:     gamma
+Note that simulations of this model can generate in all zero propensity,
+if the first reaction is a recovery of the single ‘Infected’ individual.
 
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Kermack-McKendrick SIR model"
 params <- c(beta = .001, gamma = .1)
 final_time <- 100
@@ -31,12 +28,12 @@ Define reactions
 
 ``` r
 reactions <- list(
-  reaction("beta * S * I", c(S = -1, I = +1)),
-  reaction("gamma * I", c(I = -1, R = +1))
+  reaction("beta * S * I", c(S = -1, I = +1), name = "transmission"),
+  reaction("gamma * I", c(I = -1, R = +1), name = "recovery")
 )
 ```
 
-Run simulations with the Direct method
+Run simulations with the Exact method
 
 ``` r
 set.seed(1)
@@ -45,13 +42,13 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct(),
+  method = ssa_exact(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="sir_files/figure-gfm/direct-1.png" width="100%" />
+![](sir_files/figure-gfm/exact-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
@@ -65,15 +62,15 @@ out <- ssa(
   method = ssa_etl(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="sir_files/figure-gfm/etl-1.png" width="100%" />
+![](sir_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulations with the Binomial tau-leap method
 
 ``` r
-set.seed(1)
+set.seed(2)
 out <- ssa(
   initial_state = initial_state,
   reactions = reactions,
@@ -82,7 +79,7 @@ out <- ssa(
   method = ssa_btl(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="sir_files/figure-gfm/btl-1.png" width="100%" />
+![](sir_files/figure-gfm/btl-1.png)<!-- -->

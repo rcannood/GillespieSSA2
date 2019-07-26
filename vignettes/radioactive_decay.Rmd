@@ -26,7 +26,7 @@ X --c--> 0
 
 Define parameters
 ```{r}
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Radioactive Decay model"
 params <- c(k = 0.5)
 final_time <- 20
@@ -40,18 +40,18 @@ reactions <- list(
 )
 ```
 
-Run simulations with the Direct method
-```{r direct}
+Run simulations with the Exact method
+```{r exact}
 set.seed(1)
 out <- ssa(
   initial_state = initial_state,
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct(),
+  method = ssa_exact(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
 Run simulations with the Explict tau-leap method
@@ -65,7 +65,7 @@ out <- ssa(
   method = ssa_etl(tau = .003),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
 Run simulations with the Binomial tau-leap method
@@ -79,5 +79,5 @@ out <- ssa(
   method = ssa_btl(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```

@@ -11,7 +11,7 @@
 #' @importFrom tidyr gather
 #' @importFrom dplyr bind_rows mutate
 #' @export
-ssa_plot <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE, geom = c("point", "step")) {
+autoplot.ssa <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE, geom = c("point", "step")) {
   requireNamespace("ggplot2")
   geom <- match.arg(geom)
 
@@ -49,7 +49,7 @@ ssa_plot <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE, 
   df <- df %>%
     mutate(
       type = factor(type, levels = c("state", "propensity", "buffer")),
-      var = factor(var, levels = colnames(ssa_out$state))
+      var = factor(var, levels = var_names)
     )
 
   # create plot
@@ -60,7 +60,7 @@ ssa_plot <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE, 
       title = ssa_out$sim_name %|% "SSA Simulation",
       subtitle = paste0(
         ssa_out$stats$method, ", ",
-        round(ssa_out$stats$walltime_elapsed, 2), " sec, ",
+        round(ssa_out$stats$walltime_elapsed, 3), " sec, ",
         ssa_out$stats$num_steps, " steps"
       )
     ) +

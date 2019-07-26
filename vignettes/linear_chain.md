@@ -18,14 +18,18 @@ as follows:
 Define parameters
 
 ``` r
-library(gillespie)
+library(GillespieSSA2)
 sim_name <- "Linear Chain System"
 M <- 50
 params <- c(c = 1)
 final_time <- 5
 initial_state <- c(1000, rep(0, M)) 
 names(initial_state) <- paste0("x", seq_len(M+1))
+```
 
+Define the reactions
+
+``` r
 reactions <- lapply(
   seq_len(M),
   function(i) {
@@ -37,7 +41,7 @@ reactions <- lapply(
 )
 ```
 
-Run simulations with the Direct method
+Run simulations with the Exact method
 
 ``` r
 set.seed(1)
@@ -46,13 +50,13 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_direct(),
+  method = ssa_exact(),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="linear_chain_files/figure-gfm/direct-1.png" width="100%" />
+![](linear_chain_files/figure-gfm/exact-1.png)<!-- -->
 
 Run simulations with the Explict tau-leap method
 
@@ -66,10 +70,10 @@ out <- ssa(
   method = ssa_etl(tau = .1),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="linear_chain_files/figure-gfm/etl-1.png" width="100%" />
+![](linear_chain_files/figure-gfm/etl-1.png)<!-- -->
 
 Run simulations with the Binomial tau-leap method
 
@@ -80,10 +84,10 @@ out <- ssa(
   reactions = reactions,
   params = params,
   final_time = final_time,
-  method = ssa_btl(f = 50),
+  method = ssa_btl(mean_firings = 50),
   sim_name = sim_name
 ) 
-ssa_plot(out)
+autoplot.ssa(out)
 ```
 
-<img src="linear_chain_files/figure-gfm/btl-1.png" width="100%" />
+![](linear_chain_files/figure-gfm/btl-1.png)<!-- -->

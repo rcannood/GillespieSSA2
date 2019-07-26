@@ -8,9 +8,9 @@ editor_options:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<a href="https://travis-ci.org/dynverse/gillespie"><img src="https://travis-ci.org/dynverse/gillespie.svg" align="left"></a> <a href="https://codecov.io/gh/dynverse/gillespie"> [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/dynverse/gillespie?branch=master&svg=true)](https://ci.appveyor.com/project/dynverse/gillespie)
+<a href="https://travis-ci.org/dynverse/GillespieSSA2"><img src="https://travis-ci.org/dynverse/GillespieSSA2.svg" align="left"></a> <a href="https://codecov.io/gh/dynverse/GillespieSSA2"> [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/dynverse/GillespieSSA2?branch=master&svg=true)](https://ci.appveyor.com/project/dynverse/GillespieSSA2)
 
-# `gillespie`: Gillespie's Stochastic Simulation Algorithm for impatient people.
+# `GillespieSSA2`: Gillespie's Stochastic Simulation Algorithm for impatient people.
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -26,19 +26,19 @@ submission_to_cran <- FALSE
 library(tidyverse)
 ```
 
-**gillespie** is a fast, scalable, and versatile framework for simulating large systems with 
+**GillespieSSA2** is a fast, scalable, and versatile framework for simulating large systems with 
 Gillespie's Stochastic Simulation Algorithm (SSA). It is conceptually based on 
 [GillespieSSA](https://cran.r-project.org/web/packages/GillespieSSA/index.html),
 but rewritten entirely in Rcpp with large scale systems in mind to make
-it blazingly fast. The SSA methods currently implemented are: Direct, Explicit
+it blazingly fast. The SSA methods currently implemented are: Exact, Explicit
 tau-leaping (ETL), and the Binomial tau-leaping (BTL).
 
 ## Install
 
-You can install the development version of gillespie from GitHub with
+You can install the development version of GillespieSSA2 from GitHub with
 
 ```R
-devtools::install_github("dynverse/gillespie", build_vignettes = TRUE)
+devtools::install_github("dynverse/GillespieSSA2", build_vignettes = TRUE)
 ```
 
 ## Examples
@@ -61,7 +61,7 @@ walk(
       title, 
       ifelse(submission_to_cran, "", paste0("](vignettes/", markdown_name, ")")),
       ": ",
-      "`vignette(\"", vignette_name, "\", package=\"gillespie\")`\n",
+      "`vignette(\"", vignette_name, "\", package=\"GillespieSSA2\")`\n",
       sep = ""
     )
   }
@@ -83,7 +83,7 @@ if (rerun_vignettes) {
 ```{r include = FALSE}
 show_link <- ifelse(submission_to_cran, "", "or [NEWS.md](inst/NEWS.md) ")
 ```
-Check out `news(package = "gillespie")` `r show_link` for a full list of changes.
+Check out `news(package = "GillespieSSA2")` `r show_link` for a full list of changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
