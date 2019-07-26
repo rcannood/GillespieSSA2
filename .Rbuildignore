@@ -6,3 +6,4 @@
 ^vignettes/.*\.html$
 ^vignettes/.*\.md$
 ^vignettes/.*/.*\.png$
+^appveyor\.yml$

@@ -1,6 +1,6 @@
 Package: GillespieSSA2
 Type: Package
-Title: Gillespie's Stochastic Simulation Algorithm (GSSA) for impatient people
+Title: Gillespie's Stochastic Simulation Algorithm for Impatient People
 Version: 0.2.4
 Authors@R: c(
     person(
@@ -13,12 +13,12 @@ Authors@R: c(
   )
 Description: A fast, scalable, and versatile framework for simulating large systems with 
   Gillespie's Stochastic Simulation Algorithm ('SSA'). It is the spiritual successor of 
-  'GillespieSSA', but written entirely in Rcpp with large scale systems in mind, to make
+  'GillespieSSA', but written entirely in 'Rcpp' with large scale systems in mind, to make
   it blazingly fast. The SSA methods currently implemented are: Exact, Explicit
   tau-leaping ('ETL'), and the Binomial tau-leaping ('BTL').
 License: GPL (>= 3)
 LazyData: TRUE
-Requires:
+Depends:
     R (>= 3.0)
 Imports:
     assertthat,
