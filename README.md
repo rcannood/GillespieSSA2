@@ -1,10 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<a href="https://travis-ci.org/dynverse/GillespieSSA2"><img src="https://travis-ci.org/dynverse/GillespieSSA2.svg" align="left"></a>
-<a href="https://codecov.io/gh/dynverse/GillespieSSA2"> [![AppVeyor
-Build
-Status](https://ci.appveyor.com/api/projects/status/github/dynverse/GillespieSSA2?branch=master&svg=true)](https://ci.appveyor.com/project/dynverse/GillespieSSA2)
+[![Build
+Status](https://travis-ci.org/rcannood/GillespieSSA2.svg?branch=master)](https://travis-ci.org/rcannood/GillespieSSA2)
+[![Build
+status](https://ci.appveyor.com/api/projects/status/5kw9ynlc1mmehrcj?svg=true)](https://ci.appveyor.com/project/rcannood/gillespiessa2)
 
 # `GillespieSSA2`: Gillespie’s Stochastic Simulation Algorithm for impatient people.
 
@@ -22,7 +22,7 @@ You can install the development version of GillespieSSA2 from GitHub
 with
 
 ``` r
-devtools::install_github("dynverse/GillespieSSA2", build_vignettes = TRUE)
+devtools::install_github("rcannood/GillespieSSA2", build_vignettes = TRUE)
 ```
 
 ## Examples
