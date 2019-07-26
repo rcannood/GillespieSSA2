@@ -49,7 +49,7 @@ autoplot.ssa <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FAL
   df <- df %>%
     mutate(
       type = factor(type, levels = c("state", "propensity", "buffer")),
-      var = factor(var, levels = colnames(ssa_out$state))
+      var = factor(var, levels = var_names)
     )
 
   # create plot
