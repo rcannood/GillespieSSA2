@@ -3,6 +3,7 @@
 export(autoplot.ssa)
 export(compile_reactions)
 export(ode_em)
+export(port_reactions)
 export(reaction)
 export(ssa)
 export(ssa_btl)
