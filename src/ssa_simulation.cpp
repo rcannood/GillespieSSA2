@@ -199,7 +199,7 @@ public:
 
     // determine whether extinction has occurred
     all_zero_state = true;
-    for (auto i = state.begin(); i != state.end() && all_zero_state; i++) {
+    for (NumericVector::iterator i = state.begin(); i != state.end() && all_zero_state; i++) {
       if (*i > 0) {
         all_zero_state = false;
       }
@@ -265,7 +265,7 @@ public:
 
     // check whether all propensity functions are zero
     all_zero_propensity = true;
-    for (auto i = propensity.begin(); i != propensity.end(); ++i) {
+    for (NumericVector::iterator i = propensity.begin(); i != propensity.end(); ++i) {
       if (*i > 0) {
         all_zero_propensity = false;
       } else if (*i < 0) {
@@ -301,7 +301,7 @@ public:
     firings_mean = (firings_mean * (num_steps - 1) + firings_sum) / num_steps;
 
     // Check that no states are negative (can occur in some tau-leaping methods)
-    for (auto i = state.begin(); i != state.end(); ++i) {
+    for (NumericVector::iterator i = state.begin(); i != state.end(); ++i) {
       if (*i < 0) {
         if (!stop_on_neg_state) {
           *i = 0;
