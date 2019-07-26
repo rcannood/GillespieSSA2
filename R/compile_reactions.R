@@ -16,7 +16,7 @@
 #' @importFrom stringr str_count str_replace_all str_extract_all str_replace str_split
 #' @importFrom Rcpp sourceCpp
 #' @importFrom dynutils safe_tempdir %all_in%
-#' @importFrom dplyr last
+#' @importFrom dplyr first last
 #' @importFrom readr write_lines
 #'
 #' @export
