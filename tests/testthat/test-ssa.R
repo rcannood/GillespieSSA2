@@ -40,13 +40,23 @@ reactions <- list(
   )
 )
 
+expected_prop <- with(as.list(c(params, state)), c(
+  params,
+  state,
+  a * b * a_very_long_state_name_value_is_just_to_try_and_see_if_it_works * short_one / c / d,
+  a + 5,
+  (a * b + c) / d
+)) %>%
+  unname()
+
+comp_reac <- compile_reactions(
+  reactions = reactions,
+  state_ids = names(state),
+  params = params,
+  hardcode_params = FALSE
+)
+
 test_that("perform manual steps", {
-  comp_reac <- compile_reactions(
-    reactions = reactions,
-    state_ids = names(state),
-    params = params,
-    hardcode_params = FALSE
-  )
   sim <- create_simulation(
     compiled_reactions = comp_reac,
     params = params,
@@ -64,15 +74,6 @@ test_that("perform manual steps", {
     console_interval = 1
   )
   sim$reset()
-
-  expected_prop <- with(as.list(c(params, state)), c(
-    params,
-    state,
-    a * b * a_very_long_state_name_value_is_just_to_try_and_see_if_it_works * short_one / c / d,
-    a + 5,
-    (a * b + c) / d
-  )) %>%
-    unname()
 
   # check variables before simulation
   expect_equal(sim$all_zero_propensity, FALSE)
@@ -167,12 +168,6 @@ test_that("perform manual steps", {
 
 
 test_that("perform simulation with Rcpp function", {
-  comp_reac <- compile_reactions(
-    reactions = reactions,
-    state_ids = names(state),
-    params = params,
-    hardcode_params = FALSE
-  )
   sim <- create_simulation(
     compiled_reactions = comp_reac,
     params = params,
@@ -192,8 +187,11 @@ test_that("perform simulation with Rcpp function", {
   sim$reset()
 
   # let simulator run freely
-  sim$verbose <- FALSE
-  sim$run()
+  expect_output(
+    sim$run(),
+    regexp = "Running SSA exact"
+  )
+
 
   # check simulator values again
   expect_equal(sim$all_zero_propensity, FALSE)
@@ -264,22 +262,26 @@ test_that("perform simulation with Rcpp function", {
 })
 
 test_that("perform simulation with R function", {
-  # use r function to simulate
-  out <- ssa(
-    initial_state = state,
-    reactions = reactions,
-    final_time = 1,
-    params = params,
-    method = ssa_exact(),
-    census_interval = .01,
-    max_walltime = 10,
-    stop_on_neg_state = TRUE,
-    log_propensity = TRUE,
-    log_firings = TRUE,
-    log_buffer = TRUE,
-    verbose = TRUE,
-    console_interval = 1,
-    sim_name = "test"
+  expect_output(
+    {
+      out <- ssa(
+        initial_state = state,
+        reactions = reactions,
+        final_time = 1,
+        params = params,
+        method = ssa_exact(),
+        census_interval = .01,
+        max_walltime = 10,
+        stop_on_neg_state = TRUE,
+        log_propensity = TRUE,
+        log_firings = TRUE,
+        log_buffer = TRUE,
+        verbose = TRUE,
+        console_interval = 1,
+        sim_name = "test"
+      )
+    },
+    regexp = "Running SSA exact"
   )
 
 
@@ -291,7 +293,7 @@ test_that("perform simulation with R function", {
   expect_true(all(rowSums(out$firings[-1,]) >= 1))
   expect_equal(nrow(out$propensity), nrow(out$buffer))
   expect_equal(ncol(out$propensity), length(reactions))
-  expect_equal(out$propensity[1, ], expected_prop)
+  expect_equal(out$propensity[1, ], expected_prop %>% setNames(comp_reac$reaction_ids))
   expect_equal(nrow(out$state), nrow(out$buffer))
   expect_equal(ncol(out$state), length(state))
   expect_equal(out$state[1, ], state)
@@ -306,7 +308,7 @@ test_that("perform simulation with R function", {
     a * b * a_very_long_state_name_value_is_just_to_try_and_see_if_it_works * short_one / c / d,
     a + 5,
     (a * b + c) / d
-  )) %>% set_names(reactions %>% map_chr("name"))
+  )) %>% setNames(comp_reac$reaction_ids)
   expect_equal(out$propensity[nrow(out$propensity),], exp_prop)
   expect_equal(out$name, "test")
   expect_gte(out$time[[nrow(out$buffer)]], 1)
