@@ -90,7 +90,7 @@ compile_reactions <- function(
     str_replace_all("([A-Za-z][A-Za-z0-9_]*)", " \\1 ") %>%
     str_split(" ") %>%
     first() %>%
-    discard(. == "")
+    discard(~ . == "")
 
   # substitute state variables
   state_match <- match(prop_split, state_ids)
@@ -124,8 +124,8 @@ compile_reactions <- function(
     paste0(prop_split, collapse = "") %>%
     str_split(";") %>%
     first() %>%
-    discard(. == "") %>%
-    paste0("  ", ., ";\n")
+    discard(~ . == "")
+  prop_lines <- paste0("  ", prop_lines, ";\n")
   forms_start <- seq(1, length(prop_lines), by = fun_by)
   forms_end <- pmin(forms_start + fun_by - 1, length(prop_lines))
   rcpp_function_code_blocks <-
