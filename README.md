@@ -29,6 +29,11 @@ devtools::install_github("rcannood/GillespieSSA2", build_vignettes = TRUE)
 
 The following example models are available:
 
+  - [Introduction to GillespieSSA2](vignettes/an_introduction.md):  
+    `vignette("an_introduction", package="GillespieSSA2")`
+  - [Converting from GillespieSSA to
+    GillespieSSA2](vignettes/converting_from_GillespieSSA.md):  
+    `vignette("converting_from_GillespieSSA", package="GillespieSSA2")`
   - [Decaying-Dimerization Reaction Set (Gillespie,
     2001)](vignettes/decaying_dimer.md):  
     `vignette("decaying_dimer", package="GillespieSSA2")`
@@ -44,9 +49,6 @@ The following example models are available:
   - [Lotka Predator-Prey model (Gillespie, 1977; Kot,
     2001)](vignettes/lotka_predator_prey.md):  
     `vignette("lotka_predator_prey", package="GillespieSSA2")`
-  - [Preparing your first SSA run with
-    GillespieSSA2](vignettes/preparing_a_run.md):  
-    `vignette("preparing_a_run", package="GillespieSSA2")`
   - [Radioactive Decay model (Gillespie,
     1977)](vignettes/radioactive_decay.md):  
     `vignette("radioactive_decay", package="GillespieSSA2")`
