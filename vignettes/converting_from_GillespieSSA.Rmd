@@ -1,14 +1,14 @@
 ---
-title: "Porting your code from GillespieSSA to GillespieSSA2"
+title: "Converting from GillespieSSA to GillespieSSA2"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Porting your code from GillespieSSA to GillespieSSA2}
+  %\VignetteIndexEntry{Converting from GillespieSSA to GillespieSSA2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 <!-- github markdown built using 
-rmarkdown::render("vignettes/2_porting_from_GillespieSSA.Rmd", output_format = "github_document")
+rmarkdown::render("vignettes/converting_from_GillespieSSA.Rmd", output_format = "github_document")
 -->
 
 
@@ -59,9 +59,9 @@ params <- c(c1 = 10, c2 = .01, c3 = 10)
 final_time <- 2
 initial_state <- c(Y1 = 1000, Y2 = 1000)
 reactions <- list(
-  reaction("c1 * Y1", c(Y1 = +1)),
+  reaction("c1 * Y1",      c(Y1 = +1)),
   reaction("c2 * Y1 * Y2", c(Y1 = -1, Y2 = +1)),
-  reaction("c3 * Y2", c(Y2 = -1))
+  reaction("c3 * Y2",      c(Y2 = -1))
 )
 out <- GillespieSSA2::ssa(
   initial_state = initial_state,
@@ -85,7 +85,7 @@ matrix `nu` and the propensity functions `a` into one list of reactions.
 out <- 
   GillespieSSA2::ssa(
     initial_state = x0,
-    reactions = port_reactions(a = a, nu = nu),
+    reactions = port_reactions(x0 = x0, a = a, nu = nu),
     params = parms,
     method = ssa_exact(),
     final_time = tf,

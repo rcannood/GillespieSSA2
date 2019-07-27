@@ -1,8 +1,8 @@
-Porting your code from GillespieSSA to GillespieSSA2
+Converting from GillespieSSA to GillespieSSA2
 ================
 
 <!-- github markdown built using 
-rmarkdown::render("vignettes/2_porting_from_GillespieSSA.Rmd", output_format = "github_document")
+rmarkdown::render("vignettes/converting_from_GillespieSSA.Rmd", output_format = "github_document")
 -->
 
 In this vignette, we will show how to upgrade the Lotka-predator-prey
@@ -38,7 +38,7 @@ out <- GillespieSSA::ssa(
 ssa.plot(out, show.title = TRUE, show.legend = FALSE)
 ```
 
-![](2_porting_from_GillespieSSA_files/figure-gfm/gssa1-1.png)<!-- -->
+![](converting_from_GillespieSSA_files/figure-gfm/gssa1-1.png)<!-- -->
 
 In order to port these objects, it is preferable to use the updated
 notation from the respective GillespieSSA2 vignette:
@@ -56,9 +56,9 @@ params <- c(c1 = 10, c2 = .01, c3 = 10)
 final_time <- 2
 initial_state <- c(Y1 = 1000, Y2 = 1000)
 reactions <- list(
-  reaction("c1 * Y1", c(Y1 = +1)),
+  reaction("c1 * Y1",      c(Y1 = +1)),
   reaction("c2 * Y1 * Y2", c(Y1 = -1, Y2 = +1)),
-  reaction("c3 * Y2", c(Y2 = -1))
+  reaction("c3 * Y2",      c(Y2 = -1))
 )
 out <- GillespieSSA2::ssa(
   initial_state = initial_state,
@@ -73,7 +73,7 @@ out <- GillespieSSA2::ssa(
 autoplot.ssa(out)
 ```
 
-![](2_porting_from_GillespieSSA_files/figure-gfm/gssa2-1.png)<!-- -->
+![](converting_from_GillespieSSA_files/figure-gfm/gssa2-1.png)<!-- -->
 
 However, if you want to use the GillespieSSA1 objects directly, you can
 also transform these programmatically. The interface of GillespieSSA2 is
@@ -85,7 +85,7 @@ into one list of reactions.
 out <- 
   GillespieSSA2::ssa(
     initial_state = x0,
-    reactions = port_reactions(a = a, nu = nu),
+    reactions = port_reactions(x0 = x0, a = a, nu = nu),
     params = parms,
     method = ssa_exact(),
     final_time = tf,
@@ -101,7 +101,7 @@ print(out$stats)
     ##   negative_state all_zero_propensity negative_propensity walltime_exceeded
     ## 1          FALSE               FALSE               FALSE             FALSE
     ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
-    ## 1       0.01072903     61105 3.273063e-05 5.972723e-08            1
+    ## 1      0.009042215     61105 3.273063e-05 5.972723e-08            1
     ##   firings_sd
     ## 1          0
 
@@ -109,4 +109,4 @@ print(out$stats)
 autoplot.ssa(out)
 ```
 
-![](2_porting_from_GillespieSSA_files/figure-gfm/port-1.png)<!-- -->
+![](converting_from_GillespieSSA_files/figure-gfm/port-1.png)<!-- -->

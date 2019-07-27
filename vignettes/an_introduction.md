@@ -1,8 +1,8 @@
-Preparing your first SSA run with GillespieSSA2
+Introduction to GillespieSSA2
 ================
 
 <!-- github markdown built using 
-rmarkdown::render("vignettes/1_preparing_your_first_run.Rmd", output_format = "github_document")
+rmarkdown::render("vignettes/step1_introduction.Rmd", output_format = "github_document")
 -->
 
 In order to invoke `ssa()`, the stochastic model needs at least three
@@ -70,7 +70,7 @@ print(out$stats)
     ##   all_zero_propensity negative_propensity walltime_exceeded
     ## 1               FALSE               FALSE             FALSE
     ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
-    ## 1       0.02596054    151518 3.299954e-05 1.538995e-07            1
+    ## 1       0.02316614    151518 3.299954e-05 1.538995e-07            1
     ##   firings_sd
     ## 1          0
 
@@ -78,4 +78,4 @@ print(out$stats)
 autoplot.ssa(out)
 ```
 
-![](1_preparing_your_first_run_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](an_introduction_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
