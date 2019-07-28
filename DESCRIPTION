@@ -11,11 +11,12 @@ Authors@R: c(
       comment = c(ORCID = "0000-0003-3641-729X")
     )
   )
-Description: A fast, scalable, and versatile framework for simulating large systems with 
-  Gillespie's Stochastic Simulation Algorithm ('SSA'). It is the spiritual successor of 
-  'GillespieSSA', but written entirely in 'Rcpp' with large scale systems in mind, to make
-  it blazingly fast. The SSA methods currently implemented are: Exact, Explicit
-  tau-leaping ('ETL'), and the Binomial tau-leaping ('BTL').
+Description: A fast, scalable, and versatile framework for simulating large 
+  systems with Gillespie's Stochastic Simulation Algorithm ('SSA'). 
+  This package is the spiritual successor to the 'GillespieSSA' package 
+  originally written by Mario Pineda-Krch. Benefits of this package
+  include major speed improvements (>100x), easier to understand documentation,
+  and many unit tests that try to ensure the package works as intended.
 License: GPL (>= 3)
 LazyData: TRUE
 Depends:
