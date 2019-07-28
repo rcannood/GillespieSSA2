@@ -57,7 +57,7 @@ autoplot.ssa <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FAL
     ggplot2::ggplot(df, ggplot2::aes_string("time", "value", colour = "var")) +
     ggplot2::facet_wrap(~type, ncol = 1, scales = "free_y") +
     ggplot2::labs(
-      title = ssa_out$sim_name %|% "SSA Simulation",
+      title = as.character(ssa_out$stats$sim_name) %|% "SSA Simulation",
       subtitle = paste0(
         ssa_out$stats$method, ", ",
         round(ssa_out$stats$walltime_elapsed, 3), " sec, ",
