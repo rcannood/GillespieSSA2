@@ -57,9 +57,11 @@ Returns a list object with the following elements:
 \description{
 Main interface function to the implemented \acronym{SSA} methods. Runs a
 single realization of a predefined system. For a detailed explanation
-on how to set up your first \acronym{SSA} system, check the vignette
-available on \href{https://github.com/dynverse/GillespieSSA2/tree/master/vignettes/preparing_a_run.md}{GitHub}
-or using \code{vignette("preparing_a_run", package = "GillespieSSA2")}.
+on how to set up your first \acronym{SSA} system, check the introduction
+vignette: \code{vignette("an_introduction", package = "GillespieSSA2")}.
+If you're transitioning from \pkg{GillespieSSA} to \pkg{GillespieSSA2},
+check out the corresponding vignette:
+\code{vignette("converting_from_GillespieSSA", package = "GillespieSSA2")}.
 }
 \details{
 Substantial improvements in speed and accuracy can be obtained by
