@@ -17,7 +17,7 @@
 #'
 #' @export
 #' @examples
-#' #        ↓ propensity                        ↓ effect
+#' #        propensity                        effect
 #' reaction(~ c1 * s1,                          c(s1 = -1))
 #' reaction("c2 * s1 * s1",                     c(s1 = -2, s2 = +1))
 #' reaction("buf = c3 * s1; buf / (buf + 1)",   c(s1 = +2))

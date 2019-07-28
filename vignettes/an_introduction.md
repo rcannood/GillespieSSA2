@@ -2,7 +2,7 @@ Introduction to GillespieSSA2
 ================
 
 <!-- github markdown built using 
-rmarkdown::render("vignettes/step1_introduction.Rmd", output_format = "github_document")
+rmarkdown::render("vignettes/an_introduction.Rmd", output_format = "github_document")
 -->
 
 In order to invoke `ssa()`, the stochastic model needs at least three
@@ -34,7 +34,7 @@ matrix could then be defined as follows.
 ``` r
 params <- c(c1 = 10, c2 = 0.01, c3 = 10)
 reactions <- list(
-  #        ↓ propensity function      ↓ effects                        ↓ name for reaction
+  #        propensity function        effects                          name for reaction
   reaction(~c1 * prey,                c(prey = +1),                    name = "prey_up"),
   reaction(~c2 * prey * predators,    c(prey = -1, predators = +1),    name = "predation"),
   reaction(~c3 * predators,           c(predators = -1),               name = "pred_down")
@@ -70,7 +70,7 @@ print(out$stats)
     ##   all_zero_propensity negative_propensity walltime_exceeded
     ## 1               FALSE               FALSE             FALSE
     ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
-    ## 1       0.02316614    151518 3.299954e-05 1.538995e-07            1
+    ## 1       0.02135862    151518 3.299954e-05 1.538995e-07            1
     ##   firings_sd
     ## 1          0
 

@@ -17,16 +17,6 @@ The model consists of the following objects:
 
 ``` r
 library(GillespieSSA)
-```
-
-    ## 
-    ## Attaching package: 'GillespieSSA'
-
-    ## The following object is masked from 'package:GillespieSSA2':
-    ## 
-    ##     ssa
-
-``` r
 parms <- c(c1 = 10, c2 = .01, c3 = 10)
 tf <- 2                                        # Final time
 simName <- "Lotka predator-prey model"         # Name
@@ -83,8 +73,6 @@ out <- GillespieSSA2::ssa(
 autoplot.ssa(out)
 ```
 
-    ## Loading required namespace: ggplot2
-
 ![](converting_from_GillespieSSA_files/figure-gfm/gssa2-1.png)<!-- -->
 
 However, if you want to use the GillespieSSA1 objects directly, you can
@@ -113,7 +101,7 @@ print(out$stats)
     ##   negative_state all_zero_propensity negative_propensity walltime_exceeded
     ## 1          FALSE               FALSE               FALSE             FALSE
     ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
-    ## 1      0.008731626     61105 3.273063e-05 5.972723e-08            1
+    ## 1      0.008707751     60839 3.287495e-05 3.135028e-07            1
     ##   firings_sd
     ## 1          0
 

@@ -15,6 +15,7 @@ rmarkdown::render("vignettes/converting_from_GillespieSSA.Rmd", output_format = 
 ```{r, setseed, echo=FALSE}
 set.seed(1)
 knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
+if("package:GillespieSSA2" %in% search()) detach("package:GillespieSSA2", unload=TRUE) 
 ```
 
 In this vignette, we will show how to upgrade the Lotka-predator-prey model from
@@ -45,6 +46,13 @@ out <- GillespieSSA::ssa(
   consoleInterval = 1
 ) 
 ssa.plot(out, show.title = TRUE, show.legend = FALSE)
+```
+
+
+
+```{r, setseed2, echo=FALSE}
+set.seed(1)
+if("package:GillespieSSA" %in% search()) detach("package:GillespieSSA", unload=TRUE) 
 ```
 
 In order to port these objects, it is preferable to use the updated notation from the respective GillespieSSA2 vignette:

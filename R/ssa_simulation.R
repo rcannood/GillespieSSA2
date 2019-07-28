@@ -103,10 +103,10 @@ create_simulation <- function(
 #' initial_state <- c(prey = 1000, predators = 1000)
 #' params <- c(c1 = 10, c2 = 0.01, c3 = 10)
 #' reactions <- list(
-#'   #        ↓ propensity function      ↓ effects                        ↓ name for reaction
-#'   reaction(~c1 * prey,                c(prey = +1),                    name = "prey_up"),
-#'   reaction(~c2 * prey * predators,    c(prey = -1, predators = +1),    name = "predation"),
-#'   reaction(~c3 * predators,           c(predators = -1),               name = "pred_down")
+#'   #        propensity function     effects                       name for reaction
+#'   reaction(~c1 * prey,             c(prey = +1),                 "prey_up"),
+#'   reaction(~c2 * prey * predators, c(prey = -1, predators = +1), "predation"),
+#'   reaction(~c3 * predators,        c(predators = -1),            "pred_down")
 #' )
 #'
 #' out <-
