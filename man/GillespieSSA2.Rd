@@ -6,11 +6,21 @@
 \alias{GillespieSSA2-package}
 \title{\pkg{GillespieSSA2}: Gillespie's Stochastic Simulation Algorithm for impatient people.}
 \description{
-A fast, scalable, and versatile framework for simulating large systems with
-Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). It is the spiritual successor of
-\pkg{GillespieSSA}, but written entirely in Rcpp with large scale systems in mind, to make
-it blazingly fast. The SSA methods currently implemented are: Exact, Explicit
-tau-leaping (\acronym{ETL}), and the Binomial tau-leaping (\acronym{BTL})
+\pkg{GillespieSSA2} is a fast, scalable, and versatile framework for simulating large systems with
+Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). This package is the spiritual successor to
+the \pkg{GillespieSSA} package originally written by Mario Pineda-Krch.
+}
+\details{
+GillespieSSA2 has the following added benefits:
+\itemize{
+\item The whole algorithm is run in Rcpp which results in major speed improvements (>100x).
+Even your propensity functions (reactions) are being compiled to Rcpp!
+\item Parameters and variables have been renamed to make them easier to understand.
+\item Many unit tests try to ensure that the code works as intended.
+}
+
+The SSA methods currently implemented are: Exact (\code{\link[=ssa_exact]{ssa_exact()}}), Explicit tau-leaping (\code{\link[=ssa_etl]{ssa_etl()}}),
+and the Binomial tau-leaping (\code{\link[=ssa_btl]{ssa_btl()}}).
 }
 \section{The stochastic simulation algorithm}{
 

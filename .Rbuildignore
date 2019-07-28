@@ -7,3 +7,4 @@
 ^vignettes/.*\.md$
 ^vignettes/.*/.*\.png$
 ^appveyor\.yml$
+^cran-comments\.md$

@@ -10,11 +10,21 @@ status](https://ci.appveyor.com/api/projects/status/5kw9ynlc1mmehrcj?svg=true)](
 
 **GillespieSSA2** is a fast, scalable, and versatile framework for
 simulating large systems with Gillespie’s Stochastic Simulation
-Algorithm (SSA). It is conceptually based on
-[GillespieSSA](https://cran.r-project.org/package=GillespieSSA), but
-rewritten entirely in Rcpp with large scale systems in mind to make it
-blazingly fast. The SSA methods currently implemented are: Exact,
-Explicit tau-leaping (ETL), and the Binomial tau-leaping (BTL).
+Algorithm (SSA). This package is the spiritual successor to the
+GillespieSSA package originally written by Mario Pineda-Krch.
+
+GillespieSSA2 has the following added benefits:
+
+  - The whole algorithm is run in Rcpp which results in major speed
+    improvements (\>100x). Even your propensity functions (reactions)
+    are being compiled to Rcpp\!
+  - Parameters and variables have been renamed to make them easier to
+    understand.
+  - Many unit tests try to ensure that the code works as intended.
+
+The SSA methods currently implemented are: Exact (`ssa_exact()`),
+Explicit tau-leaping (`ssa_etl()`), and the Binomial tau-leaping
+(`ssa_btl()`).
 
 ## Install
 
