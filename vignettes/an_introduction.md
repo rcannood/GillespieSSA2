@@ -70,12 +70,14 @@ print(out$stats)
     ##   all_zero_propensity negative_propensity walltime_exceeded
     ## 1               FALSE               FALSE             FALSE
     ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
-    ## 1       0.02135862    151518 3.299954e-05 1.538995e-07            1
+    ## 1       0.02149001    151518 3.299954e-05 1.538995e-07            1
     ##   firings_sd
     ## 1          0
 
 ``` r
 autoplot.ssa(out)
 ```
+
+    ## Loading required namespace: ggplot2
 
 ![](an_introduction_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->

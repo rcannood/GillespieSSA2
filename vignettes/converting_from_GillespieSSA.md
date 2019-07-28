@@ -101,7 +101,7 @@ print(out$stats)
     ##   negative_state all_zero_propensity negative_propensity walltime_exceeded
     ## 1          FALSE               FALSE               FALSE             FALSE
     ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
-    ## 1      0.008707751     60839 3.287495e-05 3.135028e-07            1
+    ## 1      0.009209634     60839 3.287495e-05 3.135028e-07            1
     ##   firings_sd
     ## 1          0
 
