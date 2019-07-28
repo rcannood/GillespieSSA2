@@ -10,13 +10,23 @@ model from GillespieSSA to GillespieSSA2. First, have a look at the
 GillespieSSA vignette:
 
   - [CRAN
-    Vignette](https://cran.r-project.org/web/packages/GillespieSSA/vignettes/lotka_predator_prey.html)
+    Vignette](https://CRAN.R-project.org/package=GillespieSSA/vignettes/lotka_predator_prey.html)
   - `vignette("lotka_predator_prey", package = "GillespieSSA")`
 
 The model consists of the following objects:
 
 ``` r
 library(GillespieSSA)
+```
+
+    ## 
+    ## Attaching package: 'GillespieSSA'
+
+    ## The following object is masked from 'package:GillespieSSA2':
+    ## 
+    ##     ssa
+
+``` r
 parms <- c(c1 = 10, c2 = .01, c3 = 10)
 tf <- 2                                        # Final time
 simName <- "Lotka predator-prey model"         # Name
@@ -44,7 +54,7 @@ In order to port these objects, it is preferable to use the updated
 notation from the respective GillespieSSA2 vignette:
 
   - [CRAN
-    Vignette](https://cran.r-project.org/web/packages/GillespieSSA2/vignettes/lotka_predator_prey.html)
+    Vignette](https://CRAN.R-project.org/package=GillespieSSA2/vignettes/lotka_predator_prey.html)
   - `vignette("lotka_predator_prey", package = "GillespieSSA2")`
 
 <!-- end list -->
@@ -72,6 +82,8 @@ out <- GillespieSSA2::ssa(
 ) 
 autoplot.ssa(out)
 ```
+
+    ## Loading required namespace: ggplot2
 
 ![](converting_from_GillespieSSA_files/figure-gfm/gssa2-1.png)<!-- -->
 
@@ -101,7 +113,7 @@ print(out$stats)
     ##   negative_state all_zero_propensity negative_propensity walltime_exceeded
     ## 1          FALSE               FALSE               FALSE             FALSE
     ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
-    ## 1      0.009042215     61105 3.273063e-05 5.972723e-08            1
+    ## 1      0.008731626     61105 3.273063e-05 5.972723e-08            1
     ##   firings_sd
     ## 1          0
 

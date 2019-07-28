@@ -20,7 +20,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
 In this vignette, we will show how to upgrade the Lotka-predator-prey model from
 GillespieSSA to GillespieSSA2. First, have a look at the GillespieSSA vignette:
 
-* [CRAN Vignette](https://cran.r-project.org/web/packages/GillespieSSA/vignettes/lotka_predator_prey.html)
+* [CRAN Vignette](https://CRAN.R-project.org/package=GillespieSSA/vignettes/lotka_predator_prey.html)
 * `vignette("lotka_predator_prey", package = "GillespieSSA")`
 
 The model consists of the following objects:
@@ -49,7 +49,7 @@ ssa.plot(out, show.title = TRUE, show.legend = FALSE)
 
 In order to port these objects, it is preferable to use the updated notation from the respective GillespieSSA2 vignette:
 
-* [CRAN Vignette](https://cran.r-project.org/web/packages/GillespieSSA2/vignettes/lotka_predator_prey.html)
+* [CRAN Vignette](https://CRAN.R-project.org/package=GillespieSSA2/vignettes/lotka_predator_prey.html)
 * `vignette("lotka_predator_prey", package = "GillespieSSA2")`
 
 ```{r gssa2}
