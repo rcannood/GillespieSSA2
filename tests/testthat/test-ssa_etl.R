@@ -52,7 +52,6 @@ for (i in seq_len(10)) {
 
     avg_firings <- Reduce(`+`, firings) / length(firings)
     exp_firings <- propensity * tau
-    expect_gte(cor(avg_firings, exp_firings), .99)
-    expect_lte(mean(avg_firings) - mean(exp_firings), .1)
+    expect_equivalent(avg_firings, exp_firings, tolerance = 1)
   })
 }
