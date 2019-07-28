@@ -15,7 +15,8 @@ rmarkdown::render("vignettes/lotka_predator_prey.Rmd", output_format = "github_d
 
 ```{r, setseed, echo=FALSE}
 set.seed(1)
-knitr::opts_chunk$set(fig.width = 8, fig.height = 6)
+knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
+if("package:GillespieSSA" %in% search()) detach("package:GillespieSSA", unload=TRUE) 
 ```
 
 This version of the Lotka predator-prey model is given by

@@ -1,19 +1,19 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<a href="https://travis-ci.org/dynverse/GillespieSSA2"><img src="https://travis-ci.org/dynverse/GillespieSSA2.svg" align="left"></a>
-<a href="https://codecov.io/gh/dynverse/GillespieSSA2"> [![AppVeyor
-Build
-Status](https://ci.appveyor.com/api/projects/status/github/dynverse/GillespieSSA2?branch=master&svg=true)](https://ci.appveyor.com/project/dynverse/GillespieSSA2)
+[![Build
+Status](https://travis-ci.org/rcannood/GillespieSSA2.svg?branch=master)](https://travis-ci.org/rcannood/GillespieSSA2)
+[![Build
+status](https://ci.appveyor.com/api/projects/status/5kw9ynlc1mmehrcj?svg=true)](https://ci.appveyor.com/project/rcannood/gillespiessa2)
 
 # `GillespieSSA2`: Gillespie’s Stochastic Simulation Algorithm for impatient people.
 
 **GillespieSSA2** is a fast, scalable, and versatile framework for
 simulating large systems with Gillespie’s Stochastic Simulation
 Algorithm (SSA). It is conceptually based on
-[GillespieSSA](https://cran.r-project.org/web/packages/GillespieSSA/index.html),
-but rewritten entirely in Rcpp with large scale systems in mind to make
-it blazingly fast. The SSA methods currently implemented are: Exact,
+[GillespieSSA](https://cran.r-project.org/package=GillespieSSA), but
+rewritten entirely in Rcpp with large scale systems in mind to make it
+blazingly fast. The SSA methods currently implemented are: Exact,
 Explicit tau-leaping (ETL), and the Binomial tau-leaping (BTL).
 
 ## Install
@@ -22,38 +22,42 @@ You can install the development version of GillespieSSA2 from GitHub
 with
 
 ``` r
-devtools::install_github("dynverse/GillespieSSA2", build_vignettes = TRUE)
+devtools::install_github("rcannood/GillespieSSA2", build_vignettes = TRUE)
 ```
 
 ## Examples
 
 The following example models are available:
 
+  - [Introduction to GillespieSSA2](vignettes/an_introduction.md):  
+    `vignette("an_introduction", package="GillespieSSA2")`
+  - [Converting from GillespieSSA to
+    GillespieSSA2](vignettes/converting_from_GillespieSSA.md):  
+    `vignette("converting_from_GillespieSSA", package="GillespieSSA2")`
   - [Decaying-Dimerization Reaction Set (Gillespie,
-    2001)](vignettes/decaying_dimer.md): `vignette("decaying_dimer",
-    package="GillespieSSA2")`
+    2001)](vignettes/decaying_dimer.md):  
+    `vignette("decaying_dimer", package="GillespieSSA2")`
   - [SIRS metapopulation model (Pineda-Krch,
-    2008)](vignettes/epi_chain.md): `vignette("epi_chain",
-    package="GillespieSSA2")`
-  - [Linear Chain System (Cao et al., 2004)](vignettes/linear_chain.md):
+    2008)](vignettes/epi_chain.md):  
+    `vignette("epi_chain", package="GillespieSSA2")`
+  - [Linear Chain System (Cao et al.,
+    2004)](vignettes/linear_chain.md):  
     `vignette("linear_chain", package="GillespieSSA2")`
   - [Pearl-Verhulst Logistic Growth model (Kot,
-    2001)](vignettes/logistic_growth.md): `vignette("logistic_growth",
-    package="GillespieSSA2")`
+    2001)](vignettes/logistic_growth.md):  
+    `vignette("logistic_growth", package="GillespieSSA2")`
   - [Lotka Predator-Prey model (Gillespie, 1977; Kot,
-    2001)](vignettes/lotka_predator_prey.md):
+    2001)](vignettes/lotka_predator_prey.md):  
     `vignette("lotka_predator_prey", package="GillespieSSA2")`
-  - [Preparing your first SSA run with
-    GillespieSSA2](vignettes/preparing_a_run.md):
-    `vignette("preparing_a_run", package="GillespieSSA2")`
   - [Radioactive Decay model (Gillespie,
-    1977)](vignettes/radioactive_decay.md):
+    1977)](vignettes/radioactive_decay.md):  
     `vignette("radioactive_decay", package="GillespieSSA2")`
   - [Rosenzweig-MacArthur Predator-Prey model (Pineda-Krch et al.,
-    2007)](vignettes/rm_predator_prey.md): `vignette("rm_predator_prey",
-    package="GillespieSSA2")`
+    2007)](vignettes/rm_predator_prey.md):  
+    `vignette("rm_predator_prey", package="GillespieSSA2")`
   - [Kermack-McKendrick SIR model (Brown & Rothery,
-    1993)](vignettes/sir.md): `vignette("sir", package="GillespieSSA2")`
+    1993)](vignettes/sir.md):  
+    `vignette("sir", package="GillespieSSA2")`
 
 ## Latest changes
 

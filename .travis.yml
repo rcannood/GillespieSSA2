@@ -1,7 +1,16 @@
 language: r
-sudo: required
 cache: packages
+matrix:
+  include:
+  - r: oldrel
+    os: linux
+  - r: release
+    os: linux
+  - r: devel
+    os: linux
+  - r: release
+    os: osx
 r_packages:
  - covr
 after_success:
-- R -e 'covr::codecov()'
+ - R -e 'covr::codecov()'

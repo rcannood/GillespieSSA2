@@ -15,7 +15,8 @@ rmarkdown::render("vignettes/logistic_growth.Rmd", output_format = "github_docum
 
 ```{r, setseed, echo=FALSE}
 set.seed(1)
-knitr::opts_chunk$set(fig.width = 8, fig.height = 6)
+knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
+if("package:GillespieSSA" %in% search()) detach("package:GillespieSSA", unload=TRUE) 
 ```
 
 The logistic growth model is given by `dN/dt = rN(1-N/K)` where

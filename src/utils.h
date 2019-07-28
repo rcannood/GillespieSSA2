@@ -7,6 +7,4 @@ namespace gillespie{
 
 int weighted_sample(const NumericVector& weight);
 
-uint64_t timems();
-
 } // namespace gillespie

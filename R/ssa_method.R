@@ -4,10 +4,10 @@ ssa_method <- function(
   params,
   factory
 ) {
-  l <- lst(
-    name,
-    params,
-    factory
+  l <- list(
+    name = name,
+    params = params,
+    factory = factory
   )
   class(l) <- c(class, "SSA_method")
   l

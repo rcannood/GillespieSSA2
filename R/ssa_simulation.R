@@ -55,9 +55,11 @@ create_simulation <- function(
 #'
 #' Main interface function to the implemented \acronym{SSA} methods. Runs a
 #' single realization of a predefined system. For a detailed explanation
-#' on how to set up your first \acronym{SSA} system, check the vignette
-#' available on [GitHub](https://github.com/dynverse/GillespieSSA2/tree/master/vignettes/preparing_a_run.md)
-#' or using `vignette("preparing_a_run", package = "GillespieSSA2")`.
+#' on how to set up your first \acronym{SSA} system, check the introduction
+#' vignette: `vignette("an_introduction", package = "GillespieSSA2")`.
+#' If you're transitioning from \pkg{GillespieSSA} to \pkg{GillespieSSA2},
+#' check out the corresponding vignette:
+#' `vignette("converting_from_GillespieSSA", package = "GillespieSSA2")`.
 #'
 #' Substantial improvements in speed and accuracy can be obtained by
 #' adjusting the additional (and optional) `ssa` arguments. By default
@@ -101,10 +103,10 @@ create_simulation <- function(
 #' initial_state <- c(prey = 1000, predators = 1000)
 #' params <- c(c1 = 10, c2 = 0.01, c3 = 10)
 #' reactions <- list(
-#'   #        ↓ propensity function      ↓ effects                        ↓ name for reaction
-#'   reaction(~c1 * prey,                c(prey = +1),                    name = "prey_up"),
-#'   reaction(~c2 * prey * predators,    c(prey = -1, predators = +1),    name = "predation"),
-#'   reaction(~c3 * predators,           c(predators = -1),               name = "pred_down")
+#'   #        propensity function     effects                       name for reaction
+#'   reaction(~c1 * prey,             c(prey = +1),                 "prey_up"),
+#'   reaction(~c2 * prey * predators, c(prey = -1, predators = +1), "predation"),
+#'   reaction(~c3 * predators,        c(predators = -1),            "pred_down")
 #' )
 #'
 #' out <-
@@ -123,7 +125,6 @@ create_simulation <- function(
 #'
 #' @importFrom methods is
 #' @importFrom dynutils is_sparse inherit_default_params
-#' @importFrom tibble tibble
 #' @importFrom Matrix Matrix
 #' @importFrom purrr is_scalar_double is_scalar_logical is_scalar_integer is_scalar_character
 ssa <- dynutils::inherit_default_params(

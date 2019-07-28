@@ -1,8 +1,8 @@
-Preparing your first SSA run with GillespieSSA2
+Introduction to GillespieSSA2
 ================
 
 <!-- github markdown built using 
-rmarkdown::render("vignettes/preparing_a_run.Rmd", output_format = "github_document")
+rmarkdown::render("vignettes/an_introduction.Rmd", output_format = "github_document")
 -->
 
 In order to invoke `ssa()`, the stochastic model needs at least three
@@ -34,7 +34,7 @@ matrix could then be defined as follows.
 ``` r
 params <- c(c1 = 10, c2 = 0.01, c3 = 10)
 reactions <- list(
-  #        ↓ propensity function      ↓ effects                        ↓ name for reaction
+  #        propensity function        effects                          name for reaction
   reaction(~c1 * prey,                c(prey = +1),                    name = "prey_up"),
   reaction(~c2 * prey * predators,    c(prey = -1, predators = +1),    name = "predation"),
   reaction(~c3 * predators,           c(predators = -1),               name = "pred_down")
@@ -57,7 +57,7 @@ out <-
   )
 ```
 
-    ## Running SSA exact with console output every 1000 seconds
+    ## Running SSA exact with console output every 1 seconds
     ## walltime: 0, sim_time: 0
     ## SSA finished!
 
@@ -70,7 +70,7 @@ print(out$stats)
     ##   all_zero_propensity negative_propensity walltime_exceeded
     ## 1               FALSE               FALSE             FALSE
     ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
-    ## 1            0.023    151518 3.299954e-05 1.538995e-07            1
+    ## 1       0.02149001    151518 3.299954e-05 1.538995e-07            1
     ##   firings_sd
     ## 1          0
 
@@ -78,4 +78,6 @@ print(out$stats)
 autoplot.ssa(out)
 ```
 
-![](preparing_a_run_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+    ## Loading required namespace: ggplot2
+
+![](an_introduction_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->

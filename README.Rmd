@@ -8,7 +8,8 @@ editor_options:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<a href="https://travis-ci.org/dynverse/GillespieSSA2"><img src="https://travis-ci.org/dynverse/GillespieSSA2.svg" align="left"></a> <a href="https://codecov.io/gh/dynverse/GillespieSSA2"> [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/dynverse/GillespieSSA2?branch=master&svg=true)](https://ci.appveyor.com/project/dynverse/GillespieSSA2)
+[![Build Status](https://travis-ci.org/rcannood/GillespieSSA2.svg?branch=master)](https://travis-ci.org/rcannood/GillespieSSA2)
+[![Build status](https://ci.appveyor.com/api/projects/status/5kw9ynlc1mmehrcj?svg=true)](https://ci.appveyor.com/project/rcannood/gillespiessa2)
 
 # `GillespieSSA2`: Gillespie's Stochastic Simulation Algorithm for impatient people.
 
@@ -28,7 +29,7 @@ library(tidyverse)
 
 **GillespieSSA2** is a fast, scalable, and versatile framework for simulating large systems with 
 Gillespie's Stochastic Simulation Algorithm (SSA). It is conceptually based on 
-[GillespieSSA](https://cran.r-project.org/web/packages/GillespieSSA/index.html),
+[GillespieSSA](https://cran.r-project.org/package=GillespieSSA),
 but rewritten entirely in Rcpp with large scale systems in mind to make
 it blazingly fast. The SSA methods currently implemented are: Exact, Explicit
 tau-leaping (ETL), and the Binomial tau-leaping (BTL).
@@ -38,7 +39,7 @@ tau-leaping (ETL), and the Binomial tau-leaping (BTL).
 You can install the development version of GillespieSSA2 from GitHub with
 
 ```R
-devtools::install_github("dynverse/GillespieSSA2", build_vignettes = TRUE)
+devtools::install_github("rcannood/GillespieSSA2", build_vignettes = TRUE)
 ```
 
 ## Examples
@@ -60,7 +61,7 @@ walk(
       ifelse(submission_to_cran, "", "["),
       title, 
       ifelse(submission_to_cran, "", paste0("](vignettes/", markdown_name, ")")),
-      ": ",
+      ":  \n",
       "`vignette(\"", vignette_name, "\", package=\"GillespieSSA2\")`\n",
       sep = ""
     )

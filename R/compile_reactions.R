@@ -16,7 +16,7 @@
 #' @importFrom stringr str_count str_replace_all str_extract_all str_replace str_split
 #' @importFrom Rcpp sourceCpp
 #' @importFrom dynutils safe_tempdir %all_in%
-#' @importFrom dplyr last
+#' @importFrom dplyr first last
 #' @importFrom readr write_lines
 #'
 #' @export
@@ -55,7 +55,7 @@ compile_reactions <- function(
   state_change_df <- map_df(seq_along(reactions), function(j) {
     reac <- reactions[[j]]
 
-    tibble(
+    data.frame(
       i = match(names(reac$effect), state_ids),
       j = j,
       x = reac$effect
@@ -90,7 +90,7 @@ compile_reactions <- function(
     str_replace_all("([A-Za-z][A-Za-z0-9_]*)", " \\1 ") %>%
     str_split(" ") %>%
     first() %>%
-    discard(. == "")
+    discard(~ . == "")
 
   # substitute state variables
   state_match <- match(prop_split, state_ids)
@@ -124,8 +124,8 @@ compile_reactions <- function(
     paste0(prop_split, collapse = "") %>%
     str_split(";") %>%
     first() %>%
-    discard(. == "") %>%
-    paste0("  ", ., ";\n")
+    discard(~ . == "")
+  prop_lines <- paste0("  ", prop_lines, ";\n")
   forms_start <- seq(1, length(prop_lines), by = fun_by)
   forms_end <- pmin(forms_start + fun_by - 1, length(prop_lines))
   rcpp_function_code_blocks <-
@@ -185,14 +185,14 @@ compile_reactions <- function(
   num_functions <- num_functions()
 
   # return output
-  l <- lst(
-    state_change,
-    reaction_ids,
-    buffer_ids,
-    buffer_size,
-    functions_pointer,
-    num_functions,
-    hardcode_params
+  l <- list(
+    state_change = state_change,
+    reaction_ids = reaction_ids,
+    buffer_ids = buffer_ids,
+    buffer_size = buffer_size,
+    functions_pointer = functions_pointer,
+    num_functions = num_functions,
+    hardcode_params = hardcode_params
   )
   class(l) <- "SSA_reactions"
   l
