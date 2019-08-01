@@ -8,3 +8,4 @@
 ^vignettes/.*/.*\.png$
 ^appveyor\.yml$
 ^cran-comments\.md$
+^CRAN-RELEASE$
