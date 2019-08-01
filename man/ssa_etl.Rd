@@ -18,5 +18,5 @@ Note that this method does not attempt to select an appropriate value for tau, n
 implement estimated-midpoint technique.
 }
 \references{
-Gillespie (2001) \url{doi:10.1063/1.1378322}
+Gillespie D.T. 2001. Approximate accelerated stochastic simulation of chemically reacting systems. J. Chem. Phys. 115:1716-1733. \doi{10.1063/1.1378322}.
 }

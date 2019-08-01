@@ -8,7 +8,7 @@
 #'
 #' @return an object of to be used by [ssa()].
 #'
-#' @references Gillespie (2001) <doi:10.1063/1.1378322>
+#' @references Gillespie D.T. 2001. Approximate accelerated stochastic simulation of chemically reacting systems. J. Chem. Phys. 115:1716-1733. \doi{10.1063/1.1378322}.
 #'
 #' @export
 ssa_etl <- function(tau = .3) {
