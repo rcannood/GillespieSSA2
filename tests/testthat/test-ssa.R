@@ -311,7 +311,6 @@ test_that("perform simulation with R function", {
     (a * b + c) / d
   )) %>% setNames(comp_reac$reaction_ids)
   expect_equal(out$propensity[nrow(out$propensity),], exp_prop)
-  expect_equal(out$name, "test")
   expect_gte(out$time[[nrow(out$buffer)]], 1)
   expect_equal(out$state[nrow(out$state), ], exp_state)
 
