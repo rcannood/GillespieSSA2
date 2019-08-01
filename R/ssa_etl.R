@@ -1,6 +1,8 @@
 #' Explicit tau-leap method (ETL)
 #'
 #' Explicit tau-leap method implementation of the \acronym{SSA} as described by Gillespie (2001).
+#' Note that this method does not attempt to select an appropriate value for tau, nor does it
+#' implement estimated-midpoint technique.
 #'
 #' @param tau the step-size (default 0.3).
 #'
@@ -13,8 +15,6 @@ ssa_etl <- function(tau = .3) {
   ssa_method(
     name = "ETL",
     params = list(tau = tau),
-    factory = function() {
-      make_ssa_etl(tau)
-    }
+    factory = make_ssa_etl
   )
 }

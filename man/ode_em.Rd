@@ -11,6 +11,9 @@ ode_em(tau = 0.01, noise_strength = 2)
 
 \item{noise_strength}{noise_strength parameter}
 }
+\value{
+an object of to be used by \code{\link[=ssa]{ssa()}}.
+}
 \description{
 Euler-Maruyama method implementation of the \acronym{ODE}.
 }

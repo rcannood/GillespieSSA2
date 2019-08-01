@@ -14,6 +14,8 @@ an object of to be used by \code{\link[=ssa]{ssa()}}.
 }
 \description{
 Explicit tau-leap method implementation of the \acronym{SSA} as described by Gillespie (2001).
+Note that this method does not attempt to select an appropriate value for tau, nor does it
+implement estimated-midpoint technique.
 }
 \references{
 Gillespie (2001) \url{doi:10.1063/1.1378322}

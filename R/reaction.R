@@ -66,14 +66,12 @@ reaction <- function(
   out
 }
 
-#' Print a reaction
-#' @param x A reaction
+#' Print various SSA objects
+#' @param x An SSA reaction or SSA method
 #' @param ... Not used
 #' @export
 #'
-#' @examples
-#' r <- reaction(~ c1 * s1, c(s1 = -1, s2 = +1))
-#' print(r)
+#' @rdname print_ssa
 print.SSA_reaction <- function(x, ...) {
   effect <- x[["effect"]]
   effect_str <-

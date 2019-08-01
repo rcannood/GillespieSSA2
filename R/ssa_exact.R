@@ -11,8 +11,6 @@ ssa_exact <- function() {
   ssa_method(
     name = "exact",
     params = list(),
-    factory = function() {
-      make_ssa_exact()
-    }
+    factory = make_ssa_exact
   )
 }

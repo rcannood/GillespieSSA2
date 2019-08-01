@@ -19,8 +19,6 @@ ssa_btl <- function(mean_firings = 10) {
   ssa_method(
     name = "BTL",
     params = list(mean_firings = mean_firings),
-    factory = function() {
-      make_ssa_btl(mean_firings)
-    }
+    factory = make_ssa_btl
   )
 }
