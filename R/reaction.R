@@ -13,6 +13,12 @@
 #' @param effect `[named integer vector]` The change in state caused by this reaction.
 #' @param name `[character]` A name for this reaction (Optional). May only contain characters matching `[A-Za-z0-9_]`.
 #'
+#' @return `[SSA_reaction]` This object describes a single reaction as part of an SSA simulation. It contains the following member values:
+#'
+#' * `r[["propensity"]]`: The propensity function as a character.
+#' * `r[["effect"]]`: The change in state caused by this reaction.
+#' * `r[["name"]]`: The name of the reaction, `NA_character_` if no name was provided.
+#'
 #' @importFrom rlang is_formula is_integerish
 #'
 #' @export
@@ -58,6 +64,30 @@ reaction <- function(
   )
   class(out) <- "SSA_reaction"
   out
+}
+
+#' Print a reaction
+#' @param x A reaction
+#' @param ... Not used
+#' @export
+#'
+#' @examples
+#' r <- reaction(~ c1 * s1, c(s1 = -1, s2 = +1))
+#' print(r)
+print.SSA_reaction <- function(x, ...) {
+  effect <- x[["effect"]]
+  effect_str <-
+    if (length(effect) > 0) {
+      paste0(names(x[["effect"]]), ": ", ifelse(x[["effect"]] > 0, "+", ""), x[["effect"]], collapse = ", ")
+    } else {
+      "<none>"
+    }
+  cat(
+    "Reaction: ", ifelse(!is.na(x[["name"]]), x[["name"]], ""), "\n",
+    " - Propensity: ", x[["propensity"]], "\n",
+    " - Effects: ", effect_str, "\n",
+    sep = ""
+  )
 }
 
 # TODO:

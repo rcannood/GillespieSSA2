@@ -13,6 +13,14 @@ reaction(propensity, effect, name = NA_character_)
 
 \item{name}{\code{[character]} A name for this reaction (Optional). May only contain characters matching \code{[A-Za-z0-9_]}.}
 }
+\value{
+\code{[SSA_reaction]} This object describes a single reaction as part of an SSA simulation. It contains the following member values:
+\itemize{
+\item \code{r[["propensity"]]}: The propensity function as a character.
+\item \code{r[["effect"]]}: The change in state caused by this reaction.
+\item \code{r[["name"]]}: The name of the reaction, \code{NA_character_} if no name was provided.
+}
+}
 \description{
 During an SSA simulation, at any infinitesimal time interval,
 a reaction will occur with a probability defined according to its

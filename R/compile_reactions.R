@@ -13,6 +13,16 @@
 #'   to this file location before compilation.
 #' @param fun_by `[integer]` Combine this number of propensity functions into one function.
 #'
+#' @return A list of objects solely to be used by [ssa()].
+#'
+#' * `x[["state_change"]]`: A sparse matrix of reaction effects.
+#' * `x[["reaction_ids"]]`: The names of the reactions.
+#' * `x[["buffer_ids"]]`: A set of buffer variables found in the propensity functions.
+#' * `x[["buffer_size"]]`: The minimum size of the buffer required.
+#' * `x[["functions_pointer"]]`: A pointer to the compiled propensity functions.
+#' * `x[["num_functions"]]`: The compiled propensity functions are split up into multiple batches of functions.
+#' * `x[["hardcode_params"]]`: Whether the parameters were hard coded into the source code.`
+#'
 #' @importFrom stringr str_count str_replace_all str_extract_all str_replace str_split
 #' @importFrom Rcpp sourceCpp
 #' @importFrom dynutils safe_tempdir %all_in%

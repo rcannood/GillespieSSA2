@@ -24,6 +24,18 @@ to this file location before compilation.}
 
 \item{fun_by}{\code{[integer]} Combine this number of propensity functions into one function.}
 }
+\value{
+A list of objects solely to be used by \code{\link[=ssa]{ssa()}}.
+\itemize{
+\item \code{x[["state_change"]]}: A sparse matrix of reaction effects.
+\item \code{x[["reaction_ids"]]}: The names of the reactions.
+\item \code{x[["buffer_ids"]]}: A set of buffer variables found in the propensity functions.
+\item \code{x[["buffer_size"]]}: The minimum size of the buffer required.
+\item \code{x[["functions_pointer"]]}: A pointer to the compiled propensity functions.
+\item \code{x[["num_functions"]]}: The compiled propensity functions are split up into multiple batches of functions.
+\item \code{x[["hardcode_params"]]}: Whether the parameters were hard coded into the source code.`
+}
+}
 \description{
 By precompiling the reactions, you can run multiple SSA simulations repeatedly
 without having to recompile the reactions every time.
