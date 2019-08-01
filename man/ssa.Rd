@@ -46,12 +46,30 @@ simulation is allowed to run for before terminated.}
 \item{sim_name}{\code{[character]} An optional name for the simulation.}
 }
 \value{
-Returns a list object with the following elements:
+Returns a list containing the output of the simulation:
 \itemize{
-\item \code{time}: \code{[numeric]} Simulatiom time for each recorded timepoint.
-\item \code{state}: \code{[numeric matrix]} The state values for each of the timepoints.
-\item \code{propensity}: \code{[numeric matrix]} The propensity values for each of the timepoints.
-\item \code{buffer}: \code{[numeric matrix]} The temporary calculation buffer used as part of the propensity functions.
+\item \code{out[["time"]]}: \code{[numeric]} The simulation time at which a census was performed.
+\item \code{out[["state"]]}: \code{[numeric matrix]} The number of individuals at those time points.
+\item \code{out[["propensity"]]}: \code{[numeric matrix]} If \code{log_propensity} is \code{TRUE}, the propensity value of each reaction at each time point.
+\item \code{out[["firings"]]}: \code{[numeric matrix]} If \code{log_firings} is \code{TRUE}, the number of firings between two time points.
+\item \code{out[["buffer"]]}: \code{[numeric matrix]} If \code{log_buffer} is \code{TRUE}, the buffer values at each time point.
+\item \code{out[["stats"]]}: \code{[data frame]} Various stats:
+\itemize{
+\item \code{$method}: The name of the SSA method used.
+\item \code{$sim_name}: The name of the simulation, if provided.
+\item \code{$sim_time_exceeded}: Whether the simulation stopped because the final simulation time was reached.
+\item \code{$all_zero_state}: Whether an extinction has occurred.
+\item \code{$negative_state}: Whether a negative state has occurred. If an SSA method other than \code{ssa_etl()} is used, this indicates a mistake in the provided reaction effects.
+\item \code{$all_zero_propensity}: Whether the simulation stopped because all propensity values are zero.
+\item \code{$negative_propensity}: Whether a negative propensity value has occurred. If so, there is likely a mistake in the provided reaction propensity functions.
+\item \code{$walltime_exceeded}: Whether the simulation stopped because the maximum execution time has been reached.
+\item \code{$walltime_elapsed}: The duration of the simulation.
+\item \code{$num_steps}: The number of steps performed.
+\item \code{$dtime_mean}: The mean time increment per step.
+\item \code{$dtime_sd}: THe standard deviation of time increments.
+\item \code{$firings_mean}: The mean number of firings per step.
+\item \code{$firings_sd}: The standard deviation of the number of firings.
+}
 }
 }
 \description{

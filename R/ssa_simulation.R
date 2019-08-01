@@ -90,14 +90,30 @@ create_simulation <- function(
 #' @param console_interval `[numeric]` The approximate interval between intermediary information outputs.
 #' @param sim_name `[character]` An optional name for the simulation.
 #'
-#' @return Returns a list object with the following elements:
-#'
-#' * `time`: `[numeric]` Simulatiom time for each recorded timepoint.
-#' * `state`: `[numeric matrix]` The state values for each of the timepoints.
-#' * `propensity`: `[numeric matrix]` The propensity values for each of the timepoints.
-#' * `buffer`: `[numeric matrix]` The temporary calculation buffer used as part of the propensity functions.
-#'
 #' @seealso [GillespieSSA2] for a high level explanation of the package
+#'
+#' @return Returns a list containing the output of the simulation:
+#'
+#' * `out[["time"]]`: `[numeric]` The simulation time at which a census was performed.
+#' * `out[["state"]]`: `[numeric matrix]` The number of individuals at those time points.
+#' * `out[["propensity"]]`: `[numeric matrix]` If `log_propensity` is `TRUE`, the propensity value of each reaction at each time point.
+#' * `out[["firings"]]`: `[numeric matrix]` If `log_firings` is `TRUE`, the number of firings between two time points.
+#' * `out[["buffer"]]`: `[numeric matrix]` If `log_buffer` is `TRUE`, the buffer values at each time point.
+#' * `out[["stats"]]`: `[data frame]` Various stats:
+#'   - `$method`: The name of the SSA method used.
+#'   - `$sim_name`: The name of the simulation, if provided.
+#'   - `$sim_time_exceeded`: Whether the simulation stopped because the final simulation time was reached.
+#'   - `$all_zero_state`: Whether an extinction has occurred.
+#'   - `$negative_state`: Whether a negative state has occurred. If an SSA method other than `ssa_etl()` is used, this indicates a mistake in the provided reaction effects.
+#'   - `$all_zero_propensity`: Whether the simulation stopped because all propensity values are zero.
+#'   - `$negative_propensity`: Whether a negative propensity value has occurred. If so, there is likely a mistake in the provided reaction propensity functions.
+#'   - `$walltime_exceeded`: Whether the simulation stopped because the maximum execution time has been reached.
+#'   - `$walltime_elapsed`: The duration of the simulation.
+#'   - `$num_steps`: The number of steps performed.
+#'   - `$dtime_mean`: The mean time increment per step.
+#'   - `$dtime_sd`: THe standard deviation of time increments.
+#'   - `$firings_mean`: The mean number of firings per step.
+#'   - `$firings_sd`: The standard deviation of the number of firings.
 #'
 #' @examples
 #' initial_state <- c(prey = 1000, predators = 1000)
@@ -215,8 +231,7 @@ ssa <- dynutils::inherit_default_params(
       propensity = sim$output_propensity,
       firings = sim$output_firings,
       buffer = sim$output_buffer,
-      stats = sim$get_statistics(),
-      name = sim$sim_name
+      stats = sim$get_statistics()
     )
 
     rm(sim)

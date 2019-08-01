@@ -7,6 +7,8 @@
 #' @param a The `a` parameter of [GillespieSSA::ssa()].
 #' @param nu The `nu` parameter of [GillespieSSA::ssa()].
 #'
+#' @return A set of [reaction()]s to be used by [ssa()].
+#'
 #' @export
 #'
 #' @examples

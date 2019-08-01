@@ -13,6 +13,9 @@ port_reactions(x0, a, nu)
 
 \item{nu}{The \code{nu} parameter of \code{\link[GillespieSSA:ssa]{GillespieSSA::ssa()}}.}
 }
+\value{
+A set of \code{\link[=reaction]{reaction()}}s to be used by \code{\link[=ssa]{ssa()}}.
+}
 \description{
 This is a helper function to tranform GillesieSSA-style
 paramters to GillespieSSA2.
