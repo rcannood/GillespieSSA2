@@ -8,7 +8,7 @@
 #'
 #' @return an object of to be used by [ssa()].
 #'
-#' @references Chatterjee A., Vlachos D.G., and Katsoulakis M.A. 2005. Binomial distribution based tau-leap accelerated stochastic simulation. J. Chem. Phys. 122:024112. \url{http://dx.doi.org/10.1063/1.1833357}
+#' @references Chatterjee et al. (2005) <doi:10.1063/1.1833357>
 #'
 #' @export
 ssa_btl <- function(mean_firings = 10) {

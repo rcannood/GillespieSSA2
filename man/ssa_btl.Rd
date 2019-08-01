@@ -18,5 +18,5 @@ an object of to be used by \code{\link[=ssa]{ssa()}}.
 Binomial tau-leap method implementation of the \acronym{SSA} as described by Chatterjee et al. (2005).
 }
 \references{
-Chatterjee A., Vlachos D.G., and Katsoulakis M.A. 2005. Binomial distribution based tau-leap accelerated stochastic simulation. J. Chem. Phys. 122:024112. \url{http://dx.doi.org/10.1063/1.1833357}
+Chatterjee et al. (2005) \url{doi:10.1063/1.1833357}
 }
