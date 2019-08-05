@@ -91,6 +91,7 @@ Approximate methods (\code{\link[=ssa_etl]{ssa_etl()}} and \code{\link[=ssa_btl]
 Some tweaking might be required for a stochastic model to run appropriately.
 }
 \examples{
+\donttest{
 initial_state <- c(prey = 1000, predators = 1000)
 params <- c(c1 = 10, c2 = 0.01, c3 = 10)
 reactions <- list(
@@ -110,7 +111,10 @@ out <-
     census_interval = .001,
     verbose = TRUE
   )
-autoplot.ssa(out)
+
+library(ggplot2)
+autoplot(out)
+}
 
 }
 \seealso{

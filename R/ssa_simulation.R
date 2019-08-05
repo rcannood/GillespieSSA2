@@ -116,6 +116,7 @@ create_simulation <- function(
 #'   - `$firings_sd`: The standard deviation of the number of firings.
 #'
 #' @examples
+#' \donttest{
 #' initial_state <- c(prey = 1000, predators = 1000)
 #' params <- c(c1 = 10, c2 = 0.01, c3 = 10)
 #' reactions <- list(
@@ -135,7 +136,10 @@ create_simulation <- function(
 #'     census_interval = .001,
 #'     verbose = TRUE
 #'   )
-#' autoplot.ssa(out)
+#'
+#' library(ggplot2)
+#' autoplot(out)
+#' }
 #'
 #' @export
 #'
