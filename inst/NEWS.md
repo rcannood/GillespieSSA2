@@ -1,4 +1,12 @@
-# GillespieSSA2 0.2.4 (26-07-2019)
+# GillespieSSA2 0.2.5 
+
+* BUG FIX: Use `fabs()` instead of `abs()` to calculate the absolute value of a 
+  floating point value.
+  
+* BUG FIX: Precompiling returns a list of compiled function pointers, instead of 
+  a single function pointer that is secretly an array of function pointers.
+
+# GillespieSSA2 0.2.4 (05-08-2019)
 
 * MAJOR CHANGE: Split up Rcpp code to make separate parts easier to test.
 
