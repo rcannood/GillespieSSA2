@@ -1,7 +1,7 @@
 Package: GillespieSSA2
 Type: Package
 Title: Gillespie's Stochastic Simulation Algorithm for Impatient People
-Version: 0.2.4
+Version: 0.2.5
 Authors@R: c(
     person(
       "Robrecht", 
@@ -29,6 +29,7 @@ Imports:
     methods,
     purrr,
     Rcpp (>= 0.12.3),
+    RcppXPtrUtils,
     readr,
     rlang,
     stringr,
@@ -44,3 +45,5 @@ VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
+URL: http://github.com/rcannood/GillespieSSA2
+BugReports: https://github.com/rcannood/GillespieSSA2/issues

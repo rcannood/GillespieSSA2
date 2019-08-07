@@ -66,19 +66,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // test_propensity_cpp
-List test_propensity_cpp(int num_functions, SEXP propensity_funs, NumericVector& params, int buffer_size, int propensity_size, NumericVector& state, double sim_time);
-RcppExport SEXP _GillespieSSA2_test_propensity_cpp(SEXP num_functionsSEXP, SEXP propensity_funsSEXP, SEXP paramsSEXP, SEXP buffer_sizeSEXP, SEXP propensity_sizeSEXP, SEXP stateSEXP, SEXP sim_timeSEXP) {
+List test_propensity_cpp(List propensity_funs, NumericVector& params, int buffer_size, int propensity_size, NumericVector& state, double sim_time);
+RcppExport SEXP _GillespieSSA2_test_propensity_cpp(SEXP propensity_funsSEXP, SEXP paramsSEXP, SEXP buffer_sizeSEXP, SEXP propensity_sizeSEXP, SEXP stateSEXP, SEXP sim_timeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type num_functions(num_functionsSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type propensity_funs(propensity_funsSEXP);
+    Rcpp::traits::input_parameter< List >::type propensity_funs(propensity_funsSEXP);
     Rcpp::traits::input_parameter< NumericVector& >::type params(paramsSEXP);
     Rcpp::traits::input_parameter< int >::type buffer_size(buffer_sizeSEXP);
     Rcpp::traits::input_parameter< int >::type propensity_size(propensity_sizeSEXP);
     Rcpp::traits::input_parameter< NumericVector& >::type state(stateSEXP);
     Rcpp::traits::input_parameter< double >::type sim_time(sim_timeSEXP);
-    rcpp_result_gen = Rcpp::wrap(test_propensity_cpp(num_functions, propensity_funs, params, buffer_size, propensity_size, state, sim_time));
+    rcpp_result_gen = Rcpp::wrap(test_propensity_cpp(propensity_funs, params, buffer_size, propensity_size, state, sim_time));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -91,7 +90,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_GillespieSSA2_make_ssa_etl", (DL_FUNC) &_GillespieSSA2_make_ssa_etl, 1},
     {"_GillespieSSA2_make_ssa_exact", (DL_FUNC) &_GillespieSSA2_make_ssa_exact, 0},
     {"_GillespieSSA2_test_ssa_method_cpp", (DL_FUNC) &_GillespieSSA2_test_ssa_method_cpp, 6},
-    {"_GillespieSSA2_test_propensity_cpp", (DL_FUNC) &_GillespieSSA2_test_propensity_cpp, 7},
+    {"_GillespieSSA2_test_propensity_cpp", (DL_FUNC) &_GillespieSSA2_test_propensity_cpp, 6},
     {"_rcpp_module_boot_gillespie", (DL_FUNC) &_rcpp_module_boot_gillespie, 0},
     {NULL, NULL, 0}
 };

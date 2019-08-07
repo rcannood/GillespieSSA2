@@ -21,7 +21,7 @@ test_ssa_method_cpp <- function(ssa_alg, state, propensity, nu_i, nu_p, nu_x) {
     .Call('_GillespieSSA2_test_ssa_method_cpp', PACKAGE = 'GillespieSSA2', ssa_alg, state, propensity, nu_i, nu_p, nu_x)
 }
 
-test_propensity_cpp <- function(num_functions, propensity_funs, params, buffer_size, propensity_size, state, sim_time) {
-    .Call('_GillespieSSA2_test_propensity_cpp', PACKAGE = 'GillespieSSA2', num_functions, propensity_funs, params, buffer_size, propensity_size, state, sim_time)
+test_propensity_cpp <- function(propensity_funs, params, buffer_size, propensity_size, state, sim_time) {
+    .Call('_GillespieSSA2_test_propensity_cpp', PACKAGE = 'GillespieSSA2', propensity_funs, params, buffer_size, propensity_size, state, sim_time)
 }
 

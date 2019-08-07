@@ -15,12 +15,14 @@ public:
 
   ~SSA_simulation() {
     // Rcout << "FREE WILLY" << std::endl;
+    if (prop_funs) {
+      delete[] prop_funs;
+    }
   }
 
   void initialise(
     // propensity functions
-    int num_functions_,
-    SEXP propensity_funs_,
+    List propensity_funs_,
     NumericVector& params_,
     int buffer_size_,
     // method
@@ -46,9 +48,10 @@ public:
     double console_interval_
   ) {
     // process prop funs
-    num_functions = num_functions_;
-    if (!Rf_isNull(propensity_funs_)) {
-      prop_funs = XPtr<TR_FUN>(propensity_funs_);
+    num_functions = propensity_funs_.size();
+    prop_funs = new TR_FUN[num_functions];
+    for (int i = 0; i < num_functions; i++) {
+      prop_funs[i] = *XPtr<TR_FUN>(as<SEXP>(propensity_funs_[i]));
     }
     params = params_;
     buffer = NumericVector(buffer_size_);
@@ -444,7 +447,6 @@ RCPP_MODULE(gillespie) {
   .method("calculate_propensity", &SSA_simulation::calculate_propensity)
   .method("make_step", &SSA_simulation::make_step)
   .method("resize_outputs", &SSA_simulation::resize_outputs)
-  .field("num_functions", &SSA_simulation::num_functions)
   .field("initial_state", &SSA_simulation::initial_state)
   .field("params", &SSA_simulation::params)
   .field("nu_i", &SSA_simulation::nu_i)
