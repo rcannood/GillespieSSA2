@@ -71,7 +71,7 @@ The following example models are available:
 
 ## Latest changes
 
-Check out `news(package = "GillespieSSA2")` or [NEWS.md](inst/NEWS.md)
+Check out `news(package = "GillespieSSA2")` or [NEWS.md](NEWS.md)
 for a full list of
 changes.
 
