@@ -1,7 +1,7 @@
-Package: gillespie
+Package: GillespieSSA2
 Type: Package
-Title: Gillespie's Stochastic Simulation Algorithm (GSSA) for impatient people
-Version: 0.2.3
+Title: Gillespie's Stochastic Simulation Algorithm for Impatient People
+Version: 0.2.4
 Authors@R: c(
     person(
       "Robrecht", 
@@ -11,13 +11,16 @@ Authors@R: c(
       comment = c(ORCID = "0000-0003-3641-729X")
     )
   )
-Description: A fast, scalable, and versatile framework for simulating large systems with 
-  Gillespie's Stochastic Simulation Algorithm ('SSA'). It is conceptually based on 
-  'GillespieSSA', but rewritten entirely in 'Rcpp' with large scale systems in mind to make
-  it blazingly fast. The 'SSA' methods currently implemented are: Direct, Explicit
-  tau-leaping ('ETL'), and the Binomial tau-leaping ('BTL').
+Description: A fast, scalable, and versatile framework for simulating large 
+  systems with Gillespie's Stochastic Simulation Algorithm ('SSA'). 
+  This package is the spiritual successor to the 'GillespieSSA' package 
+  originally written by Mario Pineda-Krch. Benefits of this package
+  include major speed improvements (>100x), easier to understand documentation,
+  and many unit tests that try to ensure the package works as intended.
 License: GPL (>= 3)
 LazyData: TRUE
+Depends:
+    R (>= 3.0)
 Imports:
     assertthat,
     dplyr,
@@ -29,15 +32,13 @@ Imports:
     readr,
     rlang,
     stringr,
-    tibble,
     tidyr
 Suggests: 
     ggplot2,
+    GillespieSSA,
     knitr,
     rmarkdown,
-    testthat
-Remotes:
-    r-lib/rlang
+    testthat (>= 2.1.0)
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1

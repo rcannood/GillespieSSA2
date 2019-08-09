@@ -6,41 +6,72 @@
 #' @param state Whether or not to plot the state values.
 #' @param propensity Whether or not to plot the propensity values.
 #' @param buffer Whether or not to plot the buffer values.
+#' @param geom Which geom to use, must be one of `"point"`, `"step"`.
 #'
 #' @importFrom tidyr gather
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_rows mutate
 #' @export
-ssa_plot <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE) {
+autoplot.ssa <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE, geom = c("point", "step")) {
   requireNamespace("ggplot2")
+  geom <- match.arg(geom)
 
   var <- value <- time <- type <- NULL # satisfying r check
-  df <-
-    bind_rows(
-      if (state) {
-        data.frame(time = ssa_out$time, ssa_out$state, type = "state", stringsAsFactors = FALSE) %>%
-          gather(var, value, -time, -type)
-      } else {
-        NULL
-      },
-      if (propensity) {
-        data.frame(time = ssa_out$time, ssa_out$propensity, type = "propensity", stringsAsFactors = FALSE) %>%
-          gather(var, value, -time, -type)
-      } else {
-        NULL
-      },
-      if (buffer && ncol(ssa_out$buffer) > 0) {
-        data.frame(time = ssa_out$time, ssa_out$buffer, type = "buffer", stringsAsFactors = FALSE) %>%
-          gather(var, value, -time, -type)
-      } else {
-        NULL
-      }
+
+  # collect data to be plotted
+  df <- NULL
+  var_names <- c()
+
+  if (state) {
+    df <-
+      data.frame(time = ssa_out$time, ssa_out$state, type = "state", stringsAsFactors = FALSE) %>%
+      gather(var, value, -time, -type) %>%
+      bind_rows(df)
+    var_names <- c(var_names, colnames(ssa_out$state))
+  }
+
+  if (propensity) {
+    df <-
+      data.frame(time = ssa_out$time, ssa_out$propensity, type = "propensity", stringsAsFactors = FALSE) %>%
+      gather(var, value, -time, -type) %>%
+      bind_rows(df)
+    var_names <- c(var_names, colnames(ssa_out$propensity))
+  }
+
+  if (buffer && ncol(ssa_out$buffer) > 0) {
+    df <-
+      data.frame(time = ssa_out$time, ssa_out$buffer, type = "buffer", stringsAsFactors = FALSE) %>%
+      gather(var, value, -time, -type) %>%
+      bind_rows(df)
+    var_names <- c(var_names, colnames(ssa_out$buffer))
+  }
+
+  # change levels of the var
+  df <- df %>%
+    mutate(
+      type = factor(type, levels = c("state", "propensity", "buffer")),
+      var = factor(var, levels = var_names)
     )
-  ggplot2::ggplot(df) +
-    ggplot2::geom_path(ggplot2::aes_string("time", "value", colour = "var")) +
+
+  # create plot
+  g <-
+    ggplot2::ggplot(df, ggplot2::aes_string("time", "value", colour = "var")) +
     ggplot2::facet_wrap(~type, ncol = 1, scales = "free_y") +
-    ggplot2::labs(subtitle = paste0(
-      ssa_out$stats$method, ", ",
-      round(ssa_out$stats$walltime_elapsed, 2), " sec, ",
-      ssa_out$stats$num_steps, " steps"
-    ))
+    ggplot2::labs(
+      title = as.character(ssa_out$stats$sim_name) %|% "SSA Simulation",
+      subtitle = paste0(
+        ssa_out$stats$method, ", ",
+        round(ssa_out$stats$walltime_elapsed, 3), " sec, ",
+        ssa_out$stats$num_steps, " steps"
+      )
+    ) +
+    ggplot2::theme_bw()
+
+  # add geom depending on parameter
+  if (geom == "point") {
+    g <- g + ggplot2::geom_point(size = .2)
+  } else if (geom == "step") {
+    g <- g + ggplot2::geom_step()
+  }
+
+  g
 }

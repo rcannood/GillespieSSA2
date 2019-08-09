@@ -4,7 +4,7 @@
 \alias{reaction}
 \title{Define a reaction}
 \usage{
-reaction(propensity, effect, name = NA)
+reaction(propensity, effect, name = NA_character_)
 }
 \arguments{
 \item{propensity}{\code{[character/formula]} A character or formula representation of the propensity function, written in C++.}
@@ -12,6 +12,14 @@ reaction(propensity, effect, name = NA)
 \item{effect}{\code{[named integer vector]} The change in state caused by this reaction.}
 
 \item{name}{\code{[character]} A name for this reaction (Optional). May only contain characters matching \code{[A-Za-z0-9_]}.}
+}
+\value{
+\code{[SSA_reaction]} This object describes a single reaction as part of an SSA simulation. It contains the following member values:
+\itemize{
+\item \code{r[["propensity"]]}: The propensity function as a character.
+\item \code{r[["effect"]]}: The change in state caused by this reaction.
+\item \code{r[["name"]]}: The name of the reaction, \code{NA_character_} if no name was provided.
+}
 }
 \description{
 During an SSA simulation, at any infinitesimal time interval,
@@ -25,7 +33,7 @@ of the propensity functions. For instance, instead of \code{"(c3 * s1) / (1 + c3
 it is possible to write \code{"buf = c3 * s1; buf / (buf + 1)"} instead.
 }
 \examples{
-#        ↓ propensity                        ↓ effect
+#        propensity                        effect
 reaction(~ c1 * s1,                          c(s1 = -1))
 reaction("c2 * s1 * s1",                     c(s1 = -2, s2 = +1))
 reaction("buf = c3 * s1; buf / (buf + 1)",   c(s1 = +2))

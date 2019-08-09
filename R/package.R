@@ -1,13 +1,21 @@
-#' \pkg{gillespie}: Gillespie's Stochastic Simulation Algorithm for impatient people.
+#' \pkg{GillespieSSA2}: Gillespie's Stochastic Simulation Algorithm for impatient people.
 #'
-#' A fast, scalable, and versatile framework for simulating large systems with
-#' Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). It is conceptually based on
-#' \pkg{GillespieSSA}, but rewritten entirely in Rcpp with large scale systems in mind to make
-#' it blazingly fast. The \acronym{SSA} methods currently implemented are: Direct, Explicit
-#' tau-leaping (\acronym{ETL}), and the Binomial tau-leaping (\acronym{BTL})
+#' \pkg{GillespieSSA2} is a fast, scalable, and versatile framework for simulating large systems with
+#' Gillespie's Stochastic Simulation Algorithm (\acronym{SSA}). This package is the spiritual successor to
+#' the \pkg{GillespieSSA} package originally written by Mario Pineda-Krch.
 #'
-#' @name gillespie
-#' @aliases gillespie-package gillespie
+#' GillespieSSA2 has the following added benefits:
+#'
+#' * The whole algorithm is run in Rcpp which results in major speed improvements (>100x).
+#' Even your propensity functions (reactions) are being compiled to Rcpp!
+#' * Parameters and variables have been renamed to make them easier to understand.
+#' * Many unit tests try to ensure that the code works as intended.
+#'
+#' The SSA methods currently implemented are: Exact ([ssa_exact()]), Explicit tau-leaping ([ssa_etl()]),
+#' and the Binomial tau-leaping ([ssa_btl()]).
+#'
+#' @name GillespieSSA2
+#' @aliases GillespieSSA2-package GillespieSSA2
 #' @docType package
 #'
 #' @section The stochastic simulation algorithm:
@@ -41,20 +49,24 @@
 #' @section Contents of this package:
 #'
 #' * [ssa()]: The main entry point for running an \acronym{SSA} simulation.
-#' * [ssa_plot()]: A standard visualisation for generating an overview plot fo the output.
-#' * [ssa_direct()], [ssa_etl()], [ssa_btl()]: Different \acronym{SSA} algorithms.
+#' * [autoplot.ssa()]: A standard visualisation for generating an overview plot fo the output.
+#' * [ssa_exact()], [ssa_etl()], [ssa_btl()]: Different \acronym{SSA} algorithms.
 #' * [ode_em()]: An \acronym{ODE} algorithm.
 #' * [compile_reactions()]: A function for precompiling the reactions.
 #'
-#' @seealso [ssa()] for more explanation on how to use \pkg{gillespie}
+#' @seealso [ssa()] for more explanation on how to use \pkg{GillespieSSA2}
 #'
-#' @useDynLib gillespie
+#' @useDynLib GillespieSSA2
 #'
-#' @importFrom dplyr first
-#' @importFrom tibble lst
 #' @importFrom assertthat assert_that
-#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep discard invoke pmap map2 map2_df set_names imap
-#' @importFrom rlang %|%
+#' @importFrom purrr %>% map map_chr map_df map_int keep discard set_names walk
+
 NULL
 
+# re-enable this on the next release of rlang
+# @importFrom rlang %|%
 
+# remove this on the next release of rlang
+`%|%` <- function(x, y) {
+  ifelse(is.na(x), y, x)
+}

@@ -2,22 +2,26 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 make_ode_em <- function(tau, noise_strength) {
-    .Call('_gillespie_make_ode_em', PACKAGE = 'gillespie', tau, noise_strength)
+    .Call('_GillespieSSA2_make_ode_em', PACKAGE = 'GillespieSSA2', tau, noise_strength)
 }
 
-simulate <- function(propensity_funs, num_functions, ssa_alg, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, buffer_size, max_walltime, stop_on_neg_state, verbose, console_interval) {
-    .Call('_gillespie_simulate', PACKAGE = 'gillespie', propensity_funs, num_functions, ssa_alg, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, buffer_size, max_walltime, stop_on_neg_state, verbose, console_interval)
-}
-
-make_ssa_btl <- function(f) {
-    .Call('_gillespie_make_ssa_btl', PACKAGE = 'gillespie', f)
-}
-
-make_ssa_direct <- function() {
-    .Call('_gillespie_make_ssa_direct', PACKAGE = 'gillespie')
+make_ssa_btl <- function(mean_firings) {
+    .Call('_GillespieSSA2_make_ssa_btl', PACKAGE = 'GillespieSSA2', mean_firings)
 }
 
 make_ssa_etl <- function(tau) {
-    .Call('_gillespie_make_ssa_etl', PACKAGE = 'gillespie', tau)
+    .Call('_GillespieSSA2_make_ssa_etl', PACKAGE = 'GillespieSSA2', tau)
+}
+
+make_ssa_exact <- function() {
+    .Call('_GillespieSSA2_make_ssa_exact', PACKAGE = 'GillespieSSA2')
+}
+
+test_ssa_method_cpp <- function(ssa_alg, state, propensity, nu_i, nu_p, nu_x) {
+    .Call('_GillespieSSA2_test_ssa_method_cpp', PACKAGE = 'GillespieSSA2', ssa_alg, state, propensity, nu_i, nu_p, nu_x)
+}
+
+test_propensity_cpp <- function(num_functions, propensity_funs, params, buffer_size, propensity_size, state, sim_time) {
+    .Call('_GillespieSSA2_test_propensity_cpp', PACKAGE = 'GillespieSSA2', num_functions, propensity_funs, params, buffer_size, propensity_size, state, sim_time)
 }
 

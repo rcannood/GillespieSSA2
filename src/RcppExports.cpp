@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // make_ode_em
 SEXP make_ode_em(double tau, double noise_strength);
-RcppExport SEXP _gillespie_make_ode_em(SEXP tauSEXP, SEXP noise_strengthSEXP) {
+RcppExport SEXP _GillespieSSA2_make_ode_em(SEXP tauSEXP, SEXP noise_strengthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -17,55 +17,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// simulate
-List simulate(SEXP propensity_funs, const int num_functions, SEXP ssa_alg, const NumericVector& initial_state, const NumericVector& params, const IntegerVector& nu_i, const IntegerVector& nu_p, const IntegerVector& nu_x, const double final_time, const double census_interval, const int buffer_size, const double max_walltime, const bool stop_on_neg_state, const bool verbose, const double console_interval);
-RcppExport SEXP _gillespie_simulate(SEXP propensity_funsSEXP, SEXP num_functionsSEXP, SEXP ssa_algSEXP, SEXP initial_stateSEXP, SEXP paramsSEXP, SEXP nu_iSEXP, SEXP nu_pSEXP, SEXP nu_xSEXP, SEXP final_timeSEXP, SEXP census_intervalSEXP, SEXP buffer_sizeSEXP, SEXP max_walltimeSEXP, SEXP stop_on_neg_stateSEXP, SEXP verboseSEXP, SEXP console_intervalSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type propensity_funs(propensity_funsSEXP);
-    Rcpp::traits::input_parameter< const int >::type num_functions(num_functionsSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type ssa_alg(ssa_algSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type initial_state(initial_stateSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type params(paramsSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type nu_i(nu_iSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type nu_p(nu_pSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type nu_x(nu_xSEXP);
-    Rcpp::traits::input_parameter< const double >::type final_time(final_timeSEXP);
-    Rcpp::traits::input_parameter< const double >::type census_interval(census_intervalSEXP);
-    Rcpp::traits::input_parameter< const int >::type buffer_size(buffer_sizeSEXP);
-    Rcpp::traits::input_parameter< const double >::type max_walltime(max_walltimeSEXP);
-    Rcpp::traits::input_parameter< const bool >::type stop_on_neg_state(stop_on_neg_stateSEXP);
-    Rcpp::traits::input_parameter< const bool >::type verbose(verboseSEXP);
-    Rcpp::traits::input_parameter< const double >::type console_interval(console_intervalSEXP);
-    rcpp_result_gen = Rcpp::wrap(simulate(propensity_funs, num_functions, ssa_alg, initial_state, params, nu_i, nu_p, nu_x, final_time, census_interval, buffer_size, max_walltime, stop_on_neg_state, verbose, console_interval));
-    return rcpp_result_gen;
-END_RCPP
-}
 // make_ssa_btl
-SEXP make_ssa_btl(double f);
-RcppExport SEXP _gillespie_make_ssa_btl(SEXP fSEXP) {
+SEXP make_ssa_btl(double mean_firings);
+RcppExport SEXP _GillespieSSA2_make_ssa_btl(SEXP mean_firingsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type f(fSEXP);
-    rcpp_result_gen = Rcpp::wrap(make_ssa_btl(f));
-    return rcpp_result_gen;
-END_RCPP
-}
-// make_ssa_direct
-SEXP make_ssa_direct();
-RcppExport SEXP _gillespie_make_ssa_direct() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(make_ssa_direct());
+    Rcpp::traits::input_parameter< double >::type mean_firings(mean_firingsSEXP);
+    rcpp_result_gen = Rcpp::wrap(make_ssa_btl(mean_firings));
     return rcpp_result_gen;
 END_RCPP
 }
 // make_ssa_etl
 SEXP make_ssa_etl(double tau);
-RcppExport SEXP _gillespie_make_ssa_etl(SEXP tauSEXP) {
+RcppExport SEXP _GillespieSSA2_make_ssa_etl(SEXP tauSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -74,17 +39,64 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// make_ssa_exact
+SEXP make_ssa_exact();
+RcppExport SEXP _GillespieSSA2_make_ssa_exact() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(make_ssa_exact());
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_ssa_method_cpp
+List test_ssa_method_cpp(SEXP ssa_alg, NumericVector& state, NumericVector& propensity, IntegerVector& nu_i, IntegerVector& nu_p, IntegerVector& nu_x);
+RcppExport SEXP _GillespieSSA2_test_ssa_method_cpp(SEXP ssa_algSEXP, SEXP stateSEXP, SEXP propensitySEXP, SEXP nu_iSEXP, SEXP nu_pSEXP, SEXP nu_xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type ssa_alg(ssa_algSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type state(stateSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type propensity(propensitySEXP);
+    Rcpp::traits::input_parameter< IntegerVector& >::type nu_i(nu_iSEXP);
+    Rcpp::traits::input_parameter< IntegerVector& >::type nu_p(nu_pSEXP);
+    Rcpp::traits::input_parameter< IntegerVector& >::type nu_x(nu_xSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_ssa_method_cpp(ssa_alg, state, propensity, nu_i, nu_p, nu_x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_propensity_cpp
+List test_propensity_cpp(int num_functions, SEXP propensity_funs, NumericVector& params, int buffer_size, int propensity_size, NumericVector& state, double sim_time);
+RcppExport SEXP _GillespieSSA2_test_propensity_cpp(SEXP num_functionsSEXP, SEXP propensity_funsSEXP, SEXP paramsSEXP, SEXP buffer_sizeSEXP, SEXP propensity_sizeSEXP, SEXP stateSEXP, SEXP sim_timeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type num_functions(num_functionsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type propensity_funs(propensity_funsSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< int >::type buffer_size(buffer_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type propensity_size(propensity_sizeSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type state(stateSEXP);
+    Rcpp::traits::input_parameter< double >::type sim_time(sim_timeSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_propensity_cpp(num_functions, propensity_funs, params, buffer_size, propensity_size, state, sim_time));
+    return rcpp_result_gen;
+END_RCPP
+}
+
+RcppExport SEXP _rcpp_module_boot_gillespie();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_gillespie_make_ode_em", (DL_FUNC) &_gillespie_make_ode_em, 2},
-    {"_gillespie_simulate", (DL_FUNC) &_gillespie_simulate, 15},
-    {"_gillespie_make_ssa_btl", (DL_FUNC) &_gillespie_make_ssa_btl, 1},
-    {"_gillespie_make_ssa_direct", (DL_FUNC) &_gillespie_make_ssa_direct, 0},
-    {"_gillespie_make_ssa_etl", (DL_FUNC) &_gillespie_make_ssa_etl, 1},
+    {"_GillespieSSA2_make_ode_em", (DL_FUNC) &_GillespieSSA2_make_ode_em, 2},
+    {"_GillespieSSA2_make_ssa_btl", (DL_FUNC) &_GillespieSSA2_make_ssa_btl, 1},
+    {"_GillespieSSA2_make_ssa_etl", (DL_FUNC) &_GillespieSSA2_make_ssa_etl, 1},
+    {"_GillespieSSA2_make_ssa_exact", (DL_FUNC) &_GillespieSSA2_make_ssa_exact, 0},
+    {"_GillespieSSA2_test_ssa_method_cpp", (DL_FUNC) &_GillespieSSA2_test_ssa_method_cpp, 6},
+    {"_GillespieSSA2_test_propensity_cpp", (DL_FUNC) &_GillespieSSA2_test_propensity_cpp, 7},
+    {"_rcpp_module_boot_gillespie", (DL_FUNC) &_rcpp_module_boot_gillespie, 0},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_gillespie(DllInfo *dll) {
+RcppExport void R_init_GillespieSSA2(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

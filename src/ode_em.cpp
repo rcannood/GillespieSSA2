@@ -1,11 +1,17 @@
 #include <Rcpp.h>
-#include "ssa.h"
+#include "ssa_method.h"
 
 using namespace Rcpp;
 
-class ODE_EM : public SSA {
+class ODE_EM : public SSA_method {
 public:
-  ODE_EM(double tau_ = .01, double noise_strength_ = 2.0) : SSA("EM"), tau(tau_), noise_strength(noise_strength_) {}
+  ODE_EM(
+    double tau_ = .01,
+    double noise_strength_ = 2.0
+  ) :
+  SSA_method("EM"),
+  tau(tau_),
+  noise_strength(noise_strength_) {}
 
   double tau;
   double noise_strength;
@@ -17,7 +23,8 @@ public:
       const IntegerVector& nu_p,
       const IntegerVector& nu_x,
       double* dtime,
-      NumericVector& dstate
+      NumericVector& dstate,
+      NumericVector& firings
   ) {
     int i, j;
 
@@ -26,6 +33,7 @@ public:
       for (i = nu_p[j]; i < nu_p[j+1]; i++) {
         dstate[nu_i[i]] += nu_x[i] * propensity[j] * tau;
       }
+      firings[j] += propensity[j] * tau;
     }
 
     // add noise
@@ -43,3 +51,4 @@ SEXP make_ode_em(double tau, double noise_strength) {
   XPtr<ODE_EM> ptr(ssa);
   return ptr;
 }
+
