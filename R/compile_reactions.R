@@ -26,6 +26,7 @@
 #' @importFrom dplyr first last
 #' @importFrom readr write_lines
 #' @importFrom RcppXPtrUtils cppXPtr
+#' @importFrom Matrix sparseMatrix
 #'
 #' @export
 compile_reactions <- function(
