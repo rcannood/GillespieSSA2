@@ -1,12 +1,13 @@
-A fast, scalable, and versatile framework for simulating large 
-systems with Gillespie's Stochastic Simulation Algorithm ('SSA'). 
-This package is the spiritual successor to the GillespieSSA package 
-originally written by Mario Pineda-Krch. Benefits of this package
-include major speed improvements (>100x), easier to understand documentation,
-and many unit tests that try to ensure the package works as intended.
+# GillespieSSA2 0.2.5 
 
+* BUG FIX: Use `fabs()` instead of `abs()` to calculate the absolute value of a 
+  floating point value.
+  
+* BUG FIX: Precompiling returns a list of compiled function pointers, instead of 
+  a single function pointer that is secretly an array of function pointers.
+  
 ## Test environments
-* local Fedora install, (release)
+* local Fedora 30 install, (release)
 * ubuntu 16.04 (on travis-ci; oldrelease, release, devel)
 * Mac OS X (on travis-ci; release)
 * win-builder (devel and release)
@@ -14,6 +15,4 @@ and many unit tests that try to ensure the package works as intended.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-* This is a new release.
+0 errors | 0 warnings | 0 notes
