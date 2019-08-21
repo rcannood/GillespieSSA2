@@ -9,8 +9,6 @@
 #' @param buffer_ids `[character]` The order of any buffer calculations that are made as part of the propensity functions.
 #' @param hardcode_params `[logical]` Whether or not to hardcode the values of `params` in the compilation of the propensity functions.
 #'   Setting this to `TRUE` will result in a minor sacrifice in accuracy for a minor increase in performance.
-#' @param write_rcpp `[character]` If not `NULL`, then the source code of the propensity functions will be written
-#'   to this file location before compilation.
 #' @param fun_by `[integer]` Combine this number of propensity functions into one function.
 #'
 #' @return A list of objects solely to be used by [ssa()].
@@ -19,8 +17,7 @@
 #' * `x[["reaction_ids"]]`: The names of the reactions.
 #' * `x[["buffer_ids"]]`: A set of buffer variables found in the propensity functions.
 #' * `x[["buffer_size"]]`: The minimum size of the buffer required.
-#' * `x[["functions_pointer"]]`: A pointer to the compiled propensity functions.
-#' * `x[["num_functions"]]`: The compiled propensity functions are split up into multiple batches of functions.
+#' * `x[["function_pointers"]]`: A list of compiled propensity functions.
 #' * `x[["hardcode_params"]]`: Whether the parameters were hard coded into the source code.`
 #'
 #' @importFrom stringr str_count str_replace_all str_extract_all str_replace str_split
@@ -28,6 +25,8 @@
 #' @importFrom dynutils safe_tempdir %all_in%
 #' @importFrom dplyr first last
 #' @importFrom readr write_lines
+#' @importFrom RcppXPtrUtils cppXPtr
+#' @importFrom Matrix sparseMatrix
 #'
 #' @export
 compile_reactions <- function(
@@ -36,8 +35,7 @@ compile_reactions <- function(
   params,
   buffer_ids = NULL,
   hardcode_params = FALSE,
-  write_rcpp = NA_character_,
-  fun_by = 100L
+  fun_by = 10000L
 ) {
   assert_that(is.list(reactions))
   walk(seq_along(reactions), function(i) {
@@ -56,7 +54,6 @@ compile_reactions <- function(
     length(params) == 0 || !is.null(names(params)),
     !any(duplicated(buffer_ids)),
     is_scalar_logical(hardcode_params),
-    is_scalar_character(write_rcpp),
     is_scalar_integer(fun_by),
     !any(duplicated(reaction_ids))
   )
@@ -156,43 +153,18 @@ compile_reactions <- function(
     "}\n"
   )
 
-  # create code to be able to return TR functions
-  rcpp_code <- paste0(
-    "#include <Rcpp.h>\n",
-    "using namespace Rcpp;\n",
-    if (hardcode_params) paste0("#define CONST_", names(params), " ", params, "\n", collapse = "") else character(),
-    "typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const double, NumericVector&, NumericVector&);\n",
-    "\n",
-    paste(rcpp_codes, collapse = "\n"),
-    "\n",
-    "// [[Rcpp::export]]\n",
-    "SEXP return_functions() {\n",
-    "  TR_FUN *functions = new TR_FUN[", length(rcpp_codes), "];\n",
-    paste0("  functions[", seq_along(rcpp_codes) - 1, "] = &calculate_propensity_", seq_along(rcpp_codes) - 1, ";\n", collapse = ""),
-    "  XPtr<TR_FUN> ptr(functions);\n",
-    "  return ptr;\n",
-    "}\n",
-    "\n",
-    "// [[Rcpp::export]]\n",
-    "int num_functions() {\n",
-    "  return ", length(rcpp_codes), ";\n",
-    "}\n"
-  )
-
   # create temporary dir for compilation
   tmpdir <- dynutils::safe_tempdir("gillespie")
   on.exit(unlink(tmpdir, recursive = TRUE, force = TRUE))
 
   # compile code
-  if (!is.na(write_rcpp)) {
-    readr::write_lines(rcpp_code, write_rcpp)
-  }
-  return_functions <- NULL # sourceCpp will override this
-  Rcpp::sourceCpp(code = rcpp_code, cacheDir = tmpdir, env = environment())
-
-  # return propensity functions as pointer
-  functions_pointer <- return_functions()
-  num_functions <- num_functions()
+  # TODO: only pass params which are needed
+  function_pointers <- map(
+    rcpp_codes,
+    RcppXPtrUtils::cppXPtr,
+    cacheDir = tmpdir,
+    includes = if (hardcode_params) paste0("#define CONST_", names(params), " ", params, "\n", collapse = "") else character()
+  )
 
   # return output
   l <- list(
@@ -200,8 +172,7 @@ compile_reactions <- function(
     reaction_ids = reaction_ids,
     buffer_ids = buffer_ids,
     buffer_size = buffer_size,
-    functions_pointer = functions_pointer,
-    num_functions = num_functions,
+    function_pointers = function_pointers,
     hardcode_params = hardcode_params
   )
   class(l) <- "SSA_reactions"

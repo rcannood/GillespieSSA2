@@ -28,12 +28,23 @@ Explicit tau-leaping (`ssa_etl()`), and the Binomial tau-leaping
 
 ## Install
 
-You can install the development version of GillespieSSA2 from GitHub
-with
+You can install:
 
-``` r
-devtools::install_github("rcannood/GillespieSSA2", build_vignettes = TRUE)
-```
+  - the latest released version from CRAN with
+    
+    ``` r
+    install.packages("GillespieSSA2")
+    ```
+
+  - the latest development version from github
+    with
+    
+    ``` r
+    devtools::install_github("rcannood/GillespieSSA2", build_vignettes = TRUE)
+    ```
+
+If you encounter a bug, please file a minimal reproducible example on
+the [issues](https://github.com/rcannood/GillespieSSA2/issues) page.
 
 ## Examples
 
@@ -71,13 +82,23 @@ The following example models are available:
 
 ## Latest changes
 
-Check out `news(package = "GillespieSSA2")` or [NEWS.md](inst/NEWS.md)
-for a full list of
-changes.
+Check out `news(package = "GillespieSSA2")` or [NEWS.md](NEWS.md) for a
+full list of changes.
 
-<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+<!-- This section gets automatically generated from NEWS.md -->
 
-### Recent changes in GillespieSSA2 0.2.4 (26-07-2019)
+### Recent changes in GillespieSSA2 0.2.5 (21-08-2019)
+
+  - BUG FIX: Use `fabs()` instead of `abs()` to calculate the absolute
+    value of a floating point value.
+
+  - BUG FIX: Precompiling returns a list of compiled function pointers,
+    instead of a single function pointer that is secretly an array of
+    function pointers.
+
+### Recent changes in GillespieSSA2 0.2.4 (05-08-2019)
+
+GillespieSSA2 is now on CRAN\!
 
   - MAJOR CHANGE: Split up Rcpp code to make separate parts easier to
     test.
@@ -93,13 +114,3 @@ changes.
     not a double.
 
   - MINOR CHANGE: Timer now has millisecond accuracy, instead of second.
-
-### Recent changes in GillespieSSA2 0.2.3 (17-07-2019)
-
-  - MAJOR CHANGE: Remove `nu` and `propensity_functions` from `ssa()`,
-    instead expect a list of `reaction()` objects. This function
-    provides a much more natural interface to specifying the effect and
-    propensity of a reaction.
-
-  - MINOR CHANGE: Apply small allocation optimisations to `ssa_btl`,
-    `ssa_etl` and `ode_em`.

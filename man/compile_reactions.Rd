@@ -5,7 +5,7 @@
 \title{Precompile the reactions}
 \usage{
 compile_reactions(reactions, state_ids, params, buffer_ids = NULL,
-  hardcode_params = FALSE, write_rcpp = NA_character_, fun_by = 100L)
+  hardcode_params = FALSE, fun_by = 10000L)
 }
 \arguments{
 \item{reactions}{'\link{reaction}' A list of multiple \code{\link[=reaction]{reaction()}} objects.}
@@ -19,9 +19,6 @@ compile_reactions(reactions, state_ids, params, buffer_ids = NULL,
 \item{hardcode_params}{\code{[logical]} Whether or not to hardcode the values of \code{params} in the compilation of the propensity functions.
 Setting this to \code{TRUE} will result in a minor sacrifice in accuracy for a minor increase in performance.}
 
-\item{write_rcpp}{\code{[character]} If not \code{NULL}, then the source code of the propensity functions will be written
-to this file location before compilation.}
-
 \item{fun_by}{\code{[integer]} Combine this number of propensity functions into one function.}
 }
 \value{
@@ -31,8 +28,7 @@ A list of objects solely to be used by \code{\link[=ssa]{ssa()}}.
 \item \code{x[["reaction_ids"]]}: The names of the reactions.
 \item \code{x[["buffer_ids"]]}: A set of buffer variables found in the propensity functions.
 \item \code{x[["buffer_size"]]}: The minimum size of the buffer required.
-\item \code{x[["functions_pointer"]]}: A pointer to the compiled propensity functions.
-\item \code{x[["num_functions"]]}: The compiled propensity functions are split up into multiple batches of functions.
+\item \code{x[["function_pointers"]]}: A list of compiled propensity functions.
 \item \code{x[["hardcode_params"]]}: Whether the parameters were hard coded into the source code.`
 }
 }

@@ -31,19 +31,21 @@ typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const double,
 
 // [[Rcpp::export]]
 List test_propensity_cpp(
-    int num_functions,
-    SEXP propensity_funs,
+    List propensity_funs,
     NumericVector& params,
     int buffer_size,
     int propensity_size,
     NumericVector& state,
     double sim_time
 ) {
-  TR_FUN *prop_funs = XPtr<TR_FUN>(propensity_funs);
+  TR_FUN *prop_funs = new TR_FUN[propensity_funs.size()];
+  for (int i = 0; i < propensity_funs.size(); i++) {
+    prop_funs[i] = *XPtr<TR_FUN>(as<SEXP>(propensity_funs(i)));
+  }
   NumericVector buffer = NumericVector(buffer_size);
   NumericVector propensity = NumericVector(propensity_size);
 
-  for (int i = 0; i < num_functions; i++) {
+  for (int i = 0; i < propensity_funs.size(); i++) {
     prop_funs[i](state, params, sim_time, propensity, buffer);
   }
 

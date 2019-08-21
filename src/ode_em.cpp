@@ -38,7 +38,7 @@ public:
 
     // add noise
     for (i = 0; i < state.size(); i++) {
-      dstate[i] += sqrt(abs(state[i])) * noise_strength * R::rnorm(0.0, tau);
+      dstate[i] += sqrt(fabs(state[i])) * noise_strength * R::rnorm(0.0, tau);
     }
 
     *dtime = tau;

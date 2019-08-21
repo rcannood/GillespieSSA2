@@ -21,8 +21,7 @@ create_simulation <- function(
 
   # set propensity functions
   sim$initialise(
-    compiled_reactions$num_functions,
-    compiled_reactions$functions_pointer,
+    compiled_reactions$function_pointers,
     params,
     compiled_reactions$buffer_size,
     method_ptr,
@@ -42,7 +41,7 @@ create_simulation <- function(
     console_interval
   )
   # make sure these pointers do not get GCed
-  attr(sim, "prop_ptr") <- compiled_reactions$functions_pointer
+  attr(sim, "prop_ptr") <- compiled_reactions$function_pointers
   attr(sim, "method_ptr") <- method_ptr
 
   sim$reset()
@@ -145,7 +144,6 @@ create_simulation <- function(
 #'
 #' @importFrom methods is
 #' @importFrom dynutils is_sparse inherit_default_params
-#' @importFrom Matrix Matrix
 #' @importFrom purrr is_scalar_double is_scalar_logical is_scalar_integer is_scalar_character
 ssa <- dynutils::inherit_default_params(
   list(create_simulation),

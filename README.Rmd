@@ -43,12 +43,21 @@ The SSA methods currently implemented are: Exact (`ssa_exact()`), Explicit tau-l
 and the Binomial tau-leaping (`ssa_btl()`).
 
 ## Install
+You can install:
 
-You can install the development version of GillespieSSA2 from GitHub with
+* the latest released version from CRAN with
 
-```R
-devtools::install_github("rcannood/GillespieSSA2", build_vignettes = TRUE)
-```
+    ```R
+    install.packages("GillespieSSA2")
+    ```
+
+* the latest development version from github with
+
+    ```R
+    devtools::install_github("rcannood/GillespieSSA2", build_vignettes = TRUE)
+    ```
+
+If you encounter a bug, please file a minimal reproducible example on the [issues](https://github.com/rcannood/GillespieSSA2/issues) page. 
 
 ## Examples
 
@@ -88,15 +97,10 @@ if (rerun_vignettes) {
 ```
 
 ## Latest changes
+Check out `news(package = "GillespieSSA2")` or [NEWS.md](NEWS.md) for a full list of changes.
 
-```{r include = FALSE}
-show_link <- ifelse(submission_to_cran, "", "or [NEWS.md](inst/NEWS.md) ")
-```
-Check out `news(package = "GillespieSSA2")` `r show_link` for a full list of changes.
-
-<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+<!-- This section gets automatically generated from NEWS.md -->
 
 ```{r news, echo=FALSE, results="asis"}
-dynutils::update_news()
 cat(dynutils::recent_news())
 ```

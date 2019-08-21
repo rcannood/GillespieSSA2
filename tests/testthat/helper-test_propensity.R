@@ -5,8 +5,7 @@ test_propensity_calculation <- function(
   sim_time
 ) {
   test_propensity_cpp(
-    comp_reac$num_functions,
-    comp_reac$functions_pointer,
+    comp_reac$function_pointers,
     params,
     comp_reac$buffer_size,
     length(comp_reac$reaction_ids),
