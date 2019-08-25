@@ -5,13 +5,14 @@
 #' @param ssa_out Data object returned by [ssa()].
 #' @param state Whether or not to plot the state values.
 #' @param propensity Whether or not to plot the propensity values.
+#' @param firings Whether or not to plot the reaction firings values.
 #' @param buffer Whether or not to plot the buffer values.
 #' @param geom Which geom to use, must be one of `"point"`, `"step"`.
 #'
 #' @importFrom tidyr gather
 #' @importFrom dplyr bind_rows mutate
 #' @export
-autoplot.ssa <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE, geom = c("point", "step")) {
+autoplot.ssa <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE, firings = FALSE, geom = c("point", "step")) {
   requireNamespace("ggplot2")
   geom <- match.arg(geom)
 
@@ -37,6 +38,14 @@ autoplot.ssa <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FAL
     var_names <- c(var_names, colnames(ssa_out$propensity))
   }
 
+  if (firings) {
+    df <-
+      data.frame(time = ssa_out$time, ssa_out$firings, type = "firings", stringsAsFactors = FALSE) %>%
+      gather(var, value, -time, -type) %>%
+      bind_rows(df)
+    var_names <- c(var_names, colnames(ssa_out$firings))
+  }
+
   if (buffer && ncol(ssa_out$buffer) > 0) {
     df <-
       data.frame(time = ssa_out$time, ssa_out$buffer, type = "buffer", stringsAsFactors = FALSE) %>%
@@ -48,7 +57,7 @@ autoplot.ssa <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FAL
   # change levels of the var
   df <- df %>%
     mutate(
-      type = factor(type, levels = c("state", "propensity", "buffer")),
+      type = factor(type, levels = c("state", "propensity", "firings", "buffer")),
       var = factor(var, levels = var_names)
     )
 

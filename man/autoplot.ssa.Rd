@@ -5,7 +5,7 @@
 \title{Simple plotting of ssa output}
 \usage{
 autoplot.ssa(ssa_out, state = TRUE, propensity = FALSE,
-  buffer = FALSE, geom = c("point", "step"))
+  buffer = FALSE, firings = FALSE, geom = c("point", "step"))
 }
 \arguments{
 \item{ssa_out}{Data object returned by \code{\link[=ssa]{ssa()}}.}
@@ -15,6 +15,8 @@ autoplot.ssa(ssa_out, state = TRUE, propensity = FALSE,
 \item{propensity}{Whether or not to plot the propensity values.}
 
 \item{buffer}{Whether or not to plot the buffer values.}
+
+\item{firings}{Whether or not to plot the reaction firings values.}
 
 \item{geom}{Which geom to use, must be one of \code{"point"}, \code{"step"}.}
 }
