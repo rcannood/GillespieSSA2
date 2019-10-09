@@ -1,3 +1,7 @@
+# GillespieSSA2 0.2.6 
+
+* BUG FIX: Zap small negative propensity and state values.
+
 # GillespieSSA2 0.2.5 (21-08-2019)
 
 * BUG FIX: Use `fabs()` instead of `abs()` to calculate the absolute value of a 
