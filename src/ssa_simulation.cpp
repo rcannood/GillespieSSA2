@@ -272,6 +272,10 @@ public:
       if (*i > 0) {
         all_zero_propensity = false;
       } else if (*i < 0) {
+        if (*i > -1e-12) {
+          *i = 0; // zapsmall
+          continue;
+        }
         negative_propensity = true;
       }
     }
@@ -306,6 +310,10 @@ public:
     // Check that no states are negative (can occur in some tau-leaping methods)
     for (NumericVector::iterator i = state.begin(); i != state.end(); ++i) {
       if (*i < 0) {
+        if (*i > -1e-12) {
+          *i = 0; // zapsmall
+          continue;
+        }
         if (!stop_on_neg_state) {
           *i = 0;
         }
