@@ -88,6 +88,7 @@ create_simulation <- function(
 #' @param verbose `[logical]` If `TRUE`, intermediary information pertaining to the simulation will be displayed.
 #' @param console_interval `[numeric]` The approximate interval between intermediary information outputs.
 #' @param sim_name `[character]` An optional name for the simulation.
+#' @param return_simulator Whether to return the simulator itself, instead of the output.
 #'
 #' @seealso [GillespieSSA2] for a high level explanation of the package
 #'
@@ -161,7 +162,8 @@ ssa <- dynutils::inherit_default_params(
     log_buffer,
     verbose,
     console_interval,
-    sim_name
+    sim_name,
+    return_simulator = FALSE
   ) {
 
     # check parameters
@@ -224,35 +226,40 @@ ssa <- dynutils::inherit_default_params(
       console_interval = console_interval
     )
 
-    # run simulation
-    sim$run()
+    if (!return_simulator) {
+      # run simulation
+      sim$run()
 
-    output <- list(
-      time = sim$output_time,
-      state = sim$output_state,
-      propensity = sim$output_propensity,
-      firings = sim$output_firings,
-      buffer = sim$output_buffer,
-      stats = sim$get_statistics()
-    )
-
-    rm(sim)
-
-    # set colnames of objects
-    colnames(output$state) <- names(initial_state)
-    if (log_propensity) {
-      colnames(output$propensity) <- compiled_reactions$reaction_ids
+      return_output(sim, initial_state, compiled_reactions)
+    } else {
+      sim
     }
-    if (log_buffer) {
-      colnames(output$buffer) <- compiled_reactions$buffer_ids
-    }
-    if (log_firings) {
-      colnames(output$firings) <- compiled_reactions$reaction_ids
-    }
-
-    class(output) <- c("ssa", "list")
-
-    output
   }
 )
 
+return_output <- function(sim, initial_state, compiled_reactions) {
+  output <- list(
+    time = sim$output_time,
+    state = sim$output_state,
+    propensity = sim$output_propensity,
+    firings = sim$output_firings,
+    buffer = sim$output_buffer,
+    stats = sim$get_statistics()
+  )
+
+  # set colnames of objects
+  colnames(output$state) <- names(initial_state)
+  if (sim$log_propensity) {
+    colnames(output$propensity) <- compiled_reactions$reaction_ids
+  }
+  if (sim$log_buffer) {
+    colnames(output$buffer) <- compiled_reactions$buffer_ids
+  }
+  if (sim$log_firings) {
+    colnames(output$firings) <- compiled_reactions$reaction_ids
+  }
+
+  class(output) <- c("ssa", "list")
+
+  output
+}

@@ -8,7 +8,8 @@ ssa(initial_state, reactions, final_time, params = NULL,
   method = ssa_exact(), census_interval = 0,
   stop_on_neg_state = TRUE, max_walltime = Inf,
   log_propensity = FALSE, log_firings = FALSE, log_buffer = FALSE,
-  verbose = FALSE, console_interval = 1, sim_name = NA_character_)
+  verbose = FALSE, console_interval = 1, sim_name = NA_character_,
+  return_simulator = FALSE)
 }
 \arguments{
 \item{initial_state}{\code{[named numeric vector]} The initial state to start the simulation with.}
@@ -44,6 +45,8 @@ simulation is allowed to run for before terminated.}
 \item{console_interval}{\code{[numeric]} The approximate interval between intermediary information outputs.}
 
 \item{sim_name}{\code{[character]} An optional name for the simulation.}
+
+\item{return_simulator}{Whether to return the simulator itself, instead of the output.}
 }
 \value{
 Returns a list containing the output of the simulation:
