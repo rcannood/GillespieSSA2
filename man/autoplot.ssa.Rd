@@ -4,8 +4,14 @@
 \alias{autoplot.ssa}
 \title{Simple plotting of ssa output}
 \usage{
-autoplot.ssa(ssa_out, state = TRUE, propensity = FALSE,
-  buffer = FALSE, firings = FALSE, geom = c("point", "step"))
+autoplot.ssa(
+  ssa_out,
+  state = TRUE,
+  propensity = FALSE,
+  buffer = FALSE,
+  firings = FALSE,
+  geom = c("point", "step")
+)
 }
 \arguments{
 \item{ssa_out}{Data object returned by \code{\link[=ssa]{ssa()}}.}

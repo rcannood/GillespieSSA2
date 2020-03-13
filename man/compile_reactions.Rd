@@ -4,22 +4,28 @@
 \alias{compile_reactions}
 \title{Precompile the reactions}
 \usage{
-compile_reactions(reactions, state_ids, params, buffer_ids = NULL,
-  hardcode_params = FALSE, fun_by = 10000L)
+compile_reactions(
+  reactions,
+  state_ids,
+  params,
+  buffer_ids = NULL,
+  hardcode_params = FALSE,
+  fun_by = 10000L
+)
 }
 \arguments{
 \item{reactions}{'\link{reaction}' A list of multiple \code{\link[=reaction]{reaction()}} objects.}
 
-\item{state_ids}{\code{[character]} The names of the states in the correct order.}
+\item{state_ids}{\verb{[character]} The names of the states in the correct order.}
 
-\item{params}{\code{[named numeric]} Constants that are used in the propensity functions.}
+\item{params}{\verb{[named numeric]} Constants that are used in the propensity functions.}
 
-\item{buffer_ids}{\code{[character]} The order of any buffer calculations that are made as part of the propensity functions.}
+\item{buffer_ids}{\verb{[character]} The order of any buffer calculations that are made as part of the propensity functions.}
 
-\item{hardcode_params}{\code{[logical]} Whether or not to hardcode the values of \code{params} in the compilation of the propensity functions.
+\item{hardcode_params}{\verb{[logical]} Whether or not to hardcode the values of \code{params} in the compilation of the propensity functions.
 Setting this to \code{TRUE} will result in a minor sacrifice in accuracy for a minor increase in performance.}
 
-\item{fun_by}{\code{[integer]} Combine this number of propensity functions into one function.}
+\item{fun_by}{\verb{[integer]} Combine this number of propensity functions into one function.}
 }
 \value{
 A list of objects solely to be used by \code{\link[=ssa]{ssa()}}.
