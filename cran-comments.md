@@ -1,16 +1,16 @@
-# GillespieSSA2 0.2.5 
+# GillespieSSA2 0.2.6
 
-* BUG FIX: Use `fabs()` instead of `abs()` to calculate the absolute value of a 
-  floating point value.
-  
-* BUG FIX: Precompiling returns a list of compiled function pointers, instead of 
-  a single function pointer that is secretly an array of function pointers.
+* BUG FIX: Zap small negative propensity and state values.
+
+* FEATURE `autoplot.ssa()`: Allow plotting the firings.
+
+* DEBUG FEATURE `ssa()`: Allow returning the GillespieSSA2 instead of running it.
   
 ## Test environments
-* local Fedora 30 install, (release)
+* local Fedora 31 install, (R 3.6.2)
 * ubuntu 16.04 (on travis-ci; oldrelease, release, devel)
 * Mac OS X (on travis-ci; release)
-* win-builder (devel and release)
+* win-builder (oldrelease, release, devel)
 * Windows (on appveyor; release)
 
 ## R CMD check results
