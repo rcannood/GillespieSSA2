@@ -8,8 +8,6 @@ matrix:
     os: linux
   - r: devel
     os: linux
-  - r: release
-    os: osx
 r_packages:
  - covr
 after_success:
