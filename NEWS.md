@@ -1,3 +1,11 @@
+# GillespieSSA2 0.2.6 
+
+* BUG FIX: Zap small negative propensity and state values.
+
+* FEATURE `autoplot.ssa()`: Allow plotting the firings.
+
+* DEBUG FEATURE `ssa()`: Allow returning the GillespieSSA2 instead of running it.
+
 # GillespieSSA2 0.2.5 (21-08-2019)
 
 * BUG FIX: Use `fabs()` instead of `abs()` to calculate the absolute value of a 

@@ -4,71 +4,85 @@
 \alias{ssa}
 \title{Invoking the stochastic simulation algorithm}
 \usage{
-ssa(initial_state, reactions, final_time, params = NULL,
-  method = ssa_exact(), census_interval = 0,
-  stop_on_neg_state = TRUE, max_walltime = Inf,
-  log_propensity = FALSE, log_firings = FALSE, log_buffer = FALSE,
-  verbose = FALSE, console_interval = 1, sim_name = NA_character_)
+ssa(
+  initial_state,
+  reactions,
+  final_time,
+  params = NULL,
+  method = ssa_exact(),
+  census_interval = 0,
+  stop_on_neg_state = TRUE,
+  max_walltime = Inf,
+  log_propensity = FALSE,
+  log_firings = FALSE,
+  log_buffer = FALSE,
+  verbose = FALSE,
+  console_interval = 1,
+  sim_name = NA_character_,
+  return_simulator = FALSE
+)
 }
 \arguments{
-\item{initial_state}{\code{[named numeric vector]} The initial state to start the simulation with.}
+\item{initial_state}{\verb{[named numeric vector]} The initial state to start the simulation with.}
 
 \item{reactions}{A list of reactions, see \code{\link[=reaction]{reaction()}}.}
 
-\item{final_time}{\code{[numeric]} The final simulation time.}
+\item{final_time}{\verb{[numeric]} The final simulation time.}
 
-\item{params}{\code{[named numeric vector]} Constant parameters to be used in the propensity functions.}
+\item{params}{\verb{[named numeric vector]} Constant parameters to be used in the propensity functions.}
 
-\item{method}{\code{[ssa_method]}] Which SSA algorithm to use. Must be one of: \code{\link[=ssa_exact]{ssa_exact()}},
+\item{method}{\verb{[ssa_method]}] Which SSA algorithm to use. Must be one of: \code{\link[=ssa_exact]{ssa_exact()}},
 \code{\link[=ssa_btl]{ssa_btl()}}, or \code{\link[=ssa_etl]{ssa_etl()}}.}
 
-\item{census_interval}{\code{[numeric]} The approximate interval between recording the state of the system.
+\item{census_interval}{\verb{[numeric]} The approximate interval between recording the state of the system.
 Setting this parameter to \code{0} will cause each state to be recorded, and
 to \code{Inf} will cause only the end state to be recorded.}
 
-\item{stop_on_neg_state}{\code{[logical]} Whether or not to stop the simulation when
+\item{stop_on_neg_state}{\verb{[logical]} Whether or not to stop the simulation when
 the a negative value in the state has occured. This can occur, for instance, in the \code{\link[=ssa_etl]{ssa_etl()}}
 method.}
 
-\item{max_walltime}{\code{[numeric]} The maximum duration (in seconds) that the
+\item{max_walltime}{\verb{[numeric]} The maximum duration (in seconds) that the
 simulation is allowed to run for before terminated.}
 
-\item{log_propensity}{\code{[logical]} Whether or not to store the propensity values at each census.}
+\item{log_propensity}{\verb{[logical]} Whether or not to store the propensity values at each census.}
 
-\item{log_firings}{\code{[logical]} Whether or not to store number of firings of each reaction between censuses.}
+\item{log_firings}{\verb{[logical]} Whether or not to store number of firings of each reaction between censuses.}
 
-\item{log_buffer}{\code{[logical]} Whether or not to store the buffer at each census.}
+\item{log_buffer}{\verb{[logical]} Whether or not to store the buffer at each census.}
 
-\item{verbose}{\code{[logical]} If \code{TRUE}, intermediary information pertaining to the simulation will be displayed.}
+\item{verbose}{\verb{[logical]} If \code{TRUE}, intermediary information pertaining to the simulation will be displayed.}
 
-\item{console_interval}{\code{[numeric]} The approximate interval between intermediary information outputs.}
+\item{console_interval}{\verb{[numeric]} The approximate interval between intermediary information outputs.}
 
-\item{sim_name}{\code{[character]} An optional name for the simulation.}
+\item{sim_name}{\verb{[character]} An optional name for the simulation.}
+
+\item{return_simulator}{Whether to return the simulator itself, instead of the output.}
 }
 \value{
 Returns a list containing the output of the simulation:
 \itemize{
-\item \code{out[["time"]]}: \code{[numeric]} The simulation time at which a census was performed.
-\item \code{out[["state"]]}: \code{[numeric matrix]} The number of individuals at those time points.
-\item \code{out[["propensity"]]}: \code{[numeric matrix]} If \code{log_propensity} is \code{TRUE}, the propensity value of each reaction at each time point.
-\item \code{out[["firings"]]}: \code{[numeric matrix]} If \code{log_firings} is \code{TRUE}, the number of firings between two time points.
-\item \code{out[["buffer"]]}: \code{[numeric matrix]} If \code{log_buffer} is \code{TRUE}, the buffer values at each time point.
-\item \code{out[["stats"]]}: \code{[data frame]} Various stats:
+\item \code{out[["time"]]}: \verb{[numeric]} The simulation time at which a census was performed.
+\item \code{out[["state"]]}: \verb{[numeric matrix]} The number of individuals at those time points.
+\item \code{out[["propensity"]]}: \verb{[numeric matrix]} If \code{log_propensity} is \code{TRUE}, the propensity value of each reaction at each time point.
+\item \code{out[["firings"]]}: \verb{[numeric matrix]} If \code{log_firings} is \code{TRUE}, the number of firings between two time points.
+\item \code{out[["buffer"]]}: \verb{[numeric matrix]} If \code{log_buffer} is \code{TRUE}, the buffer values at each time point.
+\item \code{out[["stats"]]}: \verb{[data frame]} Various stats:
 \itemize{
-\item \code{$method}: The name of the SSA method used.
-\item \code{$sim_name}: The name of the simulation, if provided.
-\item \code{$sim_time_exceeded}: Whether the simulation stopped because the final simulation time was reached.
-\item \code{$all_zero_state}: Whether an extinction has occurred.
-\item \code{$negative_state}: Whether a negative state has occurred. If an SSA method other than \code{ssa_etl()} is used, this indicates a mistake in the provided reaction effects.
-\item \code{$all_zero_propensity}: Whether the simulation stopped because all propensity values are zero.
-\item \code{$negative_propensity}: Whether a negative propensity value has occurred. If so, there is likely a mistake in the provided reaction propensity functions.
-\item \code{$walltime_exceeded}: Whether the simulation stopped because the maximum execution time has been reached.
-\item \code{$walltime_elapsed}: The duration of the simulation.
-\item \code{$num_steps}: The number of steps performed.
-\item \code{$dtime_mean}: The mean time increment per step.
-\item \code{$dtime_sd}: THe standard deviation of time increments.
-\item \code{$firings_mean}: The mean number of firings per step.
-\item \code{$firings_sd}: The standard deviation of the number of firings.
+\item \verb{$method}: The name of the SSA method used.
+\item \verb{$sim_name}: The name of the simulation, if provided.
+\item \verb{$sim_time_exceeded}: Whether the simulation stopped because the final simulation time was reached.
+\item \verb{$all_zero_state}: Whether an extinction has occurred.
+\item \verb{$negative_state}: Whether a negative state has occurred. If an SSA method other than \code{ssa_etl()} is used, this indicates a mistake in the provided reaction effects.
+\item \verb{$all_zero_propensity}: Whether the simulation stopped because all propensity values are zero.
+\item \verb{$negative_propensity}: Whether a negative propensity value has occurred. If so, there is likely a mistake in the provided reaction propensity functions.
+\item \verb{$walltime_exceeded}: Whether the simulation stopped because the maximum execution time has been reached.
+\item \verb{$walltime_elapsed}: The duration of the simulation.
+\item \verb{$num_steps}: The number of steps performed.
+\item \verb{$dtime_mean}: The mean time increment per step.
+\item \verb{$dtime_sd}: THe standard deviation of time increments.
+\item \verb{$firings_mean}: The mean number of firings per step.
+\item \verb{$firings_sd}: The standard deviation of the number of firings.
 }
 }
 }

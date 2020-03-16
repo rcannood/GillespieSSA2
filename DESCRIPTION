@@ -1,7 +1,7 @@
 Package: GillespieSSA2
 Type: Package
 Title: Gillespie's Stochastic Simulation Algorithm for Impatient People
-Version: 0.2.5
+Version: 0.2.6
 Authors@R: c(
     person(
       "Robrecht", 
@@ -25,7 +25,8 @@ Description: A fast, scalable, and versatile framework for simulating large
   include major speed improvements (>100x), easier to understand documentation,
   and many unit tests that try to ensure the package works as intended.
 License: GPL (>= 3)
-LazyData: TRUE
+URL: http://github.com/rcannood/GillespieSSA2
+BugReports: https://github.com/rcannood/GillespieSSA2/issues
 Depends:
     R (>= 3.0)
 Imports:
@@ -48,9 +49,8 @@ Suggests:
     rmarkdown,
     testthat (>= 2.1.0)
 LinkingTo: Rcpp
+LazyData: TRUE
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
-URL: http://github.com/rcannood/GillespieSSA2
-BugReports: https://github.com/rcannood/GillespieSSA2/issues
