@@ -29,8 +29,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ubuntu-r-3.6-${{ hashFiles('depends.Rds') }}
-          restore-keys: ubuntu-r-3.6-
+          key: ubuntu-r-release-${{ hashFiles('depends.Rds') }}
+          restore-keys: ubuntu-r-release-
 
       - name: Install system dependencies
         if: runner.os == 'Linux'
