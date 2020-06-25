@@ -31,6 +31,15 @@ jobs:
           path: ${{ env.R_LIBS_USER }}
           key: ubuntu-r-3.6-${{ hashFiles('depends.Rds') }}
           restore-keys: ubuntu-r-3.6-
+          
+      - name: Install system dependencies
+        if: runner.os == 'Linux'
+        env:
+          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
+        run: |
+          Rscript -e "remotes::install_github('rcannood/sysreqs')"
+          sysreqs=$(Rscript -e "cat(sysreqs:::sysreq_commands_pkgs(sysreqs:::get_cran_sysreqs(sysreqs:::get_cran_deps("covr"))))")
+          sudo -s eval "$sysreqs"
 
       - name: Install dependencies
         run: |
