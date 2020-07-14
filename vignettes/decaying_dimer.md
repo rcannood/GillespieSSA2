@@ -48,7 +48,7 @@ out <- ssa(
   method = ssa_exact(),
   sim_name = sim_name
 )
-autoplot.ssa(out)
+plot_ssa(out)
 ```
 
 ![](decaying_dimer_files/figure-gfm/exact-1.png)<!-- -->
@@ -65,7 +65,7 @@ out <- ssa(
   method = ssa_etl(tau = 0.003),
   sim_name = sim_name
 ) 
-autoplot.ssa(out)
+plot_ssa(out)
 ```
 
 ![](decaying_dimer_files/figure-gfm/etl-1.png)<!-- -->
@@ -82,7 +82,7 @@ out <- ssa(
   method = ssa_btl(),
   sim_name = sim_name
 ) 
-autoplot.ssa(out)
+plot_ssa(out)
 ```
 
 ![](decaying_dimer_files/figure-gfm/btl-1.png)<!-- -->

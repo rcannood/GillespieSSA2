@@ -137,8 +137,7 @@ create_simulation <- function(
 #'     verbose = TRUE
 #'   )
 #'
-#' library(ggplot2)
-#' autoplot(out)
+#' plot_ssa(out)
 #' }
 #'
 #' @export
@@ -259,7 +258,7 @@ return_output <- function(sim, initial_state, compiled_reactions) {
     colnames(output$firings) <- compiled_reactions$reaction_ids
   }
 
-  class(output) <- c("ssa", "list")
+  class(output) <- "ssa"#c("ssa", "list")
 
   output
 }

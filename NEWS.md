@@ -1,4 +1,8 @@
-# GillespieSSA2 0.2.6 
+# GillespieSSA2 0.2.7 (14-07-2020)
+
+* BUG FIX: Renamed `autoplot.ssa()` to `plot_ssa()` for compatibility with R 4.0.
+
+# GillespieSSA2 0.2.6 (14-03-2020)
 
 * BUG FIX: Zap small negative propensity and state values.
 

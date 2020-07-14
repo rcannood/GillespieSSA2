@@ -70,7 +70,7 @@ out <- GillespieSSA2::ssa(
   verbose = FALSE,
   sim_name = sim_name
 ) 
-autoplot.ssa(out)
+plot_ssa(out)
 ```
 
 ![](converting_from_GillespieSSA_files/figure-gfm/gssa2-1.png)<!-- -->
@@ -106,7 +106,7 @@ print(out$stats)
     ## 1          0
 
 ``` r
-autoplot.ssa(out)
+plot_ssa(out)
 ```
 
 ![](converting_from_GillespieSSA_files/figure-gfm/port-1.png)<!-- -->

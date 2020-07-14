@@ -1,10 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![Build
-Status](https://travis-ci.org/rcannood/GillespieSSA2.svg?branch=master)](https://travis-ci.org/rcannood/GillespieSSA2)
-[![Build
-status](https://ci.appveyor.com/api/projects/status/5kw9ynlc1mmehrcj?svg=true)](https://ci.appveyor.com/project/rcannood/gillespiessa2)
+![R-CMD-check](https://github.com/rcannood/GillespieSSA2/workflows/R-CMD-check/badge.svg)
 
 # `GillespieSSA2`: Gillespie’s Stochastic Simulation Algorithm for impatient people.
 
@@ -86,7 +83,12 @@ full list of changes.
 
 <!-- This section gets automatically generated from NEWS.md -->
 
-### Recent changes in GillespieSSA2 0.2.6
+### Recent changes in GillespieSSA2 0.2.7 (14-07-2020)
+
+  - BUG FIX: Renamed `autoplot.ssa()` to `plot_ssa()` for compatibility
+    with R 4.0.
+
+### Recent changes in GillespieSSA2 0.2.6 (14-03-2020)
 
   - BUG FIX: Zap small negative propensity and state values.
 
@@ -94,12 +96,3 @@ full list of changes.
 
   - DEBUG FEATURE `ssa()`: Allow returning the GillespieSSA2 instead of
     running it.
-
-### Recent changes in GillespieSSA2 0.2.5 (21-08-2019)
-
-  - BUG FIX: Use `fabs()` instead of `abs()` to calculate the absolute
-    value of a floating point value.
-
-  - BUG FIX: Precompiling returns a list of compiled function pointers,
-    instead of a single function pointer that is secretly an array of
-    function pointers.

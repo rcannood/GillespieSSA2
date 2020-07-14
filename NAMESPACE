@@ -2,9 +2,9 @@
 
 S3method(print,SSA_method)
 S3method(print,SSA_reaction)
-export(autoplot.ssa)
 export(compile_reactions)
 export(ode_em)
+export(plot_ssa)
 export(port_reactions)
 export(reaction)
 export(ssa)

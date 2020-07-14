@@ -56,7 +56,7 @@ reaction \eqn{j} will occur in the next infinitesimal time interval
 
 \itemize{
 \item \code{\link[=ssa]{ssa()}}: The main entry point for running an \acronym{SSA} simulation.
-\item \code{\link[=autoplot.ssa]{autoplot.ssa()}}: A standard visualisation for generating an overview plot fo the output.
+\item \code{\link[=plot_ssa]{plot_ssa()}}: A standard visualisation for generating an overview plot fo the output.
 \item \code{\link[=ssa_exact]{ssa_exact()}}, \code{\link[=ssa_etl]{ssa_etl()}}, \code{\link[=ssa_btl]{ssa_btl()}}: Different \acronym{SSA} algorithms.
 \item \code{\link[=ode_em]{ode_em()}}: An \acronym{ODE} algorithm.
 \item \code{\link[=compile_reactions]{compile_reactions()}}: A function for precompiling the reactions.
