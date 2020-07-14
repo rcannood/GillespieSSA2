@@ -1,15 +1,4 @@
 
-  - [`GillespieSSA2`: Gillespie’s Stochastic Simulation Algorithm for
-    impatient
-    people.](#gillespiessa2-gillespies-stochastic-simulation-algorithm-for-impatient-people.)
-      - [Install](#install)
-      - [Examples](#examples)
-      - [Latest changes](#latest-changes)
-          - [Recent changes in GillespieSSA2 0.2.7
-            (14-07-2020)](#recent-changes-in-gillespiessa2-0.2.7-14-07-2020)
-          - [Recent changes in GillespieSSA2 0.2.6
-            (14-03-2020)](#recent-changes-in-gillespiessa2-0.2.6-14-03-2020)
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ![R-CMD-check](https://github.com/rcannood/GillespieSSA2/workflows/R-CMD-check/badge.svg)
