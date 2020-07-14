@@ -81,7 +81,7 @@ out <- GillespieSSA2::ssa(
   verbose = FALSE,
   sim_name = sim_name
 ) 
-autoplot.ssa(out)
+plot_ssa(out)
 ```
 
 However, if you want to use the GillespieSSA1 objects directly, you
@@ -102,5 +102,5 @@ out <-
     sim_name = simName
   )
 print(out$stats)
-autoplot.ssa(out)
+plot_ssa(out)
 ```

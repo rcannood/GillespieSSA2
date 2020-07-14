@@ -12,7 +12,7 @@
 #' @importFrom tidyr gather
 #' @importFrom dplyr bind_rows mutate
 #' @export
-autoplot.ssa <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE, firings = FALSE, geom = c("point", "step")) {
+plot_ssa <- function(ssa_out, state = TRUE, propensity = FALSE, buffer = FALSE, firings = FALSE, geom = c("point", "step")) {
   requireNamespace("ggplot2")
   geom <- match.arg(geom)
 

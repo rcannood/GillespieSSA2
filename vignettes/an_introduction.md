@@ -75,7 +75,7 @@ print(out$stats)
     ## 1          0
 
 ``` r
-autoplot.ssa(out)
+plot_ssa(out)
 ```
 
     ## Loading required namespace: ggplot2

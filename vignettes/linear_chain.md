@@ -53,7 +53,7 @@ out <- ssa(
   method = ssa_exact(),
   sim_name = sim_name
 ) 
-autoplot.ssa(out)
+plot_ssa(out)
 ```
 
 ![](linear_chain_files/figure-gfm/exact-1.png)<!-- -->
@@ -70,7 +70,7 @@ out <- ssa(
   method = ssa_etl(tau = .1),
   sim_name = sim_name
 ) 
-autoplot.ssa(out)
+plot_ssa(out)
 ```
 
 ![](linear_chain_files/figure-gfm/etl-1.png)<!-- -->
@@ -87,7 +87,7 @@ out <- ssa(
   method = ssa_btl(mean_firings = 50),
   sim_name = sim_name
 ) 
-autoplot.ssa(out)
+plot_ssa(out)
 ```
 
 ![](linear_chain_files/figure-gfm/btl-1.png)<!-- -->

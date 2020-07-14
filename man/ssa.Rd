@@ -126,8 +126,7 @@ out <-
     verbose = TRUE
   )
 
-library(ggplot2)
-autoplot(out)
+plot_ssa(out)
 }
 
 }

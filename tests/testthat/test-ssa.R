@@ -315,7 +315,7 @@ test_that("perform simulation with R function", {
   stats <- out$stats
   expect_is(stats, "data.frame")
 
-  g <- autoplot.ssa(
+  g <- plot_ssa(
     out,
     state = TRUE,
     propensity = TRUE,
@@ -324,7 +324,7 @@ test_that("perform simulation with R function", {
   expect_is(g, "ggplot")
 
 
-  g <- autoplot.ssa(
+  g <- plot_ssa(
     out,
     state = FALSE,
     propensity = FALSE,
