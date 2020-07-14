@@ -1,17 +1,13 @@
-# GillespieSSA2 0.2.6
+# GillespieSSA2 0.2.7 (14-07-2020)
 
-* BUG FIX: Zap small negative propensity and state values.
-
-* FEATURE `autoplot.ssa()`: Allow plotting the firings.
-
-* DEBUG FEATURE `ssa()`: Allow returning the GillespieSSA2 instead of running it.
+* BUG FIX: Renamed `autoplot.ssa()` to `plot_ssa()` for compatibility with R 4.0.
   
 ## Test environments
-* local Fedora 31 install, (R 3.6.2)
-* ubuntu 16.04 (on travis-ci; oldrelease, release, devel)
-* Mac OS X (on travis-ci; release)
+* local Fedora 32 install (R 4.0)
+* ubuntu 16.04 (with Github Actions; R 3.3, 3.4, 3.5, 3.6, release)
+* Mac OS X (with Github Actions; R release)
+* Windows (with Github Actions; R release)
 * win-builder (oldrelease, release, devel)
-* Windows (on appveyor; release)
 
 ## R CMD check results
 
