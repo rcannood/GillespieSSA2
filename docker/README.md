@@ -30,8 +30,8 @@ docker run \
   -e DISABLE_AUTH=true \
   
   # mount the current working directory to the rstudio home folder
-  # so you will see it right away when rstudio starts
-  -v `pwd`:/home/rstudio/ \
+  # so you can save results in the 'workdir' folder for later use
+  -v `pwd`:/home/rstudio/workdir/ \
   
   # specify which container to run
   rcannood/gillespiessa2
