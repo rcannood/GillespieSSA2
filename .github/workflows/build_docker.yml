@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: |
           BRANCH="${GITHUB_REF#refs/heads/}"
-          docker build -t dynbuild -f docker/Dockerfile --build-arg GITHUB_PAT=${{ secrets.PAT }} --build-arg=$BRANCH .
+          docker build -t dynbuild -f docker/Dockerfile --build-arg GITHUB_PAT=${{ secrets.PAT }} --build-arg=GITHUB_BRANCH=$BRANCH .
           docker tag dynbuild $GITHUB_REPOSITORY:$BRANCH
           if [[ $BRANCH == "master" ]] ; then
             # docker tag dynbuild $GITHUB_REPOSITORY:$TAG
