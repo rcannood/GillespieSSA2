@@ -19,6 +19,8 @@ public:
       NumericVector& dstate,
       NumericVector& firings
   ) {
+    RNGScope rngScope;
+
     int k;
     int i, j;
 

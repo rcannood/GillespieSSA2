@@ -334,7 +334,7 @@ test_that("perform simulation with R function", {
   expect_is(g, "ggplot")
 })
 
-test_that("perform simulation with R function", {
+test_that("multiple runs produces different results", {
   out1 <- ssa(
     initial_state = state,
     reactions = comp_reac,

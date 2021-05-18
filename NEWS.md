@@ -1,5 +1,7 @@
 # GillespieSSA2 0.2.8
 
+* BUG FIX: RNG now uses RNGScope to properly get and put the RNG state before calling RNG functions (fixes #8, thanks @bbolker!).
+
 * DOCUMENTATION: Added example for `compile_reactions()`.
 
 # GillespieSSA2 0.2.7 (14-07-2020)

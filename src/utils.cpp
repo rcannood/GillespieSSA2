@@ -5,6 +5,8 @@ using namespace Rcpp;
 #include "utils.h"
 
 int gillespie::weighted_sample(const NumericVector& weight) {
+  RNGScope rngScope;
+
   double max = sum(weight);
   double ran = R::runif(0, max);
   int j = 0;

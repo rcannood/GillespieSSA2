@@ -19,6 +19,7 @@ public:
       NumericVector& dstate,
       NumericVector& firings
   ) {
+    RNGScope rngScope;
     // TODO: could split up nu into positive and negative nus
 
     int M = propensity.size();

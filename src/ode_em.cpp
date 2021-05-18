@@ -26,6 +26,8 @@ public:
       NumericVector& dstate,
       NumericVector& firings
   ) {
+    RNGScope rngScope;
+
     int i, j;
 
     // update state
