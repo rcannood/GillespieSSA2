@@ -1,5 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
 
 [![CRAN
 Status](https://www.r-pkg.org/badges/version/GillespieSSA2)](https://cran.r-project.org/package=GillespieSSA2)
@@ -9,6 +10,7 @@ Downloads](https://cranlogs.r-pkg.org/badges/GillespieSSA2)](https://cran.r-proj
 [![DOI](https://img.shields.io/badge/doi-10.1101/2020.02.06.936971-green)](https://doi.org/10.1101/2020.02.06.936971)
 [![Coverage
 Status](https://codecov.io/gh/rcannood/GillespieSSA2/branch/master/graph/badge.svg)](https://codecov.io/gh/rcannood/GillespieSSA2?branch=master)
+<!-- badges: end -->
 
 # `GillespieSSA2`: Gillespie’s Stochastic Simulation Algorithm for impatient people.
 
@@ -91,6 +93,9 @@ full list of changes.
 <!-- This section gets automatically generated from NEWS.md -->
 
 ### Recent changes in GillespieSSA2 0.2.8
+
+-   BUG FIX: RNG now uses RNGScope to properly get and put the RNG state
+    before calling RNG functions (fixes \#8, thanks @bbolker!).
 
 -   DOCUMENTATION: Added example for `compile_reactions()`.
 
