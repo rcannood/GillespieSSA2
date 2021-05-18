@@ -28,6 +28,37 @@
 #' @importFrom RcppXPtrUtils cppXPtr
 #' @importFrom Matrix sparseMatrix
 #'
+#' @examples
+#' \donttest{
+#' initial_state <- c(prey = 1000, predators = 1000)
+#' params <- c(c1 = 10, c2 = 0.01, c3 = 10)
+#' reactions <- list(
+#'   #        propensity function     effects                       name for reaction
+#'   reaction(~c1 * prey,             c(prey = +1),                 "prey_up"),
+#'   reaction(~c2 * prey * predators, c(prey = -1, predators = +1), "predation"),
+#'   reaction(~c3 * predators,        c(predators = -1),            "pred_down")
+#' )
+#'
+#' compiled_reactions <- compile_reactions(
+#'   reactions = reactions,
+#'   state_ids = names(initial_state),
+#'   params = params
+#' )
+#'
+#' out <-
+#'   ssa(
+#'     initial_state = initial_state,
+#'     reactions = compiled_reactions,
+#'     params = params,
+#'     method = ssa_exact(),
+#'     final_time = 5,
+#'     census_interval = .001,
+#'     verbose = TRUE
+#'   )
+#'
+#' plot_ssa(out)
+#' }
+#'
 #' @export
 compile_reactions <- function(
   reactions,

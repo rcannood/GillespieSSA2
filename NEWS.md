@@ -1,3 +1,7 @@
+# GillespieSSA2 0.2.8
+
+* DOCUMENTATION: Added example for `compile_reactions()`.
+
 # GillespieSSA2 0.2.7 (14-07-2020)
 
 * BUG FIX: Renamed `autoplot.ssa()` to `plot_ssa()` for compatibility with R 4.0.
