@@ -1,8 +1,7 @@
 Type: Package
 Package: GillespieSSA2
-Title: Gillespie's Stochastic Simulation Algorithm for Impatient
-    People
-Version: 0.2.7
+Title: Gillespie's Stochastic Simulation Algorithm for Impatient People
+Version: 0.2.8
 Authors@R: 
     c(person(given = "Robrecht",
              family = "Cannoodt",
@@ -20,7 +19,8 @@ Description: A fast, scalable, and versatile framework for
     'GillespieSSA' package originally written by Mario Pineda-Krch.
     Benefits of this package include major speed improvements (>100x),
     easier to understand documentation, and many unit tests that try to
-    ensure the package works as intended.
+    ensure the package works as intended. Cannoodt and Saelens et al. (2020) 
+    <doi:10.1101/2020.02.06.936971>.
 License: GPL (>= 3)
 URL: http://github.com/rcannood/GillespieSSA2
 BugReports: https://github.com/rcannood/GillespieSSA2/issues
@@ -50,6 +50,5 @@ LinkingTo:
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
-LazyData: TRUE
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
