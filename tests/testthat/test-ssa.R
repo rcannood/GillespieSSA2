@@ -334,6 +334,45 @@ test_that("perform simulation with R function", {
   expect_is(g, "ggplot")
 })
 
+test_that("multiple runs produces different results", {
+  out1 <- ssa(
+    initial_state = state,
+    reactions = comp_reac,
+    final_time = 1,
+    params = params,
+    method = ssa_exact(),
+    census_interval = .01,
+    max_walltime = 10,
+    stop_on_neg_state = TRUE,
+    log_propensity = TRUE,
+    log_firings = TRUE,
+    log_buffer = TRUE,
+    verbose = TRUE,
+    console_interval = 1,
+    sim_name = "test"
+  )
+  out2 <- ssa(
+    initial_state = state,
+    reactions = comp_reac,
+    final_time = 1,
+    params = params,
+    method = ssa_exact(),
+    census_interval = .01,
+    max_walltime = 10,
+    stop_on_neg_state = TRUE,
+    log_propensity = TRUE,
+    log_firings = TRUE,
+    log_buffer = TRUE,
+    verbose = TRUE,
+    console_interval = 1,
+    sim_name = "test"
+  )
+
+  expect_false(
+    identical(out1$state, out2$state)
+  )
+})
+
 
 test_that("simulation when a negative propensity is generated", {
   params <- c("a" = -1)

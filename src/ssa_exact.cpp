@@ -18,6 +18,8 @@ public:
       NumericVector& dstate,
       NumericVector& firings
   ) {
+    RNGScope rngScope;
+
     // perform weighted sampling
     int j = gillespie::weighted_sample(propensity);
 
