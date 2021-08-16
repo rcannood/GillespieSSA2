@@ -1,2 +1,2 @@
 #' @importFrom Rcpp loadModule cpp_object_initializer
-loadModule("gillespie", TRUE)
+Rcpp::loadModule("gillespie", TRUE)

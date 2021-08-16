@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // make_ode_em
 SEXP make_ode_em(double tau, double noise_strength);
 RcppExport SEXP _GillespieSSA2_make_ode_em(SEXP tauSEXP, SEXP noise_strengthSEXP) {
