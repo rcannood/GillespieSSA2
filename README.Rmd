@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
   dpi = 300
 )
 set.seed(1)
-submission_to_cran <- FALSE
+submission_to_cran <- TRUE
 library(tidyverse)
 ```
 
@@ -98,13 +98,4 @@ if (rerun_vignettes) {
     rmarkdown::render(file, output_format = "github_document")
   }
 }
-```
-
-## Latest changes
-Check out `news(package = "GillespieSSA2")` or [NEWS.md](NEWS.md) for a full list of changes.
-
-<!-- This section gets automatically generated from NEWS.md -->
-
-```{r news, echo=FALSE, results="asis"}
-cat(dynutils::recent_news())
 ```
