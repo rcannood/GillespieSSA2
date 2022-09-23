@@ -1,3 +1,11 @@
+# GillespieSSA2 0.2.10
+
+* MINOR CHANGE: Turn array of propensity functions into vector of propensity functions.
+
+# GillespieSSA2 0.2.9
+
+* MINOR CHANGE: Update RcppExports.
+
 # GillespieSSA2 0.2.8
 
 * BUG FIX: RNG now uses RNGScope to properly get and put the RNG state before calling RNG functions (fixes #8, thanks @bbolker!).

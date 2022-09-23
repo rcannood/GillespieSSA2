@@ -9,16 +9,12 @@ using namespace Rcpp;
 
 typedef void (*TR_FUN)(const NumericVector&, const NumericVector&, const double, NumericVector&, NumericVector&);
 
+
 class SSA_simulation {
 public:
   SSA_simulation() {}
 
-  ~SSA_simulation() {
-    // Rcout << "FREE WILLY" << std::endl;
-    if (prop_funs) {
-      delete[] prop_funs;
-    }
-  }
+  ~SSA_simulation() {}
 
   void initialise(
     // propensity functions
@@ -49,9 +45,10 @@ public:
   ) {
     // process prop funs
     num_functions = propensity_funs_.size();
-    prop_funs = new TR_FUN[num_functions];
+
+    prop_funs.reserve(num_functions);
     for (int i = 0; i < num_functions; i++) {
-      prop_funs[i] = *XPtr<TR_FUN>(as<SEXP>(propensity_funs_[i]));
+      prop_funs.push_back(*XPtr<TR_FUN>(as<SEXP>(propensity_funs_[i])));
     }
     params = params_;
     buffer = NumericVector(buffer_size_);
@@ -386,7 +383,7 @@ public:
   }
 
   int num_functions;
-  TR_FUN *prop_funs;
+  std::vector<TR_FUN> prop_funs;
   SSA_method *ssa_alg;
   NumericVector initial_state;
   NumericVector params;
@@ -441,7 +438,6 @@ public:
   bool verbose;
   double console_interval;
 };
-
 
 // export everything so it can be unit tested
 RCPP_MODULE(gillespie) {
