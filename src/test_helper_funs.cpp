@@ -49,6 +49,8 @@ List test_propensity_cpp(
     prop_funs[i](state, params, sim_time, propensity, buffer);
   }
 
+  delete[] prop_funs;
+
   return List::create(
     _["propensity"] = propensity,
     _["buffer"] = buffer
