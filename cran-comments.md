@@ -12,7 +12,7 @@
 ## R CMD check results
 
 ```
-── R CMD check results ─────────────────────────────────────────────────────── GillespieSSA2 0.2.10 ────
+── R CMD check results ─────────────────────────^────── GillespieSSA2 0.2.10 ────
 Duration: 3m 16.7s
 
 ❯ checking installed package size ... NOTE
@@ -24,4 +24,19 @@ Duration: 3m 16.7s
 0 errors ✔ | 0 warnings ✔ | 1 note ✖
 
 R CMD check succeeded
+```
+
+
+## Reverse dependencies
+
+A reverse dependency check was run on all downstream dependencies.
+(Summary at [revdep/README.md](revdep/README.md)). No new problems were found.
+
+```
+> revdepcheck::revdep_check(timeout = as.difftime(600, units = "mins"), num_workers = 30)
+── CHECK ───────────────────────────────────────────────────────── 1 packages ──
+✔ dyngen 1.0.3                           ── E: 1     | W: 0     | N: 0                                                 
+OK: 1                                                                                                                
+BROKEN: 0
+Total time: 1 min
 ```

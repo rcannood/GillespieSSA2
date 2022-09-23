@@ -12,3 +12,4 @@
 ^\.github$
 ^docker$
 ^teststh.R$
+^revdep$
