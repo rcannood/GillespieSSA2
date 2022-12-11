@@ -22,7 +22,7 @@ Description: A fast, scalable, and versatile framework for
     ensure the package works as intended. Cannoodt and Saelens et al. (2020) 
     <doi:10.1101/2020.02.06.936971>.
 License: GPL (>= 3)
-URL: https://github.com/rcannood/GillespieSSA2
+URL: https://rcannood.github.io/GillespieSSA2/, https://github.com/rcannood/GillespieSSA2
 BugReports: https://github.com/rcannood/GillespieSSA2/issues
 Depends:
     R (>= 3.3)

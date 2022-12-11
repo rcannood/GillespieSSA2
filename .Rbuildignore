@@ -13,3 +13,7 @@
 ^docker$
 ^teststh.R$
 ^revdep$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^codecov\.yml$
