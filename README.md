@@ -6,10 +6,10 @@
 Status](https://www.r-pkg.org/badges/version/GillespieSSA2)](https://cran.r-project.org/package=GillespieSSA2)
 [![CRAN
 Downloads](https://cranlogs.r-pkg.org/badges/GillespieSSA2)](https://cran.r-project.org/package=GillespieSSA2)
-![R-CMD-check](https://github.com/rcannood/GillespieSSA2/workflows/R-CMD-check/badge.svg)
 [![DOI](https://img.shields.io/badge/doi-10.1101/2020.02.06.936971-green)](https://doi.org/10.1101/2020.02.06.936971)
-[![Coverage
-Status](https://app.codecov.io/gh/rcannood/GillespieSSA2/branch/master/graph/badge.svg)](https://app.codecov.io/gh/rcannood/GillespieSSA2?branch=master)
+[![R-CMD-check](https://github.com/rcannood/GillespieSSA2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rcannood/GillespieSSA2/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/rcannood/GillespieSSA2/branch/master/graph/badge.svg)](https://app.codecov.io/gh/rcannood/GillespieSSA2?branch=master)
 <!-- badges: end -->
 
 # `GillespieSSA2`: Gillespie’s Stochastic Simulation Algorithm for impatient people.
