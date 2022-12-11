@@ -1,0 +1,19 @@
+pandoc: 2.19.2
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  an_introduction: an_introduction.html
+  converting_from_GillespieSSA: converting_from_GillespieSSA.html
+  decaying_dimer: decaying_dimer.html
+  epi_chain: epi_chain.html
+  linear_chain: linear_chain.html
+  logistic_growth: logistic_growth.html
+  lotka_predator_prey: lotka_predator_prey.html
+  radioactive_decay: radioactive_decay.html
+  rm_predator_prey: rm_predator_prey.html
+  sir: sir.html
+last_built: 2022-12-11T19:55Z
+urls:
+  reference: https://rcannood.github.io/GillespieSSA2/reference
+  article: https://rcannood.github.io/GillespieSSA2/articles
+
