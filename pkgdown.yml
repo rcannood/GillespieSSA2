@@ -1,5 +1,5 @@
 pandoc: 2.19.2
-pkgdown: 2.0.6
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   an_introduction: an_introduction.html
@@ -12,7 +12,7 @@ articles:
   radioactive_decay: radioactive_decay.html
   rm_predator_prey: rm_predator_prey.html
   sir: sir.html
-last_built: 2022-12-11T19:55Z
+last_built: 2023-01-23T10:00Z
 urls:
   reference: https://rcannood.github.io/GillespieSSA2/reference
   article: https://rcannood.github.io/GillespieSSA2/articles
