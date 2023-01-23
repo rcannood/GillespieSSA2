@@ -10,7 +10,8 @@ compile_reactions(
   params,
   buffer_ids = NULL,
   hardcode_params = FALSE,
-  fun_by = 10000L
+  fun_by = 10000L,
+  debug = FALSE
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ compile_reactions(
 Setting this to \code{TRUE} will result in a minor sacrifice in accuracy for a minor increase in performance.}
 
 \item{fun_by}{\verb{[integer]} Combine this number of propensity functions into one function.}
+
+\item{debug}{\verb{[logical]} Whether to print the resulting C++ code before compiling.}
 }
 \value{
 A list of objects solely to be used by \code{\link[=ssa]{ssa()}}.

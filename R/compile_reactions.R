@@ -10,6 +10,7 @@
 #' @param hardcode_params `[logical]` Whether or not to hardcode the values of `params` in the compilation of the propensity functions.
 #'   Setting this to `TRUE` will result in a minor sacrifice in accuracy for a minor increase in performance.
 #' @param fun_by `[integer]` Combine this number of propensity functions into one function.
+#' @param debug `[logical]` Whether to print the resulting C++ code before compiling.
 #'
 #' @return A list of objects solely to be used by [ssa()].
 #'
@@ -66,7 +67,8 @@ compile_reactions <- function(
   params,
   buffer_ids = NULL,
   hardcode_params = FALSE,
-  fun_by = 10000L
+  fun_by = 10000L,
+  debug = FALSE
 ) {
   assert_that(is.list(reactions))
   walk(seq_along(reactions), function(i) {
@@ -108,7 +110,7 @@ compile_reactions <- function(
   # add reaction ids assignments to propensity functions
   propensity_funs <- map_chr(reactions, "propensity")
   for (i in seq_along(propensity_funs)) {
-    propensity_funs[[i]] <- gsub("(.*;)?([^;]*)", paste0("\\1", reaction_ids[[i]], " = \\2"), propensity_funs[[i]])
+    propensity_funs[[i]] <- gsub("(.*; *)?([^;]*)", paste0("\\1", reaction_ids[[i]], " = \\2"), propensity_funs[[i]])
   }
 
   # preprocess propensity functions
@@ -116,11 +118,13 @@ compile_reactions <- function(
   reaction_ids <- variable_names %>% map_chr(last)
 
   buffer_usages <- map_int(variable_names, length) - 1
-  buffer_size <- sum(buffer_usages)
-
   if (is.null(buffer_ids)) {
-    buffer_ids <- variable_names %>% unlist() %>% discard(~ . %in% reaction_ids)
+    buffer_ids <- variable_names %>%
+      unlist() %>%
+      discard(~ . %in% reaction_ids) %>%
+      unique()
   }
+  buffer_size <- length(buffer_ids)
 
   # split propensity functions into words and non-words
   prop_split <-
@@ -159,7 +163,8 @@ compile_reactions <- function(
 
   # get indices of semi colons
   prop_lines <-
-    paste0(prop_split, collapse = "") %>%
+    paste0(prop_split, collapse = " ") %>%
+    str_replace_all(" *; *", ";") %>%
     str_split(";") %>%
     first() %>%
     discard(~ . == "")
@@ -183,6 +188,9 @@ compile_reactions <- function(
     rcpp_function_code_blocks,
     "}\n"
   )
+  if (debug) {
+    cat(rcpp_codes)
+  }
 
   # create temporary dir for compilation
   tmpdir <- dynutils::safe_tempdir("gillespie")

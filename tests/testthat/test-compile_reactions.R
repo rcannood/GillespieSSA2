@@ -37,6 +37,16 @@ reactions <- list(
     propensity = ~ (a * b + c) / d,
     effect = c(y = +1, z = -1),
     name = "react12"
+  ),
+  reaction(
+    propensity = ~ time * a,
+    effect = c(y = -1),
+    name = "react13"
+  ),
+  reaction(
+    propensity = "if (time < 10) buf5 = 1; else if (time < 20) buf5 = 2; else buf5 = 3; buf5 * a",
+    effect = c(z = 1),
+    name = "react14"
   )
 )
 
@@ -65,8 +75,8 @@ test_that("compilation works", {
   expect_equal(comp_reac$reaction_ids, expected_reac_ids)
 
   # check other params
-  expect_equal(comp_reac$buffer_ids, paste0("buf", 1:4))
-  expect_equal(comp_reac$buffer_size, 4)
+  expect_equal(comp_reac$buffer_ids, paste0("buf", 1:5))
+  expect_equal(comp_reac$buffer_size, 5)
   expect_equal(comp_reac$hardcode_params, FALSE)
 
   # check funs (have to start up a simulation object for this)
@@ -74,18 +84,20 @@ test_that("compilation works", {
     comp_reac,
     params,
     state,
-    0
+    10
   )
   expected_prop <- with(as.list(c(params, state)), c(
     params,
     state,
     a * b * c * d / a_very_long_state_name_value_is_just_to_try_and_see_if_it_works / short_one,
     a + 5,
-    (a * b + c) / d
+    (a * b + c) / d,
+    10 * a,
+    2 * a
   )) %>%
     unname()
   expect_equal(out$propensity, expected_prop, tolerance = .001)
-  expect_equal(out$buffer, 2:5, tolerance = .001)
+  expect_equal(out$buffer, c(2:5, 2), tolerance = .001)
 })
 
 
@@ -100,16 +112,18 @@ test_that("compilation works when params are hardcoded", {
     comp_reac,
     params,
     state,
-    0
+    20
   )
   expected_prop <- with(as.list(c(params, state)), c(
     params,
     state,
     a * b * c * d / a_very_long_state_name_value_is_just_to_try_and_see_if_it_works / short_one,
     a + 5,
-    (a * b + c) / d
+    (a * b + c) / d,
+    20 * a,
+    3 * a
   )) %>%
     unname()
   expect_equal(out$propensity, expected_prop, tolerance = .001)
-  expect_equal(out$buffer, 2:5, tolerance = .001)
+  expect_equal(out$buffer, c(2:5, 3), tolerance = .001)
 })

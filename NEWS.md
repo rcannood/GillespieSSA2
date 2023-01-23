@@ -1,3 +1,9 @@
+# GillespieSSA2 0.3.0
+
+* MINOR CHANGE: Add `debug` parameter to print out propensity functions before compiling.
+
+* MINOR CHANGE: Add spaces between terms in the reaction propensity C++ code to avoid pasting together `if` and `else` key words.
+
 # GillespieSSA2 0.2.10
 
 * MINOR CHANGE: Turn array of propensity functions into vector of propensity functions.
