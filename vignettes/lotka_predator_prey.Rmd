@@ -1,12 +1,13 @@
 ---
-title: "Lotka Predator-Prey model (Gillespie, 1977; Kot, 2001)"
+title: "Lotka Predator-Prey model"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Lotka Predator-Prey model (Gillespie, 1977; Kot, 2001)}
+  %\VignetteIndexEntry{Lotka Predator-Prey model}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
+bibliography: library.bib
 ---
 
 <!-- github markdown built using 
@@ -19,7 +20,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
 if("package:GillespieSSA" %in% search()) detach("package:GillespieSSA", unload=TRUE) 
 ```
 
-This version of the Lotka predator-prey model is given by
+This version of the Lotka predator-prey model [@Gillespie1977; @Kot2001] is given by
 
 ```
 dY1/dt = c1*Y1 - c2*Y1*Y2

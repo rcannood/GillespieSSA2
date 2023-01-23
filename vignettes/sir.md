@@ -1,11 +1,12 @@
-Kermack-McKendrick SIR model (Brown & Rothery, 1993)
+Kermack-McKendrick SIR model
 ================
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/sir.Rmd", output_format = "github_document")
 -->
 
-The Kermack-McKendrick SIR model is defined as
+The Kermack-McKendrick SIR model (Brown, Rothery, et al. 1993) is
+defined as
 
     dS/dt = -beta*N*S
     dI/dt = beta*N*S - gamma*I
@@ -48,7 +49,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](sir_files/figure-gfm/exact-1.png)<!-- -->
+<img src="sir_files/figure-gfm/exact-1.png" width="100%" />
 
 Run simulations with the Explict tau-leap method
 
@@ -65,7 +66,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](sir_files/figure-gfm/etl-1.png)<!-- -->
+<img src="sir_files/figure-gfm/etl-1.png" width="100%" />
 
 Run simulations with the Binomial tau-leap method
 
@@ -82,4 +83,15 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](sir_files/figure-gfm/btl-1.png)<!-- -->
+<img src="sir_files/figure-gfm/btl-1.png" width="100%" />
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-Brown1993" class="csl-entry">
+
+Brown, David, Peter Rothery, et al. 1993. *Models in Biology:
+Mathematics, Statistics and Computing.* John Wiley & Sons Ltd.
+
+</div>
+
+</div>

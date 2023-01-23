@@ -1,12 +1,13 @@
 ---
-title: "Linear Chain System (Cao et al., 2004)"
+title: "Linear Chain System"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Linear Chain System (Cao et al., 2004)}
+  %\VignetteIndexEntry{Linear Chain System}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
+bibliography: library.bib
 ---
 
 <!-- github markdown built using 
@@ -19,7 +20,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
 if("package:GillespieSSA" %in% search()) detach("package:GillespieSSA", unload=TRUE) 
 ```
 
-The Linear Chain System consists of M chain reactions with M+1 species as follows:
+The Linear Chain System [@Cao2004] consists of M chain reactions with M+1 species as follows:
 
 ```
   S_1 --c1--> S_2

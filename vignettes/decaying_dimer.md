@@ -1,19 +1,17 @@
-Decaying-Dimerization Reaction Set (Gillespie, 2001)
+Decaying-Dimerization Reaction Set
 ================
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/decaying_dimer.Rmd", output_format = "github_document")
 -->
 
-The Decaying-Dimerization Reaction Set consists of three species and
-four reaction channels.
+The Decaying-Dimerization Reaction Set (Gillespie 2001) consists of
+three species and four reaction channels.
 
-``` 
-      S1 --c1--> 0
- S1 + S1 --c2--> S2
-      S2 --c3--> S1 + S1
-      S2 --c4--> S3
-```
+          S1 --c1--> 0
+     S1 + S1 --c2--> S2
+          S2 --c3--> S1 + S1
+          S2 --c4--> S3
 
 Define parameters
 
@@ -51,7 +49,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](decaying_dimer_files/figure-gfm/exact-1.png)<!-- -->
+<img src="decaying_dimer_files/figure-gfm/exact-1.png" width="100%" />
 
 Run simulations with the Explict tau-leap method
 
@@ -68,7 +66,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](decaying_dimer_files/figure-gfm/etl-1.png)<!-- -->
+<img src="decaying_dimer_files/figure-gfm/etl-1.png" width="100%" />
 
 Run simulations with the Binomial tau-leap method
 
@@ -85,4 +83,16 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](decaying_dimer_files/figure-gfm/btl-1.png)<!-- -->
+<img src="decaying_dimer_files/figure-gfm/btl-1.png" width="100%" />
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-Gillespie2001" class="csl-entry">
+
+Gillespie, Daniel T. 2001. “Approximate Accelerated Stochastic
+Simulation of Chemically Reacting Systems.” *The Journal of Chemical
+Physics* 115 (4): 1716–33. <https://doi.org/10.1063/1.1378322>.
+
+</div>
+
+</div>

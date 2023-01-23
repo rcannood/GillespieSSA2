@@ -1,12 +1,11 @@
-Rosenzweig-MacArthur Predator-Prey model (Pineda-Krch et al., 2007)
+Rosenzweig-MacArthur Predator-Prey model
 ================
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/rm_predator_prey.Rmd", output_format = "github_document")
 -->
 
-Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al., 2007,
-Pineda-Krch, 2008)
+Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al. 2007).
 
     dN/dt = r(1-N/K - alpha/(1+wN))NP
     dP/dt = c*alpha/(1+wN))NP
@@ -72,7 +71,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](rm_predator_prey_files/figure-gfm/exact-1.png)<!-- -->
+<img src="rm_predator_prey_files/figure-gfm/exact-1.png" width="100%" />
 
 Run simulations with the Explict tau-leap method
 
@@ -89,7 +88,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](rm_predator_prey_files/figure-gfm/etl-1.png)<!-- -->
+<img src="rm_predator_prey_files/figure-gfm/etl-1.png" width="100%" />
 
 Run simulations with the Binomial tau-leap method
 
@@ -106,4 +105,17 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](rm_predator_prey_files/figure-gfm/btl-1.png)<!-- -->
+<img src="rm_predator_prey_files/figure-gfm/btl-1.png" width="100%" />
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-PinedaKrch2007" class="csl-entry">
+
+Pineda-Krch, Mario, Hendrik J. Blok, Ulf Dieckmann, and Michael Doebeli.
+2007. “A Tale of Two Cycles – Distinguishing Quasi-Cycles and Limit
+Cycles in Finite Predator–Prey Populations.” *Oikos* 116 (1): 53–64.
+https://doi.org/<https://doi.org/10.1111/j.2006.0030-1299.14940.x>.
+
+</div>
+
+</div>

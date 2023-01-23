@@ -1,12 +1,13 @@
 ---
-title: "Decaying-Dimerization Reaction Set (Gillespie, 2001)"
+title: "Decaying-Dimerization Reaction Set"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Decaying-Dimerization Reaction Set (Gillespie, 2001)}
+  %\VignetteIndexEntry{Decaying-Dimerization Reaction Set}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
+bibliography: library.bib
 ---
 
 <!-- github markdown built using 
@@ -19,7 +20,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
 if("package:GillespieSSA" %in% search()) detach("package:GillespieSSA", unload=TRUE) 
 ```
 
-The Decaying-Dimerization Reaction Set consists of three species and four reaction channels.
+The Decaying-Dimerization Reaction Set [@Gillespie2001] consists of three species and four reaction channels.
 
 ```
       S1 --c1--> 0

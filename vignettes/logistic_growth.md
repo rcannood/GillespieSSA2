@@ -1,27 +1,31 @@
-Pearl-Verhulst Logistic Growth model (Kot, 2001)
+Pearl-Verhulst Logistic Growth model
 ================
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/logistic_growth.Rmd", output_format = "github_document")
 -->
 
-The logistic growth model is given by `dN/dt = rN(1-N/K)` where `N` is
-the number (density) of indviduals at time `t`, `K` is the carrying
-capacity of the population, `r` is the intrinsic growth rate of the
-population. We assume `r=b-d` where `b` is the per capita p.c. birth
-rate and `d` is the p.c. death rate.
+The classical logistic-growth model (Kot 2001) assumes that the growth
+of a population decreases with increasing population size and is given
+by the following equation,
 
-This model consists of two reaction channels,
+$$
+\frac{dN}{dt} = rN \times \left(1 - \frac{N}{K}\right)
+$$ where $N$ is the number (density) of indviduals at time $t$, $K$ is
+the carrying capacity of the population, $r$ is the intrinsic growth
+rate of the population.
 
-``` 
- N ---b--->  N + N
- N ---d'---> 0
-```
+This model consists of two reactions, birth and death, whose propensity
+functions are defined as:
 
-where `d'=d+(b-d)N/K`. The propensity functions are `a_1=bN` and
-`a_2=d'N`.
+-   $a_1(x) = bN$
+-   $a_2(x) = (d + (b - d) \times N / K) \times N$
 
-Define parameters
+where $b$ is the per capita birth rate and $d$ is the per capita death
+rate.
+
+Assuming $b=2$, $d=1$, $K=1000$ and $X(0)=(500)$, we can define the
+following parameters:
 
 ``` r
 library(GillespieSSA2)
@@ -31,7 +35,8 @@ final_time <- 10
 initial_state <- c(N = 500)
 ```
 
-Define reactions
+The reactions (each consisting of a propensity function and a state
+change vector) can be defined as:
 
 ``` r
 reactions <- list(
@@ -55,7 +60,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](logistic_growth_files/figure-gfm/exact-1.png)<!-- -->
+<img src="logistic_growth_files/figure-gfm/exact-1.png" width="100%" />
 
 Run simulations with the Explict tau-leap method
 
@@ -72,7 +77,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](logistic_growth_files/figure-gfm/etl-1.png)<!-- -->
+<img src="logistic_growth_files/figure-gfm/etl-1.png" width="100%" />
 
 Run simulations with the Binomial tau-leap method
 
@@ -89,4 +94,27 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](logistic_growth_files/figure-gfm/btl-1.png)<!-- -->
+<img src="logistic_growth_files/figure-gfm/btl-1.png" width="100%" />
+
+## Acknowledgements
+
+Description was adapted from Pineda-Krch (2008).
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-Kot2001" class="csl-entry">
+
+Kot, Mark. 2001. *Elements of Mathematical Ecology*. Cambridge
+University Press. <https://doi.org/10.1017/cbo9780511608520>.
+
+</div>
+
+<div id="ref-PinedaKrch2008" class="csl-entry">
+
+Pineda-Krch, Mario. 2008. “GillespieSSA: Implementing the Stochastic
+Simulation Algorithm in r.” *Journal of Statistical Software* 25 (12).
+<https://doi.org/10.18637/jss.v025.i12>.
+
+</div>
+
+</div>

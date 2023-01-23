@@ -1,12 +1,13 @@
 ---
-title: "Rosenzweig-MacArthur Predator-Prey model (Pineda-Krch et al., 2007)"
+title: "Rosenzweig-MacArthur Predator-Prey model"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Rosenzweig-MacArthur Predator-Prey model (Pineda-Krch et al., 2007)}
+  %\VignetteIndexEntry{Rosenzweig-MacArthur Predator-Prey model}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
+bibliography: library.bib
 ---
 
 <!-- github markdown built using 
@@ -19,7 +20,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
 if("package:GillespieSSA" %in% search()) detach("package:GillespieSSA", unload=TRUE) 
 ```
 
-Rosenzweig-MacArthur predator-prey model (Pineda-Krch et al., 2007, Pineda-Krch, 2008)
+Rosenzweig-MacArthur predator-prey model [@PinedaKrch2007].
 
 ```
 dN/dt = r(1-N/K - alpha/(1+wN))NP

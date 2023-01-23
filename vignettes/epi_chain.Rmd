@@ -1,12 +1,13 @@
 ---
-title: "SIRS metapopulation model (Pineda-Krch, 2008)"
+title: "SIRS metapopulation model"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SIRS metapopulation model (Pineda-Krch, 2008)}
+  %\VignetteIndexEntry{SIRS metapopulation model}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
+bibliography: library.bib
 ---
 
 <!-- github markdown built using 
@@ -19,7 +20,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
 if("package:GillespieSSA" %in% search()) detach("package:GillespieSSA", unload=TRUE) 
 ```
 
-The SIRS epidemiological metapopulation model is defined in Pineda-Krch (2008).
+The SIRS epidemiological metapopulation model as defined by @PinedaKrch2008.
 
 Define parameters
 ```{r}

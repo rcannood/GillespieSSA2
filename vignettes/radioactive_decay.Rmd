@@ -1,12 +1,13 @@
 ---
-title: "Radioactive Decay model (Gillespie, 1977)"
+title: "Radioactive Decay model"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Radioactive Decay model (Gillespie, 1977)}
+  %\VignetteIndexEntry{Radioactive Decay model}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
+bibliography: library.bib
 ---
 
 <!-- github markdown built using 
@@ -19,7 +20,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
 if("package:GillespieSSA" %in% search()) detach("package:GillespieSSA", unload=TRUE) 
 ```
 
-This model is also known as the irreversible isomerization reaction set.
+This model is also known as the irreversible isomerization reaction set [@Gillespie1977].
 It consists of a single species and single reaction channels,
 ```
 X --c--> 0

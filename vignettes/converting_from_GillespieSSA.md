@@ -9,9 +9,9 @@ In this vignette, we will show how to upgrade the Lotka-predator-prey
 model from GillespieSSA to GillespieSSA2. First, have a look at the
 GillespieSSA vignette:
 
-  - [CRAN
+-   [CRAN
     Vignette](https://CRAN.R-project.org/package=GillespieSSA/vignettes/lotka_predator_prey.html)
-  - `vignette("lotka_predator_prey", package = "GillespieSSA")`
+-   `vignette("lotka_predator_prey", package = "GillespieSSA")`
 
 The model consists of the following objects:
 
@@ -38,16 +38,14 @@ out <- GillespieSSA::ssa(
 ssa.plot(out, show.title = TRUE, show.legend = FALSE)
 ```
 
-![](converting_from_GillespieSSA_files/figure-gfm/gssa1-1.png)<!-- -->
+<img src="converting_from_GillespieSSA_files/figure-gfm/gssa1-1.png" width="100%" />
 
 In order to port these objects, it is preferable to use the updated
 notation from the respective GillespieSSA2 vignette:
 
-  - [CRAN
+-   [CRAN
     Vignette](https://CRAN.R-project.org/package=GillespieSSA2/vignettes/lotka_predator_prey.html)
-  - `vignette("lotka_predator_prey", package = "GillespieSSA2")`
-
-<!-- end list -->
+-   `vignette("lotka_predator_prey", package = "GillespieSSA2")`
 
 ``` r
 library(GillespieSSA2)
@@ -73,7 +71,7 @@ out <- GillespieSSA2::ssa(
 plot_ssa(out)
 ```
 
-![](converting_from_GillespieSSA_files/figure-gfm/gssa2-1.png)<!-- -->
+<img src="converting_from_GillespieSSA_files/figure-gfm/gssa2-1.png" width="100%" />
 
 However, if you want to use the GillespieSSA1 objects directly, you can
 also transform these programmatically. The interface of GillespieSSA2 is
@@ -94,19 +92,13 @@ out <-
     sim_name = simName
   )
 print(out$stats)
-```
-
-    ##   method                  sim_name sim_time_exceeded all_zero_state
-    ## 1  exact Lotka predator-prey model              TRUE          FALSE
-    ##   negative_state all_zero_propensity negative_propensity walltime_exceeded
-    ## 1          FALSE               FALSE               FALSE             FALSE
-    ##   walltime_elapsed num_steps   dtime_mean     dtime_sd firings_mean
-    ## 1      0.009209634     60839 3.287495e-05 3.135028e-07            1
-    ##   firings_sd
-    ## 1          0
-
-``` r
+#>   method                  sim_name sim_time_exceeded all_zero_state
+#> 1  exact Lotka predator-prey model              TRUE          FALSE
+#>   negative_state all_zero_propensity negative_propensity walltime_exceeded
+#> 1          FALSE               FALSE               FALSE             FALSE
+#>   walltime_elapsed num_steps  dtime_mean     dtime_sd firings_mean firings_sd
+#> 1        0.1123357     61805 3.23602e-05 1.378919e-08            1          0
 plot_ssa(out)
 ```
 
-![](converting_from_GillespieSSA_files/figure-gfm/port-1.png)<!-- -->
+<img src="converting_from_GillespieSSA_files/figure-gfm/port-1.png" width="100%" />

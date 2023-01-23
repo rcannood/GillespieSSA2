@@ -7,7 +7,7 @@ Status](https://www.r-pkg.org/badges/version/GillespieSSA2)](https://cran.r-proj
 [![CRAN
 Downloads](https://cranlogs.r-pkg.org/badges/GillespieSSA2)](https://cran.r-project.org/package=GillespieSSA2)
 ![R-CMD-check](https://github.com/rcannood/GillespieSSA2/workflows/R-CMD-check/badge.svg)
-[![DOI](https://img.shields.io/badge/doi-10.1101/2020.02.06.936971-green)](https://doi.org/10.1101/2020.02.06.936971)
+[![DOI](https://img.shields.io/badge/doi-10.1038/s41467-021-24152-2-green)](https://doi.org/10.1038/s41467-021-24152-2)
 [![Coverage
 Status](https://app.codecov.io/gh/rcannood/GillespieSSA2/branch/master/graph/badge.svg)](https://app.codecov.io/gh/rcannood/GillespieSSA2?branch=master)
 <!-- badges: end -->
@@ -16,8 +16,9 @@ Status](https://app.codecov.io/gh/rcannood/GillespieSSA2/branch/master/graph/bad
 
 **GillespieSSA2** is a fast, scalable, and versatile framework for
 simulating large systems with Gillespie’s Stochastic Simulation
-Algorithm (SSA). This package is the spiritual successor to the
-GillespieSSA package originally written by Mario Pineda-Krch.
+Algorithm (SSA) (Cannoodt et al. 2021). This package is the spiritual
+successor to the GillespieSSA package originally written by Mario
+Pineda-Krch (Pineda-Krch 2008).
 
 GillespieSSA2 has the following added benefits:
 
@@ -59,20 +60,40 @@ The following example models are available:
     `vignette("an_introduction", package="GillespieSSA2")`
 -   Converting from GillespieSSA to GillespieSSA2:  
     `vignette("converting_from_GillespieSSA", package="GillespieSSA2")`
--   Decaying-Dimerization Reaction Set (Gillespie, 2001):  
+-   Decaying-Dimerization Reaction Set:  
     `vignette("decaying_dimer", package="GillespieSSA2")`
--   SIRS metapopulation model (Pineda-Krch, 2008):  
+-   SIRS metapopulation model:  
     `vignette("epi_chain", package="GillespieSSA2")`
--   Linear Chain System (Cao et al., 2004):  
+-   Linear Chain System:  
     `vignette("linear_chain", package="GillespieSSA2")`
--   Pearl-Verhulst Logistic Growth model (Kot, 2001):  
+-   Pearl-Verhulst Logistic Growth model:  
     `vignette("logistic_growth", package="GillespieSSA2")`
--   Lotka Predator-Prey model (Gillespie, 1977; Kot, 2001):  
+-   Lotka Predator-Prey model:  
     `vignette("lotka_predator_prey", package="GillespieSSA2")`
--   Radioactive Decay model (Gillespie, 1977):  
+-   Radioactive Decay model:  
     `vignette("radioactive_decay", package="GillespieSSA2")`
--   Rosenzweig-MacArthur Predator-Prey model (Pineda-Krch et al.,
-    2007):  
+-   Rosenzweig-MacArthur Predator-Prey model:  
     `vignette("rm_predator_prey", package="GillespieSSA2")`
--   Kermack-McKendrick SIR model (Brown & Rothery, 1993):  
+-   Kermack-McKendrick SIR model:  
     `vignette("sir", package="GillespieSSA2")`
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-Cannoodt2021" class="csl-entry">
+
+Cannoodt, Robrecht, Wouter Saelens, Louise Deconinck, and Yvan Saeys.
+2021. “Spearheading Future Omics Analyses Using Dyngen, a Multi-Modal
+Simulator of Single Cells.” *Nature Communications* 12 (1).
+<https://doi.org/10.1038/s41467-021-24152-2>.
+
+</div>
+
+<div id="ref-PinedaKrch2008" class="csl-entry">
+
+Pineda-Krch, Mario. 2008. “GillespieSSA: Implementing the Stochastic
+Simulation Algorithm in r.” *Journal of Statistical Software* 25 (12).
+<https://doi.org/10.18637/jss.v025.i12>.
+
+</div>
+
+</div>

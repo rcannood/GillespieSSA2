@@ -1,22 +1,21 @@
-Lotka Predator-Prey model (Gillespie, 1977; Kot, 2001)
+Lotka Predator-Prey model
 ================
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/lotka_predator_prey.Rmd", output_format = "github_document")
 -->
 
-This version of the Lotka predator-prey model is given by
+This version of the Lotka predator-prey model (Gillespie 1977; Kot 2001)
+is given by
 
     dY1/dt = c1*Y1 - c2*Y1*Y2
     dY2/dt = c2*Y1*Y2 - c3*Y2
 
 consisting of the three reaction channels,
 
-``` 
-      Y1 --c1--> Y1 + Y1 
- Y1 + Y2 --c2--> Y2 + Y2 
-      Y1 --c3--> 0
-```
+          Y1 --c1--> Y1 + Y1 
+     Y1 + Y2 --c2--> Y2 + Y2 
+          Y1 --c3--> 0
 
 Define parameters
 
@@ -53,7 +52,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](lotka_predator_prey_files/figure-gfm/exact-1.png)<!-- -->
+<img src="lotka_predator_prey_files/figure-gfm/exact-1.png" width="100%" />
 
 Run simulations with the Explict tau-leap method
 
@@ -70,7 +69,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](lotka_predator_prey_files/figure-gfm/etl-1.png)<!-- -->
+<img src="lotka_predator_prey_files/figure-gfm/etl-1.png" width="100%" />
 
 Run simulations with the Binomial tau-leap method
 
@@ -87,4 +86,23 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](lotka_predator_prey_files/figure-gfm/btl-1.png)<!-- -->
+<img src="lotka_predator_prey_files/figure-gfm/btl-1.png" width="100%" />
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-Gillespie1977" class="csl-entry">
+
+Gillespie, Daniel T. 1977. “Exact Stochastic Simulation of Coupled
+Chemical Reactions.” *The Journal of Physical Chemistry* 81 (25):
+2340–61. <https://doi.org/10.1021/j100540a008>.
+
+</div>
+
+<div id="ref-Kot2001" class="csl-entry">
+
+Kot, Mark. 2001. *Elements of Mathematical Ecology*. Cambridge
+University Press. <https://doi.org/10.1017/cbo9780511608520>.
+
+</div>
+
+</div>

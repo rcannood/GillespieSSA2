@@ -1,11 +1,11 @@
-SIRS metapopulation model (Pineda-Krch, 2008)
+SIRS metapopulation model
 ================
 
 <!-- github markdown built using 
 rmarkdown::render("vignettes/epi_chain.Rmd", output_format = "github_document")
 -->
 
-The SIRS epidemiological metapopulation model is defined in Pineda-Krch
+The SIRS epidemiological metapopulation model as defined by Pineda-Krch
 (2008).
 
 Define parameters
@@ -96,7 +96,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](epi_chain_files/figure-gfm/exact-1.png)<!-- -->
+<img src="epi_chain_files/figure-gfm/exact-1.png" width="100%" />
 
 Run simulations with the Explict tau-leap method
 
@@ -113,7 +113,7 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](epi_chain_files/figure-gfm/etl-1.png)<!-- -->
+<img src="epi_chain_files/figure-gfm/etl-1.png" width="100%" />
 
 Run simulations with the Binomial tau-leap method
 
@@ -130,4 +130,16 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-![](epi_chain_files/figure-gfm/btl-1.png)<!-- -->
+<img src="epi_chain_files/figure-gfm/btl-1.png" width="100%" />
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-PinedaKrch2008" class="csl-entry">
+
+Pineda-Krch, Mario. 2008. “GillespieSSA: Implementing the Stochastic
+Simulation Algorithm in r.” *Journal of Statistical Software* 25 (12).
+<https://doi.org/10.18637/jss.v025.i12>.
+
+</div>
+
+</div>

@@ -1,12 +1,13 @@
 ---
-title: "Kermack-McKendrick SIR model (Brown & Rothery, 1993)"
+title: "Kermack-McKendrick SIR model"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Kermack-McKendrick SIR model (Brown & Rothery, 1993)}
+  %\VignetteIndexEntry{Kermack-McKendrick SIR model}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
+bibliography: library.bib
 ---
 
 <!-- github markdown built using 
@@ -19,7 +20,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
 if("package:GillespieSSA" %in% search()) detach("package:GillespieSSA", unload=TRUE) 
 ```
 
-The Kermack-McKendrick SIR model is defined as
+The Kermack-McKendrick SIR model [@Brown1993] is defined as
 ```
 dS/dt = -beta*N*S
 dI/dt = beta*N*S - gamma*I

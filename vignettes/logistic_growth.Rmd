@@ -1,12 +1,13 @@
 ---
-title: "Pearl-Verhulst Logistic Growth model (Kot, 2001)"
+title: "Pearl-Verhulst Logistic Growth model"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Pearl-Verhulst Logistic Growth model (Kot, 2001)}
+  %\VignetteIndexEntry{Pearl-Verhulst Logistic Growth model}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
+bibliography: library.bib
 ---
 
 <!-- github markdown built using 
@@ -19,22 +20,27 @@ knitr::opts_chunk$set(fig.width = 6, fig.height = 4)
 if("package:GillespieSSA" %in% search()) detach("package:GillespieSSA", unload=TRUE) 
 ```
 
-The logistic growth model is given by `dN/dt = rN(1-N/K)` where
-`N` is the number (density) of indviduals at time `t`, 
-`K` is the carrying capacity of the population, 
-`r` is the intrinsic growth rate of the population. 
-We assume `r=b-d` where 
-`b` is the per capita p.c. birth rate and 
-`d` is the p.c. death rate. 
+The classical logistic-growth model [@Kot2001] assumes that the growth of a population decreases with
+increasing population size and is given by the following equation,
 
-This model consists of two reaction channels,
-```
- N ---b--->  N + N
- N ---d'---> 0
-```
-where `d'=d+(b-d)N/K`. The propensity functions are `a_1=bN` and `a_2=d'N`.
+$$
+\frac{dN}{dt} = rN \times \left(1 - \frac{N}{K}\right)
+$$
+where
+$N$ is the number (density) of indviduals at time $t$, 
+$K$ is the carrying capacity of the population, 
+$r$ is the intrinsic growth rate of the population.
 
-Define parameters
+This model consists of two reactions, birth and death, whose propensity functions
+are defined as: 
+
+* $a_1(x) = bN$
+* $a_2(x) = (d + (b - d) \times N / K) \times N$
+
+where $b$ is the per capita birth rate and $d$ is the per capita death rate.
+
+Assuming $b=2$, $d=1$, $K=1000$ and $X(0)=(500)$, we can define the following parameters:
+
 ```{r}
 library(GillespieSSA2)
 sim_name <- "Pearl-Verhulst Logistic Growth model"
@@ -43,7 +49,8 @@ final_time <- 10
 initial_state <- c(N = 500)
 ```
 
-Define reactions
+The reactions (each consisting of a propensity function and a state change vector)
+can be defined as:
 ```{r}
 reactions <- list(
   reaction("b * N", c(N = +1)),
@@ -92,3 +99,7 @@ out <- ssa(
 ) 
 plot_ssa(out)
 ```
+
+## Acknowledgements
+
+Description was adapted from @PinedaKrch2008.

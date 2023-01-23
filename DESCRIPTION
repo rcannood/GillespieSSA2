@@ -19,8 +19,8 @@ Description: A fast, scalable, and versatile framework for
     'GillespieSSA' package originally written by Mario Pineda-Krch.
     Benefits of this package include major speed improvements (>100x),
     easier to understand documentation, and many unit tests that try to
-    ensure the package works as intended. Cannoodt and Saelens et al. (2020) 
-    <doi:10.1101/2020.02.06.936971>.
+    ensure the package works as intended. Cannoodt and Saelens et al. (2021) 
+    <doi:10.1038/s41467-021-24152-2>.
 License: GPL (>= 3)
 URL: https://github.com/rcannood/GillespieSSA2
 BugReports: https://github.com/rcannood/GillespieSSA2/issues
@@ -52,4 +52,4 @@ VignetteBuilder:
     knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2
