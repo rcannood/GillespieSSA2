@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
-bibliography: library.bib
+bibliography: ../inst/REFERENCES.bib
 ---
 
 <!-- github markdown built using 

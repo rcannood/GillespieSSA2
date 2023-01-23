@@ -3,7 +3,7 @@ output:
   github_document
 editor_options: 
   chunk_output_type: console
-bibliography: vignettes/library.bib
+bibliography: inst/REFERENCES.bib
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
