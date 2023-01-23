@@ -96,9 +96,7 @@ plot_ssa(out)
 
 <img src="logistic_growth_files/figure-gfm/btl-1.png" width="100%" />
 
-## Acknowledgements
-
-Description was adapted from Pineda-Krch (2008).
+## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
@@ -106,14 +104,6 @@ Description was adapted from Pineda-Krch (2008).
 
 Kot, Mark. 2001. *Elements of Mathematical Ecology*. Cambridge
 University Press. <https://doi.org/10.1017/cbo9780511608520>.
-
-</div>
-
-<div id="ref-PinedaKrch2008" class="csl-entry">
-
-Pineda-Krch, Mario. 2008. “GillespieSSA: Implementing the Stochastic
-Simulation Algorithm in r.” *Journal of Statistical Software* 25 (12).
-<https://doi.org/10.18637/jss.v025.i12>.
 
 </div>
 

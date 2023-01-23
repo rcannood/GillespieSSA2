@@ -97,7 +97,7 @@ print(out$stats)
 #>   negative_state all_zero_propensity negative_propensity walltime_exceeded
 #> 1          FALSE               FALSE               FALSE             FALSE
 #>   walltime_elapsed num_steps  dtime_mean     dtime_sd firings_mean firings_sd
-#> 1        0.1123357     61805 3.23602e-05 1.378919e-08            1          0
+#> 1        0.1121878     61805 3.23602e-05 1.378919e-08            1          0
 plot_ssa(out)
 ```
 

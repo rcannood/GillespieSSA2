@@ -90,6 +90,8 @@ plot_ssa(out)
 
 <img src="linear_chain_files/figure-gfm/btl-1.png" width="100%" />
 
+## References
+
 <div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-Cao2004" class="csl-entry">

@@ -1,7 +1,7 @@
 Type: Package
 Package: GillespieSSA2
 Title: Gillespie's Stochastic Simulation Algorithm for Impatient People
-Version: 0.2.10
+Version: 0.3.0
 Authors@R: 
     c(person(given = "Robrecht",
              family = "Cannoodt",

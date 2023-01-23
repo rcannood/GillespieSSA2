@@ -100,3 +100,5 @@ if (rerun_vignettes) {
   }
 }
 ```
+
+## References

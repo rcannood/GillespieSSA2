@@ -100,6 +100,4 @@ out <- ssa(
 plot_ssa(out)
 ```
 
-## Acknowledgements
-
-Description was adapted from @PinedaKrch2008.
+## References

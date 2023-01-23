@@ -85,6 +85,8 @@ plot_ssa(out)
 
 <img src="sir_files/figure-gfm/btl-1.png" width="100%" />
 
+## References
+
 <div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-Brown1993" class="csl-entry">

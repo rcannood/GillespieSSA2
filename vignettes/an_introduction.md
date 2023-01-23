@@ -65,7 +65,7 @@ print(out$stats)
 #>   method          sim_name sim_time_exceeded all_zero_state negative_state
 #> 1  exact My first SSA run!              TRUE          FALSE          FALSE
 #>   all_zero_propensity negative_propensity walltime_exceeded walltime_elapsed
-#> 1               FALSE               FALSE             FALSE        0.2771259
+#> 1               FALSE               FALSE             FALSE        0.2749141
 #>   num_steps   dtime_mean     dtime_sd firings_mean firings_sd
 #> 1    151518 3.299954e-05 1.538995e-07            1          0
 ```

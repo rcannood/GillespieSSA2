@@ -83,3 +83,5 @@ out <- ssa(
 ) 
 plot_ssa(out)
 ```
+
+## References

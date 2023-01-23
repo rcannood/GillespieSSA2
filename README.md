@@ -77,6 +77,8 @@ The following example models are available:
 -   Kermack-McKendrick SIR model:  
     `vignette("sir", package="GillespieSSA2")`
 
+## References
+
 <div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-Cannoodt2021" class="csl-entry">

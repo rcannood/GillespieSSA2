@@ -2,7 +2,8 @@
 
 * MINOR CHANGE: Add `debug` parameter to print out propensity functions before compiling.
 
-* MINOR CHANGE: Add spaces between terms in the reaction propensity C++ code to avoid pasting together `if` and `else` key words.
+* MINOR CHANGE: Add spaces between terms in the reaction propensity C++ code to 
+  avoid pasting together important key words (e.g. `if` and `else`).
 
 # GillespieSSA2 0.2.10
 

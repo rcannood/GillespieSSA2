@@ -85,6 +85,8 @@ plot_ssa(out)
 
 <img src="decaying_dimer_files/figure-gfm/btl-1.png" width="100%" />
 
+## References
+
 <div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-Gillespie2001" class="csl-entry">
